@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+
+
+data/*/*
+!data/process/*
+!README.md
+
+*.qsub*
+mothur*logfile
+*temp*
+*.docx
