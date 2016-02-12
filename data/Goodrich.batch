@@ -1,0 +1,4 @@
+unique.seqs(fasta=combined.fasta)
+summary.seqs(fasta=current, name=current)
+count.seqs(name=current, group=combined.groups)
+pre.cluster(fasta=current, count=current, diffs=2)
