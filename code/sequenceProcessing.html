@@ -70,34 +70,557 @@ img {
 
 <div id="preamble" class="section level4">
 <h4><strong>Preamble</strong></h4>
-<p>Each study is brought up one at a time. This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study. You will also need the latest version of mothur, SRA Toolkit, Metaphlan2, and Python 2.7 installed on your system. There are also a few reference files that you will need. The first is the <a href="http://www.mothur.org/wiki/Silva_reference_files">SILVA reference</a> database and the second is the <a href="http://www.mothur.org/wiki/RDP_reference_files">RDP database</a> of which we used release 102 and version 9 respectively. Finally, any entered code is denoted will be surronded with ‘’. As an example,’’print(“Hello World)’’. <br> <br></p>
+<p>Each study is brought up one at a time. This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study. You will also need the latest version of mothur, SRA Toolkit, Metaphlan2, Python 2.7, and Python 3+ installed on your system. There are also a few reference files that you will need. The first is the <a href="http://www.mothur.org/wiki/Silva_reference_files">SILVA reference</a> database and the second is the <a href="http://www.mothur.org/wiki/RDP_reference_files">RDP database</a> of which we used release 102 and version 9 respectively. In general, we tried to keep close to the Schloss SOP for processsing sequence reads. However, where this was not possible (mostly due to a high loss of reads resulting in a high loss of samples) we defaulted to the processing used by the published authors. Where it was not possible to use a <em>de novo</em> approach (mostly due to high numbers of unique sequences) and the authors used a closed-reference approach we used the RDP database instead of greengenes.</p>
+<p><br> <br></p>
 <div id="baxter-et-al.-2016" class="section level5">
 <h5><strong>Baxter et al. 2016:</strong></h5>
-<p>This data set consisted of controls without colorectal cancer (CRC) and those with CRC. The sequence reads of only the controls who did not have CRC were obtained directly from the first author since the data was generated within the Schloss lab. However, the sequences can be found on the SRA under the accession number SRP062005. Only the raw 16S sequence reads for normal controls were processed from the Sequence Read Archive (SRA) and subsequently used in the analysis. So here we go…. <br> <br> I’m sure a smarter person could seperate the specific files that are normal only but I’m lazy and we had the storage space so I downloaded the entire data set.<br /><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP062/SRP062005/" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP062/SRP062005/</a>’‘<br>’‘fastq-dump *.sra’‘<br><br> The metadata can be found and downloaded by searching SRP062005 at the following site: <a href="http://www.ncbi.nlm.nih.gov/Traces/study/" class="uri">http://www.ncbi.nlm.nih.gov/Traces/study/</a> <br><br> The simple python program (Python 3.0) used to generate the .file file needed to make contigs can be found in this repository titled: <em>MSze.makefile.good.trial2.py</em> and the resulting file is titled <em>mothur.data.file</em>. All you need to make this work is to have only the necessary fastq files in the respective folder. <br><br> Before getting started enter mothur and curate the silva.fasta for the v4 region with the following commands: <br><br>’‘pcr.seqs(fasta=silva.bacteria.fasta, start=11894, end=25319, keepdots=F)’‘<br>’‘system(mv silva.bacteria.pcr.fasta silva.v4.fasta)’’ <br><br></p>
-<p>Next we utilized the batch mode process and can come back the next day to see everything completed. Our command was the following: <br><br> ‘’/share/scratch/schloss/mothur/mothur data1.batch’’ <br> <br> If you thought this was difficult to get data just wait until later on in this pipeline to see just how crazy it can get trying to get the data to a useable point. <br> <br></p>
+<p>This data set consisted of controls without colorectal cancer (CRC) and those with CRC. The sequence reads of only the controls who did not have CRC were obtained directly from the first author since the data was generated within the Schloss lab. However, the sequences can be found on the SRA under the accession number SRP062005. Only the raw 16S sequence reads for normal controls were processed from the Sequence Read Archive (SRA) and subsequently used in the analysis. So here we go…. <br> <br> I’m sure a smarter person could seperate the specific files that are normal only but I’m lazy and we had the storage space so I downloaded the entire data set.<br /><br></p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP062/SRP062005/
+
+fastq-dump \*.sra</code></pre>
+<p><br><br> The metadata can be found and downloaded by searching SRP062005 at the following site: <a href="http://www.ncbi.nlm.nih.gov/Traces/study/" class="uri">http://www.ncbi.nlm.nih.gov/Traces/study/</a> <br><br> The simple python program (Python 3.0) used to generate the .file file needed to make contigs can be found in this repository titled: <em>MSze.makefile.good.trial2.py</em> and the resulting file is titled <em>mothur.data.file</em>. All you need to make this work is to have only the necessary fastq files in the respective folder. <br><br> Before getting started enter mothur and curate the silva.fasta for the v4 region with the following commands:</p>
+<pre class="bash"><code>pcr.seqs(fasta=silva.bacteria.fasta, start=11894, end=25319, keepdots=F)
+system(mv silva.bacteria.pcr.fasta silva.v4.fasta)</code></pre>
+<p>Next we utilized the batch mode process and can come back the next day to see everything completed. Our command was the following:</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur data1.batch</code></pre>
+<p>If you thought this was difficult to get data just wait until later on in this pipeline to see just how crazy it can get trying to get the data to a useable point. <br> <br></p>
 </div>
 <div id="ross-et-al.-2015" class="section level5">
 <h5><strong>Ross et al. 2015:</strong></h5>
-<p>This data set consisted of normal individuals from the Cameron Count Hispanic Cohort (CCHC). The paper for this data set can be found <a href="http://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-015-0072-y">here</a>. The project accession number in the SRA is SRP053023. We can download the entire data set again with the code mentioned above but with one small substitution at the ending. Here we go…… <br><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP053/SRP053023/" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP053/SRP053023/</a>’‘<br> <br> Now since there was no sff file provided in this data set even though it is a 454 data set (I found this out when I tried to run the command -&gt; sff-dump *.sra). We have to use the fastq function of the SRA Tool kit. <br> <br>’‘fastq-dump *.sra’’ <br> <br> Because of this difference there are a few changes in this processing versus the standardized mothur 454 protocol. First, instead of the sff.info() command we have to use the fastq.info() command. Second, and perhaps more importantly, because we don’t have the sff file we have to use the quality scores. We used the author specified defaults of <em>qwindowaverage=25</em> and <em>qwindowsize=50</em>. It should also be noted that we had <em>maxambig=5</em> and <em>maxhomop=8</em>. Since the data come seperated already we do not need an oligo file and all we have to do is loop the mothur <em>trim.seqs</em> command. You can run a bash or shell program to get all of this done with either <em>#!/bin/sh</em> or <em>#!/bin/bash</em>. So in a text editor:</p>
-<p>‘’#!/bin/sh<br />for sample in $(ls *sra)<br />do<br />fastq-dump $sample<br />done <br><br> for sample2 in $(ls *fastq)<br />do<br />/share/scratch/schloss/mothur/mothur “#fastq.info(fastq=$sample2)”<br />rm *logfile<br />done <br><br> for TRIM in $(ls ERR*.fasta)<br />do<br />QFILE=${TRIM//fasta/qual}<br />/share/scratch/schloss/mothur/mothur “#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=5, maxhomop=8, qwindowaverage=25, qwindowsize=50, processors=8)”<br />done<br />rm *.fastq’‘<br><br> The next lines of code are used to combine the fasta file, create a names file with the mothur unique command, and create a combined group file for subsequent processing. <br><br>’‘cat *trim.fasta &gt; combined.trim.fasta<br />/share/scratch/schloss/mothur/mothur “#unique.seqs(fasta=combined.trim.fasta)”<br />grep -e’^&gt;‘combined.trim.fasta &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed ‘s/\./_/g’ test2.fasta &gt; test3.fasta<br />sed ’s/_.*//‘test3.fasta &gt; test4.fasta<br />paste -d&quot; &quot; test2.fasta test4.fasta &gt; combined.groups<br />exit 0’‘<br><br> After this little program is run we follow the mothur 454 SOP as written and can use the following command to complete the processing using the put together <em>Ross.batch</em> file and running mothur. One final difference from the standardized mothur approach that was made was during the screen.seqs command after alignment a hard cutoff <em>minlength=200</em> and <em>maxlength=250</em> was used. <br><br>’‘/share/scratch/schloss/mothur/mothur Ross.batch’’ <br><br> That completes the processing for this data set. Simple so far I hope. On to the next data set. <br><br></p>
+<p>This data set consisted of normal individuals from the Cameron Count Hispanic Cohort (CCHC). The paper for this data set can be found <a href="http://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-015-0072-y">here</a>. The project accession number in the SRA is SRP053023. We can download the entire data set again with the code mentioned above but with one small substitution at the ending. Here we go……</p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP053/SRP053023/</code></pre>
+<p>Now since there was no sff file provided in this data set even though it is a 454 data set (I found this out when I tried to run the command -&gt; sff-dump *.sra). We have to use the fastq function of the SRA Tool kit. <br></p>
+<pre class="bash"><code>fastq-dump \*.sra</code></pre>
+<p><br> Because of this difference there are a few changes in this processing versus the standardized mothur 454 protocol. First, instead of the sff.info() command we have to use the fastq.info() command. Second, and perhaps more importantly, because we don’t have the sff file we have to use the quality scores. We used the author specified defaults of <em>qwindowaverage=25</em> and <em>qwindowsize=50</em>. It should also be noted that we had <em>maxambig=5</em> and <em>maxhomop=8</em>. Since the data come seperated already we do not need an oligo file and all we have to do is loop the mothur <em>trim.seqs</em> command. You can run a bash or shell program to get all of this done with either <em>#!/bin/sh</em> or <em>#!/bin/bash</em>. So in a text editor:</p>
+<pre class="sh"><code>#!/bin/sh  
+for sample in $(ls *sra)  
+do  
+fastq-dump $sample  
+done
+
+for sample2 in $(ls *fastq)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
+rm *logfile  
+done
+
+for TRIM in $(ls ERR*.fasta)  
+do  
+QFILE=${TRIM//fasta/qual}  
+/share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=5, maxhomop=8, qwindowaverage=25, qwindowsize=50, processors=8)&quot;  
+done  
+
+rm *.fastq</code></pre>
+<p>The next lines of code are used to combine the fasta file, create a names file with the mothur unique command, and create a combined group file for subsequent processing.</p>
+<pre class="bash"><code>cat \*trim.fasta &gt; combined.trim.fasta  
+/share/scratch/schloss/mothur/mothur &quot;#unique.seqs(fasta=combined.trim.fasta)&quot;  
+
+grep -e '^&gt;' combined.trim.fasta &gt; test.fasta  
+sed 's/&gt;//' test.fasta &gt; test2.fasta  
+sed 's/\./_/g' test2.fasta &gt; test3.fasta  
+sed 's/_.*//' test3.fasta &gt; test4.fasta  
+paste -d&quot; &quot; test2.fasta test4.fasta &gt; combined.groups  
+
+exit 0</code></pre>
+<p>After this little program is run we follow the mothur 454 SOP as written and can use the following command to complete the processing using the put together <em>Ross.batch</em> file and running mothur. One final difference from the standardized mothur approach that was made was during the screen.seqs command after alignment a hard cutoff <em>minlength=200</em> and <em>maxlength=250</em> was used.</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Ross.batch</code></pre>
+<p>That completes the processing for this data set. Simple so far I hope. On to the next data set. <br><br></p>
 </div>
 <div id="goodrich-et-al.-2014" class="section level5">
 <h5><strong>Goodrich et al. 2014:</strong></h5>
-<p>This is a second larger twin data set that builds on the Turnbaugh et al. findings. The paper can be found <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4255478/">here</a>. The individuals that participated in the study were part of the TwinsUK registry and is somewhat heavily skewed toward women. The raw sequence data can be found on the SRA under ERP006339. So using wget we can download the data with the following code: <br><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006339/" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006339/</a>’‘<br><br> I started off with analyzing the data separately while sticking the the default mothur SOP for MiSeq processing….. <br><br>’‘#!/bin/sh<br /># Unpack sra files<br /># mkdir sra.complete<br />for start in $(ls *sra)<br />do<br />fastq-dump $start<br />mv $start sra.complete<br />done <br><br> # Unpack fastq files<br />mkdir fastq.complete<br />mkdir logfile.complete<br />for info in $(ls *fastq)<br />do<br />/share/scratch/schloss/mothur/mothur “#fastq.info(fastq=$info)”<br />mv $info fastq.complete<br />mv *.logfile logfile.complete<br />done <br><br> # Screen the fasta file that came from the fastq<br />mkdir fasta.complete<br />for next in $(ls *fasta)<br />do<br />/share/scratch/schloss/mothur/mothur “#screen.seqs(fasta=$next, maxambig=0, maxlength=275, processors=8)”<br />mv $next fasta.complete # should store silva file in here and then move it working directory<br />mv *.logfile logfile.complete<br />done <br><br> mv ~/twinsUK/fasta.complete/silva.v4.fasta ~/twinsUK<br /># Align the screened fasta file to V4 region of SILVA<br />mkdir good.fasta.complete<br />for sample2 in $(ls *good.fasta)<br />do<br />/share/scratch/schloss/mothur/mothur “#align.seqs(fasta=$sample2, reference=silva.v4.fasta, processors=8)”<br />mv $sample2 good.fasta.complete<br />mv *logfile logfile.complete<br />done <br><br> #Screen the aligned sequences to specific location<br />mkdir align.complete<br />for sample3 in $(ls *.align)<br />do<br />/share/scratch/schloss/mothur/mothur “#screen.seqs(fasta=$sample3, start=1968, end=11546, maxhomop=8, processors=8)”<br />mv $sample3 align.complete<br />done <br><br> # Filter the screened sequences to get a fasta file back<br />mkdir align.good.complete<br />for sample4 in $(ls *good.align)<br />do<br />/share/scratch/schloss/mothur/mothur “#filter.seqs(fasta=$sample4, vertical=T, trump=., processors=8)”<br />mv $sample4 align.good.complete<br />mv *logfile logfile.complete<br />done <br><br> # Make the combined fasta file<br />mkdir filter.fasta.complete<br />cat *filter.fasta &gt; combined.fasta<br />mv *filter.fasta filter.fasta.complete <br><br> # Make the combined group file<br />grep -e’^&gt;‘combined.fasta &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed ‘s/\..*\$//’ test2.fasta &gt; test3.fasta<br />paste -d“\t” test2.fasta test3.fasta &gt; combined.groups’‘<br><br> After this program was run I thought perhaps naively that I could simply run a set a batch file and be done with this data set. Well not quite. The sheer size and the way our server was configured meant that if I called much more than 130GB of RAM my job would run the risk of starting over regularly. So I did use the batch method but only upto <em>pre.cluster</em>. After this the <em>chimera.uchime</em> step was just taking too long so I seperated everything again and did the <em>chimera.uchime</em> separately. This also meant having to redo the unique seqs step. The code for this is below: <br><br>’‘/share/scratch/schloss/mothur/mothur Goodrich.batch’’ <br><br> So now the biggest challenge that I have found so far is getting the data into a distance matrix not based on the closed-reference approach. The file is just too big for cluster.split so I’m going to have to find an alternative way.</p>
+<p>This is a second larger twin data set that builds on the Turnbaugh et al. findings. The paper can be found <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4255478/">here</a>. The individuals that participated in the study were part of the TwinsUK registry and is somewhat heavily skewed toward women. The raw sequence data can be found on the SRA under ERP006339. So using wget we can download the data with the following code:</p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006339/
+</code></pre>
+<p>I started off with analyzing the data separately while sticking the the default mothur SOP for MiSeq processing…..</p>
+<pre class="sh"><code>#!/bin/sh  
+# Unpack sra files  
+# mkdir sra.complete  
+for start in \$(ls \*sra)  
+do  
+fastq-dump $start  
+mv $start sra.complete  
+done
+
+# Unpack fastq files  
+mkdir fastq.complete  
+mkdir logfile.complete  
+for info in $(ls *fastq)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$info)&quot;  
+mv $info fastq.complete  
+mv *.logfile logfile.complete  
+done
+
+# Screen the fasta file that came from the fastq  
+mkdir fasta.complete  
+for next in $(ls *fasta)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$next, maxambig=0, maxlength=275, processors=8)&quot;  
+mv $next fasta.complete # should store silva file in here and then move it to working directory  
+mv *.logfile logfile.complete  
+done
+
+mv ~/twinsUK/fasta.complete/silva.v4.fasta ~/twinsUK  
+# Align the screened fasta file to V4 region of SILVA  
+mkdir good.fasta.complete  
+for sample2 in $(ls *good.fasta)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#align.seqs(fasta=$sample2, reference=silva.v4.fasta, processors=8)&quot;  
+mv $sample2 good.fasta.complete  
+mv *logfile logfile.complete  
+done
+
+#Screen the aligned sequences to specific location  
+mkdir align.complete  
+for sample3 in $(ls *.align)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$sample3, start=1968, end=11546, maxhomop=8, processors=8)&quot;  
+mv $sample3 align.complete  
+done
+
+# Filter the screened sequences to get a fasta file back  
+mkdir align.good.complete  
+for sample4 in $(ls *good.align)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#filter.seqs(fasta=$sample4, vertical=T, trump=., processors=8)&quot;  
+mv $sample4 align.good.complete  
+mv *logfile logfile.complete  
+done
+
+# Make the combined fasta file  
+mkdir filter.fasta.complete  
+cat *filter.fasta &gt; combined.fasta  
+mv *filter.fasta filter.fasta.complete
+
+# Make the combined group file  
+grep -e '^&gt;' combined.fasta &gt; test.fasta  
+sed 's/&gt;//' test.fasta &gt; test2.fasta  
+sed 's/\..*$//' test2.fasta &gt; test3.fasta  
+paste -d&quot;\t&quot; test2.fasta test3.fasta &gt; combined.groups
+</code></pre>
+<p>After this program was run I thought perhaps naively that I could simply run a set a batch file and be done with this data set. Well not quite. The sheer size and the way our server was configured meant that if I called much more than 130GB of RAM my job would run the risk of starting over regularly. So I did use the batch method but only upto <em>pre.cluster</em>. After this the <em>chimera.uchime</em> step was just taking too long so I seperated everything again and did the <em>chimera.uchime</em> separately. This also meant having to redo the unique seqs step. The code for this is below:</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Goodrich.batch</code></pre>
+<p>So now the biggest challenge that I have found so far is getting the data into a distance matrix not based on the closed-reference approach. The file is just too big for cluster.split so we have had to use the closed-reference approach for this data set.</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Goodrich2.batch</code></pre>
 <p><br><br></p>
 </div>
 <div id="escobar-et-al.-2014" class="section level5">
 <h5><strong>Escobar et al. 2014:</strong></h5>
-<p>This data set consisted of normal individuals from Medellin, Colombia South America. The paper for this data set can be found <a href="http://bmcmicrobiol.biomedcentral.com/articles/10.1186/s12866-014-0311-6">here</a>. The project accession number in the ENA is ERP003466. We can download the entire data set again with the code mentioned above but with a few substitutions versus the previous two studies. Here we go…… <br><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP003/ERP003466/" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP003/ERP003466/</a>’‘<br> <br> Now just like the previous data set there was no sff file provided in this data set even though it is a 454 data set (I found this out, again, when I tried to run the command -&gt; sff-dump *.sra). We have to use the fastq function of the SRA Tool kit. <br> <br>’‘fastq-dump *.sra’’ <br> <br> Because of this difference there are a few changes in this processing versus the standardized mothur 454 protocol. First, instead of the sff.info() command we have to use the fastq.info() command. Second, and perhaps more importantly, because we don’t have the sff file we have to use the quality scores. Unlike the Ross, et al study we used the mothur specified defaults of <em>qwindowaverage=35</em> and <em>qwindowsize=50</em>. It should also be noted that we had <em>maxambig=0</em> and <em>maxhomop=8</em>. Since the data come seperated already we do not need an oligo file and all we have to do is loop the mothur <em>trim.seqs</em> command. You can run a bash or shell program to get all of this done with either <em>#!/bin/sh</em> or <em>#!/bin/bash</em>. So in a text editor:</p>
-<p>‘’#!/bin/sh<br />for sample in $(ls *sra)<br />do<br />fastq-dump $sample<br />done <br><br> for sample2 in $(ls *fastq)<br />do<br />/share/scratch/schloss/mothur/mothur “#fastq.info(fastq=$sample2)”<br />rm *logfile<br />done <br><br> for TRIM in $(ls SRR*.fasta)<br />do<br />QFILE=${TRIM//fasta/qual}<br />/share/scratch/schloss/mothur/mothur “#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50, processors=8)”<br />done<br />rm *.fastq’‘<br><br> The next lines of code are used to combine the fasta file, create a names file with the mothur unique command, and create a combined group file for subsequent processing. <br><br>’‘cat *trim.fasta &gt; combined.trim.fasta<br />/share/scratch/schloss/mothur/mothur “#unique.seqs(fasta=combined.trim.fasta)”<br />grep -e’^&gt;‘combined.trim.fasta &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed ‘s/\./_/g’ test2.fasta &gt; test3.fasta<br />sed ’s/_.*//‘test3.fasta &gt; test4.fasta<br />paste -d&quot; &quot; test2.fasta test4.fasta &gt; combined.groups<br />exit 0’‘<br><br> After this little program is run we follow the mothur 454 SOP as written and can use the following command to complete the processing using the put together <em>Escobar.batch</em> file and running mothur. Again like the Ross et al data set one final difference from the standardized mothur approach that was made was during the screen.seqs command after alignment a hard cutoff <em>minlength=200</em> and <em>maxlength=250</em> was used. <br><br>’‘/share/scratch/schloss/mothur/mothur Escobar.batch’’ <br><br> That completes the processing for this data set. So far so good, no major problems. On to the next data set. <br><br></p>
+<p>This data set consisted of normal individuals from Medellin, Colombia South America. The paper for this data set can be found <a href="http://bmcmicrobiol.biomedcentral.com/articles/10.1186/s12866-014-0311-6">here</a>. The project accession number in the ENA is ERP003466. We can download the entire data set again with the code mentioned above but with a few substitutions versus the previous two studies. Here we go……</p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP003/ERP003466/</code></pre>
+<p>Now just like the previous data set there was no sff file provided in this data set even though it is a 454 data set (I found this out, again, when I tried to run the command -&gt; sff-dump *.sra). We have to use the fastq function of the SRA Tool kit.</p>
+<pre class="bash"><code>fastq-dump *.sra</code></pre>
+<p>Because of this difference there are a few changes in this processing versus the standardized mothur 454 protocol. First, instead of the sff.info() command we have to use the fastq.info() command. Second, and perhaps more importantly, because we don’t have the sff file we have to use the quality scores. Unlike the Ross, et al study we used the mothur specified defaults of <em>qwindowaverage=35</em> and <em>qwindowsize=50</em>. It should also be noted that we had <em>maxambig=0</em> and <em>maxhomop=8</em>. Since the data come seperated already we do not need an oligo file and all we have to do is loop the mothur <em>trim.seqs</em> command. You can run a bash or shell program to get all of this done with either <em>#!/bin/sh</em> or <em>#!/bin/bash</em>. So in a text editor:</p>
+<pre class="sh"><code>#!/bin/sh  
+for sample in $(ls *sra)  
+do  
+fastq-dump $sample  
+done
+&lt;br&gt;&lt;br&gt;
+for sample2 in $(ls *fastq)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
+rm *logfile  
+done
+&lt;br&gt;&lt;br&gt;
+for TRIM in $(ls SRR*.fasta)  
+do  
+QFILE=\${TRIM//fasta/qual}  
+/share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50, processors=8)&quot;  
+done  
+rm *.fastq</code></pre>
+<p>The next lines of code are used to combine the fasta file, create a names file with the mothur unique command, and create a combined group file for subsequent processing.</p>
+<pre class="bash"><code>cat *trim.fasta &gt; combined.trim.fasta  
+
+/share/scratch/schloss/mothur/mothur &quot;#unique.seqs(fasta=combined.trim.fasta)&quot;  
+
+grep -e '^&gt;' combined.trim.fasta &gt; test.fasta  
+sed 's/&gt;//' test.fasta &gt; test2.fasta  
+sed 's/\./_/g' test2.fasta &gt; test3.fasta  
+sed 's/_.*//' test3.fasta &gt; test4.fasta  
+paste -d&quot; &quot; test2.fasta test4.fasta &gt; combined.groups  
+exit 0</code></pre>
+<p>After this little program is run we follow the mothur 454 SOP as written and can use the following command to complete the processing using the put together <em>Escobar.batch</em> file and running mothur. Again like the Ross et al data set one final difference from the standardized mothur approach that was made was during the screen.seqs command after alignment a hard cutoff <em>minlength=200</em> and <em>maxlength=250</em> was used.</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Escobar.batch</code></pre>
+<p>That completes the processing for this data set. So far so good, no major problems. On to the next data set. <br><br></p>
 </div>
 <div id="zupancic-et-al.-2012" class="section level5">
 <h5><strong>Zupancic et al. 2012:</strong></h5>
-<p>This data set consisted of normal individuals from an Amish community living in Lancaster County, Pennsylvania. The paper for this data set can be found <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.00430526">here</a>. The project accession number in the SRA is SRP002465. We can download the entire data set again with the code mentioned above but with a few substitutions. Here we go…… <br><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002465/" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002465/</a>’‘<br><br> Now this data set included the sff files so we can use sffinfo function and start from the very start of the mothur 454 pipleine. Plus one for this data set so far. The below program was used and you can use either <em>#!/bin/sh</em> or <em>#!/bin/bash</em> and text editor to create it and then run it. Also you should be aware that this part of the processing will take a LONG time to get through. <br><br>’‘#!/bin/sh for sample in $(ls *sra)<br />do<br />sff-dump $sample<br />done <br><br> for sample2 in $(ls *sff)<br />do<br />/share/scratch/schloss/mothur/mothur “#sffinfo(sff=$sample2, flow=T)”<br />rm *logfile<br />done <br><br> for FLOW in $(ls *flow)<br />do<br />/share/scratch/schloss/mothur/mothur “#trim.flows(flow=$FLOW, processors=8)”<br />rm *logfile<br />done <br><br> for SHHH in $(ls *files)<br />do<br />/share/scratch/schloss/mothur/mothur “#shhh.flows(file=$SHHH, processors=8)”<br />rm *logfile<br />done <br><br> for TRIMS in $(ls *shhh.fasta)<br />do<br />NAMES=${TRIMS//fasta/names}<br />/share/scratch/schloss/mothur/mothur “#trim.seqs(fasta=$TRIMS, name=$NAMES, maxhomop=8, maxambig=0, minlength=200, processors=8)”<br />rm *logfile<br />done<br />exit 0’‘<br><br> Now, I had a few extra lines that combined the finalized files together but when I went to analyze these they gave some weird errors. So I needed to make a second program to sort through these errors and analyze the data separately still. One thing I noticed was that by using the standard workflow a large number of files ended up with 0 or very few sequences passing the quality filters. The other problem which I delayed dealing with in this data set was that many samples were done sequenced more than once. This in itself is not a problem but the sequence ID associated with these sequences from different files were the exact same and so were carbon copies. This wreaked havoc when I tried to combined the data together. But I’ll deal with that problem later. I’m just going to continue on with the pipeline with the file seperated. I will however, have to deal with this before the preclustering step. <br><br> So here is the second program used to keep processing the sequences separately rather than as one combined fasta file….. <br><br>’‘#!/bin/sh<br />#Align the fasta file to the SILVA database and create directories to move files into<br />mkdir good.fasta.complete<br />mkdir reference.files<br />mkdir logifle.complete<br />mv silva* reference files<br />mv trainset9* reference files<br />for sample2 in $(ls *.fasta)<br />do<br />/share/scratch/schloss/mothur/mothur “#align.seqs(fasta=$sample2, reference=reference.files/silva.bacteria.fasta, flip=t, processors=8)”<br />mv $sample2 good.fasta.complete<br />mv *logfile logfile.complete<br />done <br><br> #Screen the align sequences<br />mkdir align.complete<br />for sample3 in $(ls *.align)<br />do<br />/share/scratch/schloss/mothur/mothur “#screen.seqs(fasta=$sample3, end=6453, optimize=start, criteria=95, processors=8)”<br />mv $sample3 align.complete mv *logfile logfile.complete<br />done <br><br> #filter the screen sequences<br />mkdir align.good.complete<br />for sample4 in $(ls *good.align)<br />do<br />/share/scratch/schloss/mothur/mothur “#filter.seqs(fasta=$sample4, vertical=T, trump=., processors=8)”<br />mv $sample4 align.good.complete<br />mv *logfile logfile.complete<br />done<br />exit 0’‘<br><br> Right, now I need to pre cluster the data and I can’t get away with analyzing each file separately anymore. However, remember from up above there is something wierd going on in that the unique sequence ID are duplicated for many samples and there were a whole bunch of samples that did not survive quality filtering. Since some samples had two samples others had 6 samples to be fair I decided to take the first sample from an individual that had sequences in them (so greater than 0 MB). Now, this was done when I was still truly a novice in using shell scripting so I did this the “hard” way (i.e. the following method is pretty manual with very little automation so someone can make this more automated to improve on this process). Essentially if a sample had sequence in it the indivdiual study ID was assigned to the fasta file and stored in a new directory. Those that either had 0 MB after this we carried over and the next sequence ID file was used. This was done until all samples had an indivdiual ID. In my novice approach the only thing I automated was the original copying of the sequence ID file to a individual study ID file. I then visually checked the size and manually sorted the files into directories. From this I created a new list to run through. The lists that were used were <em>combined2</em>, <em>combined3</em>, <em>combined4</em>, <em>combined5</em>, <em>combined6</em>, <em>combined7</em>, and <em>combined8</em> and can be found in this same repository. <br><br> As an aside I have learned a lot about coding doing this project and if I were to do this analysis again for this study I would automate this by first generated the list of sequence IDs for each respective Indivdiual and then adding an argument that if the file size is larger than 0 MB to stop and move it. If it was 0 MB the program would move on to the next sequence ID file for that Indivdiual. <br><br> Now that this little problem is out of the way and I have been perfectly upfront with how I dealt with this lets move on to the final part of the processing pipeline for this data set. <br><br> For this step I took the individual sample ID named fasta files and created a list which I looped with a shell script to create a group file which can then be combined along with the fasta file. The code I used for this was: <br><br>’‘#!/bin/sh<br />mkdir trim.fasta.complete2<br />#Make loop to create a group file<br />groupN=“106 107 108 113 116 11 126 128 12 13 143 14 150 156 157 160 162 163 169 172 177 181 18 190 191 192 19 1 201 202 212 214 216 217 219 225 226 230 242 24 269 26 275 283 287 289 291 292 297 299 29 2 313 323 327 333 33 346 347 349 351 352 354 358 359 361 367 373 376 388 38 392 397 398 401 406 410 411 415 416 421 423 424 427 429 444 44 453 455 459 463 464 467 46 471 473 474 475 476 481 482 483 484 488 48 49 50 51 523 52 53 54 59 66 68 6 74 77 81 84 87 92 99 p0 p105 p108 p111 p112 p113 p114 p115 p116 p117 p118 p119 p120 p121 p122 p123 p124 p125 p126 p127 p130 p132 p133 p134 p135 p136 p137 p138 p139 p13 p140 p142 p145 p148 p14 p150 p151 p152 p153 p154 p155 p156 p158 p159 p15 p160 p16 p17 p22 p23 p24 p25 p26 p33 p34 p36 p37 p38 p3 p41 p42 p43 p44 p46 p49 p4 p57 p58 p63 p68 p69 p71 p72 p73 p74 p77 p79 p7 p81 p82 p85 p86 p87 p8 p90 p91 p95 p98”<br />for V in ${groupN}<br />do<br />grep -e’^&gt;‘${V}.fasta &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed “s/$/\t$V/” test2.fasta &gt; ${V}.groups<br />mv ${V}.fasta trim.fasta.complete2<br />rm test.fasta<br />rm test2.fasta<br />done <br><br> cd trim.fasta.complete2<br />cat *fasta &gt; combined.fasta<br />cat *groups &gt; combined.groups<br />/share/scratch/schloss/mothur/mothur “#unique.seqs(fasta=combined.fasta)”‘’ <br><br> Now that this has been completed we can create a batch file for the remaining commands and analyze the data altogether. One final comment is that for the <em>screen.seq</em> command I did not set a <em>maxhomop=8</em>. Due to the large loss (which you will see from the subsampling) from this data set I did not want to be picky. <br><br>’‘/share/scratch/schloss/mothur/mothur Zupancic.batch’’ <br><br> With that you should now be able to generate the subsample shared file that was used for the downstream analysis. This was a headache of a data set to work with. I think the next one will be better. At least I hope so…. <br><br></p>
+<p>This data set consisted of normal individuals from an Amish community living in Lancaster County, Pennsylvania. The paper for this data set can be found <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.00430526">here</a>. The project accession number in the SRA is SRP002465. We can download the entire data set again with the code mentioned above but with a few substitutions. Here we go……</p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002465/</code></pre>
+<p>Now this data set included the sff files so we can use sffinfo function and start from the very start of the mothur 454 pipleine. Plus one for this data set so far. The below program was used and you can use either <em>#!/bin/sh</em> or <em>#!/bin/bash</em> and text editor to create it and then run it. Also you should be aware that this part of the processing will take a LONG time to get through.</p>
+<pre class="bash"><code>#!/bin/bash
+
+# Make a directory to store the reference files
+mkdir reference.files
+mv silva.bacteria.fasta reference.files
+mv trainset9_032012.pds.tax reference.files
+mv trainset9_032012.pds.fasta reference.files
+
+# Read in the sra and make a fastq instead of a sff.
+mkdir completed.redo.sra
+mkdir logfile.completed
+
+for sample in $(ls *sra)
+do
+    fastq-dump $sample
+    mv $sample completed.redo.sra
+    mv *logfile logfile.completed 
+    
+done
+
+# Get the quality file and fasta information from the fastq
+mkdir completed.fastq
+
+for sample2 in $(ls *fastq)
+do
+    /share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
+    mv $sample2 completed.fastq
+    mv *logfile logfile.completed
+    
+done
+
+# Trim the fastas according to quality 
+mkdir first.trim.completed
+for Trimming in $(ls *fasta)
+do
+    Quality=${Trimming//fasta/qual}
+    /share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$Trimming, qfile=$Quality, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50)&quot;
+    mv $Trimming first.trim.completed
+    mv $Quality first.trim.completed
+    mv *logfile logfile.completed
+done
+
+mkdir scrap.fasta.completed
+mkdir scrap.qual.completed
+mkdir trim.qual.completed
+mv *scrap.qual scrap.qual.completed
+mv * scrap.fasta.completed
+mv *trim.qual trim.qual.completed</code></pre>
+<p>Now I realized moving through this data set that they had SRR’s for an individual sample so I decided to combine all these SRR’s together based on their sample ID. I used a python script that would make this possible. It takes to columns seperated by a tab and looks for common names from one column and inserts a user defined command at the beginning as well as any special symbols like /* or .fasta to the end of each column as needed. If you want to use the program it is found in my personal repository <a href="https://github.com/marcsze/pythonPrograms">here</a> called RepeatEdit.py. At any rate if you just want to copy and paste the command (it is long) you can see it below. The output of the RepeatEdit.py program will basically spit this out for you.</p>
+<pre class="bash"><code>#!/bin/bash
+
+cat SRR050640* SRR050641* &gt; p0_s2.fasta
+cat SRR050550* SRR050551* SRR050806* SRR050807* &gt; p0_s1.fasta
+cat SRR050558* SRR050559* SRR050814* SRR050815* SRR050732* SRR050733* &gt; p10_s1.fasta
+cat SRR050808* SRR050809* SRR050552* SRR050553* &gt; p100_s1.fasta
+cat SRR050724* SRR050725* &gt; p103_s1.fasta
+cat SRR050452* SRR050453* SRR050650* SRR050651* &gt; p115_s1.fasta
+cat SRR050456* SRR050457* &gt; p118_s1.fasta
+cat SRR050460* SRR050461* &gt; p120_s2.fasta
+cat SRR050556* SRR050557* SRR050812* SRR050813* &gt; p108_s1.fasta
+cat SRR050560* SRR050561* SRR050816* SRR050817* &gt; p111_s1.fasta
+cat SRR050642* SRR050643* &gt; p106_s2.fasta
+cat SRR050644* SRR050645* &gt; p112_s1.fasta
+cat SRR050648* SRR050649* &gt; p114_s1.fasta
+cat SRR050652* SRR050653* &gt; p119_s1.fasta
+cat SRR050728* SRR050729* &gt; p105_s1.fasta
+cat SRR050730* SRR050731* &gt; p105_s2.fasta
+cat SRR050554* SRR050555* SRR050810* SRR050811* &gt; p106_s1.fasta
+cat SRR050458* SRR050459* &gt; p120_s1.fasta
+cat SRR050464* SRR050465* &gt; p124_s1.fasta
+cat SRR050466* SRR050467* &gt; p125_s1.fasta
+cat SRR050470* SRR050471* &gt; p129_s1.fasta
+cat SRR050472* SRR050473* &gt; p130_s1.fasta
+cat SRR050476* SRR050477* &gt; p133_s1.fasta
+cat SRR050478* SRR050479* &gt; p134_s1.fasta
+cat SRR050482* SRR050483* &gt; p136_s1.fasta
+cat SRR050484* SRR050485* &gt; p137_s1.fasta
+cat SRR050488* SRR050489* &gt; p140_s1.fasta
+cat SRR050490* SRR050491* &gt; p142_s1.fasta
+cat SRR050494* SRR050495* &gt; p148_s1.fasta
+cat SRR050496* SRR050497* &gt; p149_s1.fasta
+cat SRR050500* SRR050501* &gt; p151_s1.fasta
+cat SRR050502* SRR050503* &gt; p152_s1.fasta
+cat SRR050522* SRR050523* &gt; p36_s1.fasta
+cat SRR050524* SRR050525* &gt; p39_s2.fasta
+cat SRR050528* SRR050529* &gt; p42_s1.fasta
+cat SRR050530* SRR050531* SRR050682* SRR050683* SRR095127* SRR095128* &gt; p44_s2.fasta
+cat SRR050564* SRR050565* SRR050820* SRR050821* &gt; p14_s1.fasta
+cat SRR050568* SRR050569* SRR050824* SRR050825* &gt; p17_s1.fasta
+cat SRR050572* SRR050573* SRR050828* SRR050829* &gt; p20_s1.fasta
+cat SRR050576* SRR050577* SRR050832* SRR050833* &gt; p3_s1.fasta
+cat SRR050580* SRR050581* SRR050764* SRR050765* SRR050836* SRR050837* &gt; p48_s1.fasta
+cat SRR050584* SRR050585* SRR050586* SRR050587* SRR050840* SRR050841* &gt; p4_s1.fasta
+cat SRR050660* SRR050661* &gt; p16_s2.fasta
+cat SRR050662* SRR050663* &gt; p18_s2.fasta
+cat SRR050736* SRR050737* &gt; p13_s1.fasta
+cat SRR050738* SRR050739* &gt; p13_s2.fasta
+cat SRR050538* SRR050539* &gt; p6_s2.fasta
+cat SRR050540* SRR050541* &gt; p72_s2.fasta
+cat SRR050582* SRR050583* SRR050766* SRR050767* SRR050838* SRR050839* &gt; p49_s1.fasta
+cat SRR050588* SRR050589* SRR050842* SRR050843* &gt; p50_s1.fasta
+cat SRR050592* SRR050593* SRR050846* SRR050847* &gt; p54_s1.fasta
+cat SRR050594* SRR050595* SRR050848* SRR050849* &gt; p55_s1.fasta
+cat SRR050598* SRR050599* SRR050852* SRR050853* &gt; p57_s1.fasta
+cat SRR050600* SRR050601* SRR050854* SRR050855* &gt; p61_s1.fasta
+cat SRR050604* SRR050605* SRR050858* SRR050859* &gt; p64_s1.fasta
+cat SRR050606* SRR050607* SRR050860* SRR050861* &gt; p6_s1.fasta
+cat SRR050610* SRR050611* SRR050864* SRR050865* &gt; p79_s1.fasta
+cat SRR050612* SRR050613* SRR050866* SRR050867* &gt; p7_s1.fasta
+cat SRR050616* SRR050617* SRR050870* SRR050871* &gt; p82_s1.fasta
+cat SRR050626* SRR050627* SRR050882* SRR050883* &gt; p8_s1.fasta
+cat SRR050666* SRR050667* &gt; p24_s1.fasta
+cat SRR050668* SRR050669* &gt; p25_s1.fasta
+cat SRR050672* SRR050673* &gt; p27_s1.fasta
+cat SRR050674* SRR050675* &gt; p37_s1.fasta
+cat SRR050678* SRR050679* &gt; p39_s1.fasta
+cat SRR050680* SRR050681* &gt; p43_s1.fasta
+cat SRR050602* SRR050603* SRR050686* SRR050687* SRR050856* SRR050857* &gt; p63_s1.fasta
+cat SRR050690* SRR050691* SRR050782* SRR050783* &gt; p69_s1.fasta
+cat SRR050694* SRR050695* &gt; p71_s2.fasta
+cat SRR050696* SRR050697* SRR050788* SRR050789* &gt; p72_s1.fasta
+cat SRR050700* SRR050701* &gt; p74_s2.fasta
+cat SRR050702* SRR050703* SRR050796* SRR050797* &gt; p77_s1.fasta
+cat SRR050706* SRR050707* &gt; p81_s2.fasta
+cat SRR050708* SRR050709* &gt; p82_s2.fasta
+cat SRR050740* SRR050741* &gt; p20_s2.fasta
+cat SRR050742* SRR050743* &gt; p22_s1.fasta
+cat SRR050746* SRR050747* &gt; p29_s1.fasta
+cat SRR050748* SRR050749* &gt; p29_s2.fasta
+cat SRR050752* SRR050753* &gt; p33_s1.fasta
+cat SRR050754* SRR050755* &gt; p38_s1.fasta
+cat SRR050758* SRR050759* &gt; p41_s1.fasta
+cat SRR050578* SRR050579* SRR050760* SRR050761* SRR050834* SRR050835* &gt; p46_s1.fasta
+cat SRR050772* SRR050773* &gt; p62_s1.fasta
+cat SRR050774* SRR050775* &gt; p62_s2.fasta
+cat SRR050778* SRR050779* &gt; p64_s2.fasta
+cat SRR050688* SRR050689* SRR050780* SRR050781* &gt; p68_s1.fasta
+cat SRR050698* SRR050699* SRR050790* SRR050791* &gt; p73_s1.fasta
+cat SRR050794* SRR050795* &gt; p75_s1.fasta
+cat SRR050570* SRR050571* SRR050826* SRR050827* &gt; p18_s1.fasta
+cat SRR050504* SRR050505* &gt; p153_s1.fasta
+cat SRR050506* SRR050507* &gt; p154_s1.fasta
+cat SRR050510* SRR050511* &gt; p156_s1.fasta
+cat SRR050512* SRR050513* &gt; p158_s1.fasta
+cat SRR050518* SRR050519* &gt; p161_s1.fasta
+cat SRR050534* SRR050535* &gt; p48_s2.fasta
+cat SRR050546* SRR050547* &gt; p87_s2.fasta
+cat SRR050548* SRR050549* &gt; p90_s2.fasta
+cat SRR050620* SRR050621* SRR050876* SRR050877* &gt; p86_s1.fasta
+cat SRR050622* SRR050623* SRR050800* SRR050801* SRR050878* SRR050879* &gt; p87_s1.fasta
+cat SRR050628* SRR050629* SRR050884* SRR050885* &gt; p90_s1.fasta
+cat SRR050630* SRR050631* SRR050886* SRR050887* &gt; p91_s1.fasta
+cat SRR050634* SRR050635* SRR050890* SRR050891* &gt; p95_s1.fasta
+cat SRR050636* SRR050637* SRR050892* SRR050893* &gt; p97_s1.fasta
+cat SRR050544* SRR050545* SRR050710* SRR050711* &gt; p85_s2.fasta
+cat SRR050716* SRR050717* &gt; p91_s2.fasta
+cat SRR050720* SRR050721* &gt; p98_s1.fasta
+cat SRR050722* SRR050723* &gt; p98_s2.fasta
+cat SRR050804* SRR050805* &gt; p94_s2.fasta
+cat SRR050608* SRR050609* SRR050862* SRR050863* &gt; p78_s1.fasta
+cat SRR050872* SRR050873* &gt; p83_s1.fasta
+cat SRR050624* SRR050625* SRR050880* SRR050881* &gt; p88_s1.fasta
+cat SRR050638* SRR050639* SRR050894* SRR050895* &gt; p99_s1.fasta
+cat SRR095005* SRR095006* SRR095053* SRR095054* SRR095125* SRR095126* &gt; 177.fasta
+cat SRR095007* SRR095008* SRR095055* SRR095056* SRR095101* SRR095102* &gt; 186.fasta
+cat SRR095011* SRR095012* SRR095059* SRR095060* &gt; 211.fasta
+cat SRR095013* SRR095014* SRR095061* SRR095062* &gt; 213.fasta
+cat SRR095017* SRR095018* SRR095065* SRR095066* &gt; 224.fasta
+cat SRR095021* SRR095022* SRR095069* SRR095070* SRR095105* SRR095106* &gt; 238.fasta
+cat SRR095001* SRR095002* SRR095047* SRR095048* &gt; 102.fasta
+cat SRR095009* SRR095010* SRR095057* SRR095058* &gt; 208.fasta
+cat SRR095095* SRR095096* &gt; 168.fasta
+cat SRR095099* SRR095100* &gt; 179.fasta
+cat SRR095107* SRR095108* &gt; 259.fasta
+cat SRR095109* SRR095110* SRR095147* SRR095148* &gt; 283.fasta
+cat SRR095133* SRR095134* &gt; 116.fasta
+cat SRR095135* SRR095136* &gt; 126.fasta
+cat SRR095139* SRR095140* &gt; 162.fasta
+cat SRR095141* SRR095142* &gt; 269.fasta
+cat SRR095145* SRR095146* &gt; 275.fasta
+cat SRR095149* SRR095150* &gt; 297.fasta
+cat SRR095253* SRR095254* &gt; 128.fasta
+cat SRR095257* SRR095258* &gt; 157.fasta
+cat SRR095261* SRR095262* &gt; 169.fasta
+cat SRR095269* SRR095270* &gt; 212.fasta
+cat SRR095273* SRR095274* &gt; 226.fasta
+cat SRR095275* SRR095276* &gt; 242.fasta
+cat SRR095369* SRR095370* SRR095456* SRR095457* &gt; 107.fasta
+cat SRR095371* SRR095372* &gt; 113.fasta
+cat SRR095375* SRR095376* SRR095424* SRR095425* &gt; 11.fasta
+cat SRR095377* SRR095378* SRR095434* SRR095435* &gt; 219.fasta
+cat SRR095381* SRR095382* SRR095482* SRR095483* &gt; 12.fasta
+cat SRR095373* SRR095374* SRR095387* SRR095388* &gt; 13.fasta
+cat SRR095393* SRR095394* SRR095610* SRR095611* &gt; 150.fasta
+cat SRR095395* SRR095396* SRR095492* SRR095493* &gt; 156.fasta
+cat SRR095401* SRR095402* SRR095458* SRR095459* &gt; 287.fasta
+cat SRR095412* SRR095413* SRR095440* SRR095441* &gt; 192.fasta
+cat SRR095414* SRR095415* SRR095430* SRR095431* &gt; 217.fasta
+cat SRR095418* SRR095419* SRR095438* SRR095439* &gt; 1.fasta
+cat SRR095420* SRR095421* SRR095598* SRR095599* &gt; 201.fasta
+cat SRR095428* SRR095429* SRR095452* SRR095453* &gt; 216.fasta
+cat SRR095436* SRR095437* SRR095502* SRR095503* &gt; 230.fasta
+cat SRR095379* SRR095380* SRR095460* SRR095461* &gt; 289.fasta
+cat SRR095442* SRR095443* SRR095466* SRR095467* &gt; 2.fasta
+cat SRR095426* SRR095427* SRR095532* SRR095533* &gt; 214.fasta
+cat SRR095391* SRR095392* SRR095620* SRR095621* &gt; 14.fasta
+cat SRR095031* SRR095032* SRR095079* SRR095080* &gt; 392.fasta
+cat SRR095033* SRR095034* SRR095081* SRR095082* SRR095121* SRR095122* &gt; 397.fasta
+cat SRR095037* SRR095038* SRR095085* SRR095086* SRR095123* SRR095124* &gt; 453.fasta
+cat SRR095027* SRR095028* SRR095075* SRR095076* &gt; 327.fasta
+cat SRR095111* SRR095112* &gt; 313.fasta
+cat SRR095115* SRR095116* &gt; 323.fasta
+cat SRR095119* SRR095120* &gt; 388.fasta
+cat SRR095155* SRR095156* &gt; 333.fasta
+cat SRR095159* SRR095160* &gt; 358.fasta
+cat SRR095161* SRR095162* &gt; 381.fasta
+cat SRR095167* SRR095168* &gt; 459.fasta
+cat SRR095169* SRR095170* &gt; 46.fasta
+cat SRR095173* SRR095174* &gt; 481.fasta
+cat SRR095175* SRR095176* SRR095177* SRR095178* SRR095179* SRR095180* SRR095181* SRR095182* SRR095183* SRR095184* &gt; 482.fasta
+cat SRR095185* SRR095186* SRR095187* SRR095188* SRR095189* SRR095190* SRR095191* SRR095192* SRR095193* SRR095194* SRR095195* SRR095196* SRR095197* SRR095198* SRR095199* SRR095200* &gt; 49.fasta
+cat SRR095283* SRR095284* &gt; 354.fasta
+cat SRR095291* SRR095292* &gt; 406.fasta
+cat SRR095293* SRR095294* &gt; 416.fasta
+cat SRR095299* SRR095300* &gt; 444.fasta
+cat SRR095301* SRR095302* &gt; 44.fasta
+cat SRR095307* SRR095308* SRR095309* SRR095310* SRR095311* SRR095312* SRR095313* SRR095314* SRR095315* SRR095316* SRR095317* SRR095318* SRR095319* SRR095320* &gt; 488.fasta
+cat SRR095321* SRR095322* SRR095323* SRR095324* SRR095325* SRR095326* SRR095327* SRR095328* SRR095329* SRR095330* SRR095331* SRR095332* SRR095333* SRR095334* SRR095335* SRR095336* SRR095337* SRR095338* SRR095339* SRR095340* SRR095341* SRR095342* SRR095343* SRR095344* SRR095345* SRR095346* SRR095347* SRR095348* SRR095349* SRR095350* SRR095351* SRR095352* SRR095353* SRR095354* SRR095355* SRR095356* SRR095357* SRR095358* SRR095359* SRR095360* SRR095361* SRR095362* &gt; 50.fasta
+cat SRR095403* SRR095404* SRR095572* SRR095573* SRR095574* SRR095575* SRR095576* SRR095577* &gt; 48.fasta
+cat SRR095405* SRR095406* SRR095560* SRR095561* &gt; 473.fasta
+cat SRR095432* SRR095433* SRR095540* SRR095541* &gt; 445.fasta
+cat SRR095446* SRR095447* SRR095514* SRR095515* &gt; 395.fasta
+cat SRR095450* SRR095451* SRR095550* SRR095551* &gt; 463.fasta
+cat SRR095454* SRR095455* SRR095518* SRR095519* &gt; 401.fasta
+cat SRR095470* SRR095471* SRR095500* SRR095501* &gt; 367.fasta
+cat SRR095448* SRR095449* SRR095472* SRR095473* &gt; 308.fasta
+cat SRR095476* SRR095477* SRR095478* SRR095479* &gt; 316.fasta
+cat SRR095486* SRR095487* &gt; 346.fasta
+cat SRR095490* SRR095491* SRR095568* SRR095569* &gt; 349.fasta
+cat SRR095494* SRR095495* SRR095548* SRR095549* &gt; 352.fasta
+cat SRR095480* SRR095481* SRR095504* SRR095505* &gt; 373.fasta
+cat SRR095383* SRR095384* SRR095508* SRR095509* &gt; 376.fasta
+cat SRR095522* SRR095523* &gt; 410.fasta
+cat SRR095524* SRR095525* &gt; 411.fasta
+cat SRR095528* SRR095529* SRR095542* SRR095543* &gt; 424.fasta
+cat SRR095530* SRR095531* SRR095536* SRR095537* &gt; 427.fasta
+cat SRR095534* SRR095535* SRR095538* SRR095539* &gt; 429.fasta
+cat SRR095546* SRR095547* SRR095590* SRR095591* &gt; 455.fasta
+cat SRR095516* SRR095517* SRR095556* SRR095557* &gt; 398.fasta
+cat SRR095564* SRR095565* SRR095633* SRR095634* &gt; 475.fasta
+cat SRR095474* SRR095475* SRR095570* SRR095571* &gt; 483.fasta
+cat SRR095562* SRR095563* SRR095600* SRR095601* &gt; 474.fasta
+cat SRR050450* SRR050451* SRR095255* SRR095256* &gt; p113_s1.fasta
+cat SRR050516* SRR050517* SRR095289* SRR095290* &gt; p160_s1.fasta
+cat SRR050574* SRR050575* SRR095297* SRR095298* &gt; p34_s1.fasta
+cat SRR095019* SRR095020* SRR095067* SRR095068* &gt; 234.fasta
+cat SRR095039* SRR095040* SRR095087* SRR095088* &gt; 59.fasta
+cat SRR095041* SRR095042* SRR095089* SRR095090* &gt; 66.fasta
+cat SRR095045* SRR095046* SRR095093* SRR095094* &gt; 84.fasta
+cat SRR050566* SRR050567* SRR095051* SRR095052* SRR095097* SRR095098* &gt; p15_s1.fasta
+cat SRR095113* SRR095114* SRR095151* SRR095152* &gt; p58_s1.fasta
+cat SRR095129* SRR095130* &gt; 523.fasta
+cat SRR095165* SRR095166* &gt; 423.fasta
+cat SRR095201* SRR095202* SRR095203* SRR095204* SRR095205* SRR095206* SRR095207* SRR095208* SRR095209* SRR095210* SRR095211* SRR095212* &gt; 51.fasta
+cat SRR095213* SRR095214* SRR095215* SRR095216* SRR095217* SRR095218* SRR095219* SRR095220* SRR095221* SRR095222* SRR095223* SRR095224* SRR095225* SRR095226* SRR095227* SRR095228* SRR095229* SRR095230* SRR095231* SRR095232* SRR095233* SRR095234* SRR095235* SRR095236* SRR095237* SRR095238* SRR095239* SRR095240* SRR095241* SRR095242* SRR095243* SRR095244* SRR095245* SRR095246* &gt; 52.fasta
+cat SRR095249* SRR095250* &gt; 87.fasta
+cat SRR095265* SRR095266* &gt; 190.fasta
+cat SRR095267* SRR095268* &gt; p127_s1.fasta
+cat SRR095287* SRR095288* &gt; p138_s1.fasta
+cat SRR095303* SRR095304* &gt; p123_s1.fasta
+cat SRR095363* SRR095364* &gt; p121_s1.fasta
+cat SRR095365* SRR095366* &gt; 68.fasta
+cat SRR095397* SRR095398* &gt; 160.fasta
+cat SRR095410* SRR095411* SRR095510* SRR095511* &gt; 191.fasta
+cat SRR095444* SRR095445* &gt; 24.fasta
+cat SRR095468* SRR095469* SRR095631* SRR095632* &gt; 92.fasta
+cat SRR095552* SRR095553* SRR095558* SRR095559* &gt; 464.fasta
+cat SRR095580* SRR095581* SRR095602* SRR095603* &gt; 53.fasta
+cat SRR095582* SRR095583* SRR095584* SRR095585* SRR095586* SRR095587* SRR095594* SRR095595* &gt; 54.fasta
+cat SRR095596* SRR095597* SRR095604* SRR095605* &gt; 61.fasta
+cat SRR095608* SRR095609* SRR095624* SRR095625* &gt; 83.fasta
+cat SRR095612* SRR095613* SRR095630* &gt; 77.fasta
+cat SRR095614* SRR095615* SRR095618* SRR095619* &gt; 7.fasta
+cat SRR095622* SRR095623* SRR095628* SRR095629* &gt; 81.fasta
+
+mkdir trim.fasta.renamed.complete
+mv *trim.fasta trim.fasta.renamed.complete</code></pre>
+<p>So after this I need to make a group file and then combine the fastas and group files together.</p>
+<pre class="bash"><code>#!/bin/bash
+
+
+
+groupN=&quot;102 107 113 116 11 126 128 12 13 14 150 156 157 160 162 168 169 177 179 186 190 191 192 1 201 208 211 212 213 214 216 217 219 224 226 230 234 238 242 24 259 269 275 283 287 289 297 2 308 313 316 323 327 333 346 349 352 354 358 367 373 376 381 388 392 395 397 398 401 406 410 411 416 423 424 427 429 444 445 44 453 455 459 463 464 46 473 474 475 481 482 483 488 48 49 50 51 523 52 53 54 59 61 66 68 77 7 81 83 84 87 92 p0_s1 p0_s2 p100_s1 p103_s1 p105_s1 p105_s2 p106_s1 p106_s2 p108_s1 p10_s1 p111_s1 p112_s1 p113_s1 p114_s1 p115_s1 p118_s1 p119_s1 p120_s1 p120_s2 p121_s1 p123_s1 p124_s1 p125_s1 p127_s1 p129_s1 p130_s1 p133_s1 p134_s1 p136_s1 p137_s1 p138_s1 p13_s1 p13_s2 p140_s1 p142_s1 p148_s1 p149_s1 p14_s1 p151_s1 p152_s1 p153_s1 p154_s1 p156_s1 p158_s1 p15_s1 p160_s1 p161_s1 p16_s2 p17_s1 p18_s1 p18_s2 p20_s1 p20_s2 p22_s1 p24_s1 p25_s1 p27_s1 p29_s1 p29_s2 p33_s1 p34_s1 p36_s1 p37_s1 p38_s1 p39_s1 p39_s2 p3_s1 p41_s1 p42_s1 p43_s1 p44_s2 p46_s1 p48_s1 p48_s2 p49_s1 p4_s1 p50_s1 p54_s1 p55_s1 p57_s1 p58_s1 p61_s1 p62_s1 p62_s2 p63_s1 p64_s1 p64_s2 p68_s1 p69_s1 p6_s1 p6_s2 p71_s2 p72_s1 p72_s2 p73_s1 p74_s2 p75_s1 p77_s1 p78_s1 p79_s1 p7_s1 p81_s2 p82_s1 p82_s2 p83_s1 p85_s2 p86_s1 p87_s1 p87_s2 p88_s1 p8_s1 p90_s1 p90_s2 p91_s1 p91_s2 p94_s2 p95_s1 p97_s1 p98_s1 p98_s2 p99_s1&quot;
+
+for V in ${groupN}
+do
+    grep -e '^&gt;' ${V}.fasta &gt; test.fasta
+    sed 's/&gt;//' test.fasta &gt; test2.fasta
+    sed &quot;s/$/\t$V/&quot; test2.fasta &gt; ${V}.groups
+    rm test.fasta
+    rm test2.fasta
+done 
+
+cat *fasta &gt; combined.fasta
+cat *groups &gt; combined.groups
+</code></pre>
+<p>From here things get pretty simple. All you now need to do is run mothur with the provided batch file and everything should work….</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Zupancic.batch</code></pre>
+<p>With that you should now be able to generate the subsample shared file that was used for the downstream analysis. This was a headache of a data set to work with. I think the next one will be better. At least I hope so…. <br><br></p>
 </div>
 <div id="yatsunenko-et-al.-2012" class="section level5">
 <h5><strong>Yatsunenko et al. 2012:</strong></h5>
-<p>This data set was another famous one looking at the microbiome of indivdiuals at different geographical locations and pretty different diets. The link to the paper is <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3376388/">here</a>. A couple problems from a data processing and sequence clean up point of view is that they used a HiSeq, single end, 100bp total length, sequencing run. This wreaked absolute havoc with a lot of the downstream steps mostly with trying to figure out a way to reduce the artificial diversity within the files. Oh… and the data was not on a public database but stored on MG-RAST. I had a lot trouble downloading the data on command line all at once (maybe I’m just not smart enough to do it). So I had to manually download the sequence files.Thats right I am just a glutton for punishment. After you have downloaded the files the first part of the code is: <br><br> ‘’#!/bin/sh<br />mkdir fna.done<br />mkdir logfiles.done<br />mkdir bad.accnos.done <br><br> mkdir good.fna.done<br />for sample in $(ls *.fna)<br />do<br />/share/scratch/schloss/mothur/mothur “#align.seqs(fasta=$sample, reference=silva.bacteria.fasta, processors=8)”<br />mv $sample good.fna.done<br />mv *logfile logfiles.done<br />done’‘<br><br> For the next code it might be best to just double check that the start and end are what is written here. To make it go faster I made a custom pcr.seqs based on the start and end of the sequences on the aligned file. It shouldn’t make a difference but…..you never know. <br><br>’‘#!/bin/sh<br />mkdir align.done<br />for sample2 in $(ls *.align)<br />do<br />/share/scratch/schloss/mothur/mothur “#screen.seqs(fasta=$sample2, start=8, end=2448, maxhomop=8, processors=8)”<br />mv $sample2 align.done<br />mv *logfile logfiles.done<br />done <br><br> mkdir good.align.done<br />for sample3 in $(ls *good.align)<br />do<br />/share/scratch/schloss/mothur/mothur “#filter.seqs(fasta=$sample3, vertical=T, trump=., processors=8)”<br />mv $sample3 good.align.done<br />mv *logfile logfiles.done<br />done <br><br> mkdir completed.good.groups<br />for sample in $(ls *.good.filter.fasta)<br />do<br />grep -e’^&gt;‘$sample &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed ’s/_.*//‘test2.fasta &gt; test3.fasta<br />paste -d“\t” test2.fasta test3.fasta &gt; ${sample}.groups<br />rm test.fasta<br />rm test2.fasta<br />rm test3.fasta<br />mv ~/Yatsunenko.Nature/${sample}.groups ~/Yatsunenko.Nature/completed.good.groups<br />done <br><br> From here I thought I might be able to get away with combining the data set and running everything together. Well that was not the case since it is just too large for the memory I have readily available without having the job restarting. The plan is to seperate everything back out again and run the <em>chimera.uchime</em> function. Then combine them and run the <em>pre.cluster</em> function. The code below shows what was used for this part: <br><br>’’#!/bin/sh<br />cat <em>fasta &gt; combined.fasta<br />cat </em>groups &gt; combined.groups<br />/share/scratch/schloss/mothur/mothur “#unique.seqs(fasta=combined.fasta)”<br />/share/scratch/schloss/mothur/mothur Yatsunenko.batch<br />done <br><br></p>
+<p>This data set was another famous one looking at the microbiome of indivdiuals at different geographical locations and pretty different diets. The link to the paper is <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3376388/">here</a>. A couple problems from a data processing and sequence clean up point of view is that they used a HiSeq, single end, 100bp total length, sequencing run. This wreaked absolute havoc with a lot of the downstream steps mostly with trying to figure out a way to reduce the artificial diversity within the files. Oh… and the data was not on a public database but stored on MG-RAST. I had a lot trouble downloading the data on command line all at once (maybe I’m just not smart enough to do it). So I had to manually download the sequence files.Thats right I am just a glutton for punishment. After you have downloaded the files the first part of the code is:</p>
+<pre class="bash"><code>#!/bin/sh  
+mkdir fna.done  
+mkdir logfiles.done  
+mkdir bad.accnos.done
+
+# Algin the sequences
+mkdir good.fna.done  
+for sample in $(ls *.fna)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#align.seqs(fasta=\$sample, reference=silva.bacteria.fasta, processors=8)&quot;  
+mv $sample good.fna.done  
+mv *logfile logfiles.done  
+done
+</code></pre>
+<p>For the next code it might be best to just double check that the start and end are what is written here. To make it go faster I made a custom pcr.seqs based on the start and end of the sequences on the aligned file. It shouldn’t make a difference but…..you never know.</p>
+<pre class="bash"><code>#!/bin/sh  
+
+# Screen the sequences to the same start and end
+mkdir align.done  
+for sample2 in $(ls *.align)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$sample2, start=8, end=2448, maxhomop=8, processors=8)&quot;  
+mv $sample2 align.done  
+mv *logfile logfiles.done  
+done
+
+# Filter the sequences
+mkdir good.align.done  
+for sample3 in \$(ls \*good.align)  
+do  
+/share/scratch/schloss/mothur/mothur &quot;#filter.seqs(fasta=\$sample3, vertical=T, trump=., processors=8)&quot;  
+mv \$sample3 good.align.done  
+mv \*logfile logfiles.done  
+done
+
+# Create a groups file and combine the fasta and groups together
+mkdir completed.good.groups  
+for sample in \$(ls \*.good.filter.fasta)  
+do  
+grep -e '^&gt;' \$sample &gt; test.fasta  
+sed 's/&gt;//' test.fasta &gt; test2.fasta  
+sed 's/_.*//' test2.fasta &gt; test3.fasta  
+paste -d&quot;\t&quot; test2.fasta test3.fasta &gt; \${sample}.groups  
+
+rm test.fasta  
+rm test2.fasta  
+rm test3.fasta  
+mv ~/Yatsunenko.Nature/${sample}.groups ~/Yatsunenko.Nature/completed.good.groups   
+
+done</code></pre>
+<p>From here I thought I might be able to get away with combining the data set and running everything together. Well that was not the case since it is just too large for the memory I have readily available without having the job restarting. The plan is to seperate everything back out again and run the <em>chimera.uchime</em> function. Then combine them and run the <em>pre.cluster</em> function. The code below shows what was used for this part:</p>
+<pre class="bash"><code>#!/bin/sh  
+cat *fasta &gt; combined.fasta  
+cat *groups &gt; combined.groups  
+
+/share/scratch/schloss/mothur/mothur &quot;#unique.seqs(fasta=combined.fasta)&quot;    
+/share/scratch/schloss/mothur/mothur Yatsunenko.batch  
+
+done</code></pre>
 <p><br><br></p>
 </div>
 <div id="human-microbiome-project-hmp-2011" class="section level5">
@@ -106,19 +629,158 @@ img {
 </div>
 <div id="nam-et-al.-2011" class="section level5">
 <h5><strong>Nam, et al. 2011:</strong></h5>
-<p>This study recruited 20 individuals that were from the area surronding Kyung Hee University in South Korea and can be found <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0022109">here</a>. The data from this project can be found under the accession number PRJDA6057 and we downloaded the data from DRR000776. There is some small difference to the wget, which is mostly associated with the directory where the data is stored. From here you can run the SRA tool kit command to get the sff file. Once this is done you can then run mothur with the batch file and get the sub sample shared file that was used in this analysis. We have also provided the oligo file in this repository <em>korean6.oligos</em> that was used so that you can easily use it on this data set. <br><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/DRR/DRR000/DRR000776" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/DRR/DRR000/DRR000776</a> <br><br> sff-dump DRR000776.sra <br><br> /share/scratch/schloss/mothur/mothur Nam.batch’’ <br><br> Compared to the previous data sets this was one of the most straight forward to actually process. <br><br></p>
+<p>This study recruited 20 individuals that were from the area surronding Kyung Hee University in South Korea and can be found <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0022109">here</a>. The data from this project can be found under the accession number PRJDA6057 and we downloaded the data from DRR000776. There is some small difference to the wget, which is mostly associated with the directory where the data is stored. From here you can run the SRA tool kit command to get the sff file. Once this is done you can then run mothur with the batch file and get the sub sample shared file that was used in this analysis. We have also provided the oligo file in this repository <em>korean6.oligos</em> that was used so that you can easily use it on this data set.</p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/DRR/DRR000/DRR000776
+
+sff-dump DRR000776.sra
+
+/share/scratch/schloss/mothur/mothur Nam.batch''
+</code></pre>
+<p>Compared to the previous data sets this was one of the most straight forward to actually process. <br><br></p>
 </div>
 <div id="wu-et-al.-2011" class="section level5">
 <h5><strong>Wu, et al. 2011:</strong></h5>
-<p>This study was published in Science using the COMBO data set and can be found <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3368382/">here</a>. The investigators were mostly interested in investigating dietary patterns its influence of gur microbial enterotypes. The data for this project can be found on the SRA website under the Accession number SRP002424. So with a little modification we can use wget again to get the data. <br><br> ‘’wget -r -np -nd -k <a href="ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002424/" class="uri">ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002424/</a>’‘<br><br> From here there was a program that was run to loop through a few of the mothur functions on each individual file. Since they are already seperated by indivdiual we don’t need the oligo file. So here we go…… <br><br>’‘#!/bin/sh<br />mkdir sra.complete<br />#run first loop which will extract sff files<br />for sample in $(ls *sra)<br />do<br />sff-dump $sample<br />mv $sample sra.complete <br><br> #create new directories for logfiles and sff’s that are complete.<br />mkdir logfile.complete<br />mkdir sff.complete<br />#Extract info from sff files<br />for sample2 in $(ls *sff)<br />do<br />/share/scratch/schloss/mothur/mothur “#sffinfo(sff=$sample2, flow=T)”<br />mv $sample2 sff.complete<br />mv *logfile logfile.complete<br />done <br><br> mkdir flow.complete<br />#Trim respective flow files<br />for FLOW in $(ls *flow)<br />do<br />/share/scratch/schloss/mothur/mothur “#trim.flows(flow=$FLOW, processors=8)”<br />mv $FLOW flow.complete<br />mv *logfile logfile.complete<br />done <br><br> mkdir file.complete<br />#Make loop to run the shhh.flow and move completed sample to another directory<br />for SHHH in $(ls *files)<br />do<br />/share/scratch/schloss/mothur/mothur “#shhh.flows(file=$SHHH, processors=8)”<br />mv $SHHH file.complete<br />mv *logfile logfile.complete<br />done <br><br> mkdir shhh.fasta.complete<br />for TRIMS in $(ls *shhh.fasta)<br />do<br />NAMES=${TRIMS//fasta/names}<br />/share/scratch/schloss/mothur/mothur “#trim.seqs(fasta=$TRIMS, name=$NAMES, maxhomop=8, minlength=200, processors=8)”<br />mv $TRIMS shhh.fasta.complete<br />mv *logfile logfile.complete’‘<br /><br><br> So for the next part I needed to make a group file so I renamed the fasta file to represent the sampleID label so that I could with more ease create the labels I needed within the group file. The code for it is…. <br><br>’‘samples=“SRR327637 SRR327638 SRR327639 SRR327640 SRR327641 SRR327642 SRR327643 SRR327644 SRR327645 SRR327646 SRR327647 SRR327648 SRR327649 SRR327650 SRR327651 SRR327652 SRR327653 SRR327654 SRR327655 SRR327656 SRR327657 SRR327658 SRR327659 SRR327660 SRR327661 SRR327662 SRR327663 SRR327664 SRR327665 SRR327666 SRR327667 SRR327668 SRR327669 SRR327670 SRR327671 SRR327672 SRR327673 SRR327674 SRR327675 SRR327676 SRR327677 SRR327678 SRR327679 SRR327680 SRR327681 SRR327682 SRR327683 SRR327684 SRR327685 SRR327686 SRR327687 SRR327688 SRR327689 SRR327690 SRR327691 SRR327692 SRR327693 SRR327694 SRR327695 SRR327696 SRR327697 SRR327698 SRR327699 SRR327700 SRR327701” <br><br> for V in ${samples}<br />do<br />grep -e’^&gt;‘${V}.shhh.trim.good.filter.fasta &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed “s/$/\t$V/” test2.fasta &gt; ${V}.groups<br />mv ${V}.shhh.trim.good.filter.fasta filter.fasta.complete<br />rm test.fasta<br />rm test2.fasta<br />echo $V<br />done’‘<br><br> From here you can go to the individual folders and find the final version of the respective fasta, names, and groups files for every indivdiual and combine them into a single larger file. In essence you don’t need the names file since mothur will re-generate one when you run the <em>unique.seqs</em> command. This was the route that I opted for since it meant slightly less typing. So the only files that I needed to combine are the fasta and groups files. <br><br>’‘cat *trim.good.filter.fasta &gt; combined.fasta’‘<br />’‘cat *groups &gt; combined.groups’‘<br><br> After you have done this you can run a batch file with mothur and that should generate the subsample shared file that we used for this anlaysis. We lose a large number of samples like in the Zupancic data set since we are subsampling to 1000. We choose 1000 since it is an arbitrary standard many use but also because we wanted to set a standardized lowest vaule to subsample for that we can hold every data set to. Anyways by running the final command you should get the files needed to all the downstream analysis. <br><br>’‘/share/scratch/schloss/mothur/mothur Wu.batch’’ <br><br></p>
+<p>This study was published in Science using the COMBO data set and can be found <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC3368382/">here</a>. The investigators were mostly interested in investigating dietary patterns its influence of gur microbial enterotypes. The data for this project can be found on the SRA website under the Accession number SRP002424. So with a little modification we can use wget again to get the data.</p>
+<pre class="bash"><code>wget -r -np -nd -k ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002424/</code></pre>
+<p>From here there was a program that was run to loop through a few of the mothur functions on each individual file. Since they are already seperated by indivdiual we don’t need the oligo file. So here we go……</p>
+<pre class="bash"><code>#!/bin/bash
+
+# Make a directory to store the reference files
+mkdir reference.files
+mv silva.bacteria.fasta reference.files
+mv trainset9_032012.pds.tax reference.files
+mv trainset9_032012.pds.fasta reference.files
+
+# Read in the sra and make a fastq instead of a sff.
+mkdir completed.redo.sra
+mkdir logfile.completed
+
+for sample in $(ls *sra)
+do
+    fastq-dump $sample
+    mv $sample completed.redo.sra
+    mv *logfile logfile.completed 
+    
+done
+
+# Get the quality file and fasta information from the fastq
+mkdir completed.fastq
+
+for sample2 in $(ls *fastq)
+do
+    /share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
+    mv $sample2 completed.fastq
+    mv *logfile logfile.completed
+    
+done
+
+# Trim the fastas according to quality 
+mkdir first.trim.completed
+for Trimming in $(ls *fasta)
+do
+    Quality=${Trimming//fasta/qual}
+    /share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$Trimming, qfile=$Quality, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50)&quot;
+    mv $Trimming first.trim.completed
+    mv $Quality first.trim.completed
+    mv *logfile logfile.completed
+done
+
+mkdir scrap.fasta.completed
+mkdir scrap.qual.completed
+mkdir trim.qual.completed
+mv *scrap.qual scrap.qual.completed
+mv *scrap.fasta scrap.fasta.completed
+mv *trim.qual trim.qual.completed  
+</code></pre>
+<p>So for the next part I needed to make a group file so I renamed the fasta file to represent the sampleID label so that I could with more ease create the labels I needed within the group file. The code for it is….</p>
+<pre class="bash"><code>#!/bin/bash
+
+groupN=&quot;SRR327637 SRR327638 SRR327639 SRR327640 SRR327641 SRR327642 SRR327643 SRR327644 SRR327645 SRR327646 SRR327647 SRR327648 SRR327649 SRR327650 SRR327651 SRR327652 SRR327653 SRR327654 SRR327655 SRR327656 SRR327657 SRR327658 SRR327659 SRR327660 SRR327661 SRR327662 SRR327663 SRR327664 SRR327665 SRR327666 SRR327667 SRR327668 SRR327669 SRR327670 SRR327671 SRR327672 SRR327673 SRR327674 SRR327675 SRR327676 SRR327677 SRR327678 SRR327679 SRR327680 SRR327681 SRR327682 SRR327683 SRR327684 SRR327685 SRR327686 SRR327687 SRR327688 SRR327689 SRR327690 SRR327691 SRR327692 SRR327693 SRR327694 SRR327695 SRR327696 SRR327697 SRR327698 SRR327699 SRR327700 SRR327701&quot;
+
+
+for V in ${groupN}
+do
+    grep -e '^&gt;' ${V}.trim.fasta &gt; test.fasta
+    sed 's/&gt;//' test.fasta &gt; test2.fasta
+    sed &quot;s/$/\t$V/&quot; test2.fasta &gt; ${V}.groups
+    rm test.fasta
+    rm test2.fasta
+done 
+
+cat *fasta &gt; combined.fasta
+cat *groups &gt; combined.groups
+</code></pre>
+<p>After you have done this you can run a batch file with mothur and that should generate the subsample shared file that we used for this anlaysis.</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Wu.batch</code></pre>
+<p><br><br></p>
 </div>
 <div id="arumugam-et-al.-2010-metahit" class="section level5">
 <h5><strong>Arumugam, et al. 2010 (MetaHit):</strong></h5>
-<p>We only used the Danish individuals for this study and left the others alone since many had IBD or other disease conditions. For this data set Metaphlan2 was used to generate the abundance data. Metaphlan2 and how well it associates with 16S data is also discussed in the supplemental of the draft manuscript we are writing. To test this we downloaded ~40 samples from the HMP data set which had both metagenome and 16S data. We ran the same code that we used with the MetaHit data to generate the abundance data using Metaphlan2 and compared that result with the obtained 16S values. So here is code that was used below: <br><br> ‘’#!/bin/sh<br />PATH=$PATH:~/metaphlan2<br />export mpa_dir=~/metaphlan2<br />mkdir completed.combined.fq<br />test_samples=“MH0001 MH0002 MH0003 MH0004 MH0005 MH0006 MH0007 MH0008 MH0009 MH0010 MH0011 MH0012 MH0013 MH0014 MH0015 MH0016 MH0017 MH0018 MH0019 MH0020 MH0021 MH0022 MH0023 MH0024 MH0025 MH0026 MH0027 MH0028 MH0030 MH0031 MH0032 MH0033 MH0034 MH0035 MH0036 MH0037 MH0038 MH0039 MH0040 MH0041 MH0042 MH0043 MH0044 MH0045 MH0046 MH0047 MH0048 MH0049 MH0050 MH0051 MH0052 MH0053 MH0054 MH0055 MH0056 MH0057 MH0058 MH0059 MH0060 MH0061 MH0062 MH0063 MH0064 MH0065 MH0066 MH0067 MH0068 MH0069 MH0070 MH0071 MH0072 MH0073 MH0074 MH0075 MH0076 MH0077 MH0078 MH0079 MH0080 MH0081 MH0082 MH0083 MH0084 MH0085 MH0086” <br><br> for s in ${test_samples}<br />do<br />cat ${s}*.1.fq &gt; ${s}.combined.1.fq<br />cat ${s}*.2.fq &gt; ${s}.combined.2.fq<br />mv ${s}*combined.1.fq completed.combined.fq<br />mv ${s}*combined.2.fq completed.combined.fq<br />done’‘<br><br> This code was used to combine the fastq files since there are multiple files per sample. To actually implement the metaphlan2 program for these files see below: <br><br>’‘for s in ${test_samples}<br />do<br />metaphlan2.py /mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.1.fq,/mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.2.fq –mpa_pkl db_v20/mpa_v20_m200.pkl –bowtie2db db_v20/mpa_v20_m200 –input_type fastq –bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt<br />done’‘<br><br> In order to combine all the files into a single data table the following code was run: <br><br>’‘python ~/metaphlan2/utils/merge_metaphlan_tables.py profiled_samples/*.txt &gt; profiled_samples/output/merged_abundance_table.txt’‘<br><br> For the 16S and metaphlan2 comparison the following code was run to obtain the necessary data tables: <br><br>’’#!/bin/sh<br />PATH=$PATH:~/metaphlan2<br />export mpa_dir=~/metaphlan2 <br><br> test_samples=“SRS012849 SRS012969 SRS013098 SRS013216 SRS013638 SRS013639 SRS016437 SRS016438 SRS016990 SRS017916 SRS020622 SRS021153 SRS021219 SRS022093 SRS024663 SRS043667 SRS045528 SRS045739 SRS049402 SRS049896 SRS050026 SRS053356 SRS053573 SRS053649 SRS054352 SRS055533 SRS056273 SRS058070 SRS063489 SRS063518 SRS064973 SRS074670 SRS074964 SRS075078 SRS075341 SRS075963 SRS076929 SRS077086 SRS077194 SRS077294 SRS077335 SRS077502 SRS077552 SRS077753 SRS077849 SRS078242 SRS078419 SRS078665 SRS097889 SRS098514 SRS098571 SRS098644 SRS098717 SRS098827 SRS0100021 SRS101376 SRS101433 SRS103987 SRS0104197 SRS104311 SRS104400 SRS104485 SRS105153 SRS140492 SRS140513 SRS140645 SRS142503 SRS142505 SRS142599 SRS142712 SRS142890 SRS143070 SRS143181 SRS143342 SRS143417 SRS143598 SRS143780 SRS143876 SRS143991 SRS144362 SRS144506 SRS144537 SRS145497 SRS146764 SRS146812 SRS146813 SRS147022 SRS147088 SRS147139 SRS147346 SRS147445 SRS147652 SRS147766 SRS147919 SRS148196 SRS148424 SRS148721” <br><br> for s in ${test_samples}<br />do<br />#Download and unpack necessary files<br />wget -r -np -nd -k <a href="ftp://public-ftp.hmpdacc.org/Illumina/PHASEII/stool/" class="uri">ftp://public-ftp.hmpdacc.org/Illumina/PHASEII/stool/</a>${s}.tar.bz2<br />tar xvjf ${s}.tar.bz2<br />mv ${s}/${s}.denovo_duplicates_marked.trimmed.1.fastq ~/metaphlan2<br />mv ${s}/${s}.denovo_duplicates_marked.trimmed.2.fastq ~/metaphlan2<br />metaphlan2.py ${s}.denovo_duplicates_marked.trimmed.1.fastq,${s}.denovo__.trimmed.2.fastq –mpa_pkl db_v20/mpa_v20_m200.pkl –bowtie2db db_v20/mpa_v20_m200 –input_type fastq –bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt<br />rm -r ${s}<br />rm ${s}.denovo_duplicates_marked.trimmed.1.fastq<br />rm ${s}.denovo_duplicates_marked.trimmed.2.fastq<br />done’‘<br><br> You can then go into the directory with all the seperate data tables and combined them into one with the following command: <br><br>’‘python ~/metaphlan2/utils/merge_metaphlan_tables.py profiled_samples/*.txt &gt; profiled_samples/output/merged_abundance_table.txt’’ <br><br> Now I decided, perhaps foolishly, to manually curate the combined file. What I mean by this is that I manually deleted viruses and eukaryotic cells that were identified instead of using a computer to do this. I also then manually created data tables with phyla and the lowest taxonomic identification. The data table with the lowest taxonomic identification information was used to generate alpha diversity measures and to complete and PERMANOVA analysis that was used. These manually curated files are provided in this repository for you to use as you want. Finally, I used relative abundance instead of subsampling in these samples. So I had to redo the relative abundance after removing the viruses and eukaryotic cells. This part was done in R. <br><br></p>
+<p>We only used the Danish individuals for this study and left the others alone since many had IBD or other disease conditions. For this data set Metaphlan2 was used to generate the abundance data. Metaphlan2 and how well it associates with 16S data is also discussed in the supplemental of the draft manuscript we are writing. To test this we downloaded ~40 samples from the HMP data set which had both metagenome and 16S data. We ran the same code that we used with the MetaHit data to generate the abundance data using Metaphlan2 and compared that result with the obtained 16S values. So here is code that was used below:</p>
+<pre class="bash"><code>#!/bin/sh  
+
+PATH=\$PATH:~/metaphlan2  
+export mpa_dir=~/metaphlan2  
+mkdir completed.combined.fq  
+
+test_samples=&quot;MH0001 MH0002 MH0003 MH0004 MH0005 MH0006 MH0007 MH0008 
+MH0009 MH0010 MH0011 MH0012 MH0013 MH0014 MH0015 MH0016 MH0017 MH0018 
+MH0019 MH0020 MH0021 MH0022 MH0023 MH0024 MH0025 MH0026 MH0027 MH0028 
+MH0030 MH0031 MH0032 MH0033 MH0034 MH0035 MH0036 MH0037 MH0038 MH0039 
+MH0040 MH0041 MH0042 MH0043 MH0044 MH0045 MH0046 MH0047 MH0048 MH0049 
+MH0050 MH0051 MH0052 MH0053 MH0054 MH0055 MH0056 MH0057 MH0058 MH0059 
+MH0060 MH0061 MH0062 MH0063 MH0064 MH0065 MH0066 MH0067 MH0068 MH0069 
+MH0070 MH0071 MH0072 MH0073 MH0074 MH0075 MH0076 MH0077 MH0078 MH0079 
+MH0080 MH0081 MH0082 MH0083 MH0084 MH0085 MH0086&quot;
+
+for s in ${test_samples}  
+do  
+cat ${s}*.1.fq &gt; ${s}.combined.1.fq  
+cat ${s}*.2.fq &gt; ${s}.combined.2.fq  
+mv ${s}*combined.1.fq completed.combined.fq  
+mv ${s}*combined.2.fq completed.combined.fq  
+done
+</code></pre>
+<p>This code was used to combine the fastq files since there are multiple files per sample. To actually implement the metaphlan2 program for these files see below:</p>
+<pre class="bash"><code>for s in ${test_samples}  
+do  
+metaphlan2.py /mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.1.fq,/mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.2.fq --mpa_pkl db_v20/mpa_v20_m200.pkl --bowtie2db db_v20/mpa_v20_m200 --input_type fastq --bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt  
+
+done</code></pre>
+<p>In order to combine all the files into a single data table the following code was run:</p>
+<pre class="bash"><code>python ~/metaphlan2/utils/merge_metaphlan_tables.py profiled_samples*.txt &gt; profiled_samples/output/merged_abundance_table.txt</code></pre>
+<p>For the 16S and metaphlan2 comparison the following code was run to obtain the necessary data tables:</p>
+<pre class="bash"><code>#!/bin/sh  
+PATH=\$PATH:~/metaphlan2  
+export mpa_dir=~/metaphlan2
+
+test_samples=&quot;SRS012849 SRS012969 SRS013098 SRS013216 SRS013638 SRS013639 SRS016437 SRS016438 SRS016990 SRS017916 SRS020622 SRS021153 SRS021219 SRS022093 SRS024663 SRS043667 SRS045528 SRS045739 SRS049402 SRS049896 SRS050026 SRS053356 SRS053573 SRS053649 SRS054352 SRS055533 SRS056273 SRS058070 SRS063489 SRS063518 SRS064973 SRS074670 SRS074964 SRS075078 SRS075341 SRS075963 SRS076929 SRS077086 SRS077194 SRS077294 SRS077335 SRS077502 SRS077552 SRS077753 SRS077849 SRS078242 SRS078419 SRS078665 SRS097889 SRS098514 SRS098571 SRS098644 SRS098717 SRS098827 SRS0100021 SRS101376 SRS101433 SRS103987 SRS0104197 SRS104311 SRS104400 SRS104485 SRS105153 SRS140492 SRS140513 SRS140645 SRS142503 SRS142505 SRS142599 SRS142712 SRS142890 SRS143070 SRS143181 SRS143342 SRS143417 SRS143598 SRS143780 SRS143876 SRS143991 SRS144362 SRS144506 SRS144537 SRS145497 SRS146764 SRS146812 SRS146813 SRS147022 SRS147088 SRS147139 SRS147346 SRS147445 SRS147652 SRS147766 SRS147919 SRS148196 SRS148424 SRS148721&quot; 
+
+for s in ${test_samples}  
+do  
+#Download and unpack necessary files  
+wget -r -np -nd -k ftp://public-ftp.hmpdacc.org/Illumina/PHASEII/stool/${s}.tar.bz2  
+tar xvjf ${s}.tar.bz2  
+mv ${s}/${s}.denovo_duplicates_marked.trimmed.1.fastq ~/metaphlan2  
+mv ${s}/${s}.denovo_duplicates_marked.trimmed.2.fastq ~/metaphlan2  
+metaphlan2.py ${s}.denovo_duplicates_marked.trimmed.1.fastq,${s}.denovo_duplicates_marked.trimmed.2.fastq --mpa_pkl db_v20/mpa_v20_m200.pkl --bowtie2db db_v20/mpa_v20_m200 --input_type fastq --bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt  
+rm -r ${s}  
+rm ${s}.denovo_duplicates_marked.trimmed.1.fastq  
+rm ${s}.denovo_duplicates_marked.trimmed.2.fastq  
+done</code></pre>
+<p>You can then go into the directory with all the seperate data tables and combined them into one with the following command:</p>
+<pre class="bash"><code>python ~/metaphlan2/utils/merge_metaphlan_tables.py profiled_samples*.txt &gt; profiled_samples/output/merged_abundance_table.txt</code></pre>
+<p>Now I decided, perhaps foolishly, to manually curate the combined file. What I mean by this is that I manually deleted viruses and eukaryotic cells that were identified instead of using a computer to do this. I also then manually created data tables with phyla and the lowest taxonomic identification. The data table with the lowest taxonomic identification information was used to generate alpha diversity measures and to complete and PERMANOVA analysis that was used. These manually curated files are provided in this repository for you to use as you want. Finally, I used relative abundance instead of subsampling in these samples. So I had to redo the relative abundance after removing the viruses and eukaryotic cells. This part was done in R. <br><br></p>
 </div>
 <div id="turnbaugh-et-al.-2008" class="section level5">
 <h5><strong>Turnbaugh, et al. 2008:</strong></h5>
-<p>This is the very famous twin study of the microbiome and obesity. The other two re-analysis articles <span class="citation">(Finucane et al. 2014; Walters, Xu, and Knight 2014)</span> also use this data set. The raw data is not avialable on the SRA but you can download a fasta file for either the V2 or V6 16S rRNA gene <a href="https://gordonlab.wustl.edu/NatureTwins_2008/TurnbaughNature_11_30_08.html">here</a>. We used the V2 region. For the most part it was relatively straight forward, just be aware that this took a lot of RAM to create a distance matrix. The code I used is below: <br><br> ‘’grep -e’^&gt;‘combined.trim.fasta &gt; test.fasta<br />sed ’s/&gt;//’ test.fasta &gt; test2.fasta<br />sed ‘s/\s.*$//’ test2.fasta &gt; test3.fasta<br />paste -d&quot; &quot; test2.fasta test3.fasta &gt; V2.groups’‘<br><br> Once we have a groups file we can just create a batch file and put it into mothur to run and come back when it is completed. <br><br>’‘/share/scratch/schloss/mothur/mothur Turnbaugh.batch’’ <br><br></p>
+<p>This is the very famous twin study of the microbiome and obesity. The other two re-analysis articles <span class="citation">(Finucane et al. 2014; Walters, Xu, and Knight 2014)</span> also use this data set. The raw data is not avialable on the SRA but you can download a fasta file for either the V2 or V6 16S rRNA gene <a href="https://gordonlab.wustl.edu/NatureTwins_2008/TurnbaughNature_11_30_08.html">here</a>. We used the V2 region. For the most part it was relatively straight forward, just be aware that this took a lot of RAM to create a distance matrix. The code I used is below:</p>
+<pre class="bash"><code>grep -e '^&gt;' combined.trim.fasta &gt; test.fasta  
+sed 's/&gt;//' test.fasta &gt; test2.fasta    
+sed 's/\s.*$//' test2.fasta &gt; test3.fasta  
+paste -d&quot; &quot; test2.fasta test3.fasta &gt; V2.groups''</code></pre>
+<p>Once we have a groups file we can just create a batch file and put it into mothur to run and come back when it is completed.</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur Turnbaugh.batch</code></pre>
 <div class="references">
 <h5><strong>References:</strong></h5>
 <p>Finucane, Mariel M., Thomas J. Sharpton, Timothy J. Laurent, and Katherine S. Pollard. 2014. “A Taxonomic Signature of Obesity in the Microbiome? Getting to the Guts of the Matter.” <em>PloS One</em> 9 (1): e84689. doi:<a href="http://dx.doi.org/10.1371/journal.pone.0084689">10.1371/journal.pone.0084689</a>.</p>
