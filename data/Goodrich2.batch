@@ -1,0 +1,5 @@
+phylotype(taxonomy=combined.unique.pds.wang.pick.taxonomy)
+make.shared(list=current, count=combined.pick.count_table, label=1)
+count.groups()
+classify.otu(list=combined.unique.pds.wang.pick.tx.list, count=combined.pick.count_table, taxonomy=combined.unique.pds.wang.pick.taxonomy, label=1)
+sub.sample(shared=combined.unique.pds.wang.pick.tx.shared, size=20000)
