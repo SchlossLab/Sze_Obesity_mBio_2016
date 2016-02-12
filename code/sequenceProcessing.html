@@ -95,19 +95,19 @@ system(mv silva.bacteria.pcr.fasta silva.v4.fasta)</code></pre>
 <pre class="sh"><code>#!/bin/sh  
 for sample in $(ls *sra)  
 do  
-fastq-dump $sample  
+  fastq-dump $sample  
 done
 
 for sample2 in $(ls *fastq)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
-rm *logfile  
+  /share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
+  rm *logfile  
 done
 
 for TRIM in $(ls ERR*.fasta)  
 do  
-QFILE=${TRIM//fasta/qual}  
-/share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=5, maxhomop=8, qwindowaverage=25, qwindowsize=50, processors=8)&quot;  
+  QFILE=${TRIM//fasta/qual}  
+  /share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=5, maxhomop=8, qwindowaverage=25, qwindowsize=50, processors=8)&quot;  
 done  
 
 rm *.fastq</code></pre>
@@ -137,8 +137,8 @@ exit 0</code></pre>
 # mkdir sra.complete  
 for start in \$(ls \*sra)  
 do  
-fastq-dump $start  
-mv $start sra.complete  
+  fastq-dump $start  
+  mv $start sra.complete  
 done
 
 # Unpack fastq files  
@@ -146,18 +146,18 @@ mkdir fastq.complete
 mkdir logfile.complete  
 for info in $(ls *fastq)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$info)&quot;  
-mv $info fastq.complete  
-mv *.logfile logfile.complete  
+  /share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$info)&quot;  
+  mv $info fastq.complete  
+  mv *.logfile logfile.complete  
 done
 
 # Screen the fasta file that came from the fastq  
 mkdir fasta.complete  
 for next in $(ls *fasta)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$next, maxambig=0, maxlength=275, processors=8)&quot;  
-mv $next fasta.complete # should store silva file in here and then move it to working directory  
-mv *.logfile logfile.complete  
+  /share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$next, maxambig=0, maxlength=275, processors=8)&quot;  
+  mv $next fasta.complete # should store silva file in here and then move it to working directory  
+  mv *.logfile logfile.complete  
 done
 
 mv ~/twinsUK/fasta.complete/silva.v4.fasta ~/twinsUK  
@@ -165,26 +165,26 @@ mv ~/twinsUK/fasta.complete/silva.v4.fasta ~/twinsUK
 mkdir good.fasta.complete  
 for sample2 in $(ls *good.fasta)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#align.seqs(fasta=$sample2, reference=silva.v4.fasta, processors=8)&quot;  
-mv $sample2 good.fasta.complete  
-mv *logfile logfile.complete  
+  /share/scratch/schloss/mothur/mothur &quot;#align.seqs(fasta=$sample2, reference=silva.v4.fasta, processors=8)&quot;  
+  mv $sample2 good.fasta.complete  
+  mv *logfile logfile.complete  
 done
 
 #Screen the aligned sequences to specific location  
 mkdir align.complete  
 for sample3 in $(ls *.align)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$sample3, start=1968, end=11546, maxhomop=8, processors=8)&quot;  
-mv $sample3 align.complete  
+  /share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$sample3, start=1968, end=11546, maxhomop=8, processors=8)&quot;  
+  mv $sample3 align.complete  
 done
 
 # Filter the screened sequences to get a fasta file back  
 mkdir align.good.complete  
 for sample4 in $(ls *good.align)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#filter.seqs(fasta=$sample4, vertical=T, trump=., processors=8)&quot;  
-mv $sample4 align.good.complete  
-mv *logfile logfile.complete  
+  /share/scratch/schloss/mothur/mothur &quot;#filter.seqs(fasta=$sample4, vertical=T, trump=., processors=8)&quot;  
+  mv $sample4 align.good.complete  
+  mv *logfile logfile.complete  
 done
 
 # Make the combined fasta file  
@@ -214,20 +214,21 @@ paste -d&quot;\t&quot; test2.fasta test3.fasta &gt; combined.groups
 <pre class="sh"><code>#!/bin/sh  
 for sample in $(ls *sra)  
 do  
-fastq-dump $sample  
+  fastq-dump $sample  
 done
-&lt;br&gt;&lt;br&gt;
+
 for sample2 in $(ls *fastq)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
-rm *logfile  
+  /share/scratch/schloss/mothur/mothur &quot;#fastq.info(fastq=$sample2)&quot;  
+  rm *logfile  
 done
 &lt;br&gt;&lt;br&gt;
 for TRIM in $(ls SRR*.fasta)  
 do  
-QFILE=\${TRIM//fasta/qual}  
+  QFILE=\${TRIM//fasta/qual}  
 /share/scratch/schloss/mothur/mothur &quot;#trim.seqs(fasta=$TRIM, qfile=$QFILE, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50, processors=8)&quot;  
 done  
+
 rm *.fastq</code></pre>
 <p>The next lines of code are used to combine the fasta file, create a names file with the mothur unique command, and create a combined group file for subsequent processing.</p>
 <pre class="bash"><code>cat *trim.fasta &gt; combined.trim.fasta  
@@ -539,8 +540,6 @@ mv *trim.fasta trim.fasta.renamed.complete</code></pre>
 <p>So after this I need to make a group file and then combine the fastas and group files together.</p>
 <pre class="bash"><code>#!/bin/bash
 
-
-
 groupN=&quot;102 107 113 116 11 126 128 12 13 14 150 156 157 160 162 168 169 177 179 186 190 191 192 1 201 208 211 212 213 214 216 217 219 224 226 230 234 238 242 24 259 269 275 283 287 289 297 2 308 313 316 323 327 333 346 349 352 354 358 367 373 376 381 388 392 395 397 398 401 406 410 411 416 423 424 427 429 444 445 44 453 455 459 463 464 46 473 474 475 481 482 483 488 48 49 50 51 523 52 53 54 59 61 66 68 77 7 81 83 84 87 92 p0_s1 p0_s2 p100_s1 p103_s1 p105_s1 p105_s2 p106_s1 p106_s2 p108_s1 p10_s1 p111_s1 p112_s1 p113_s1 p114_s1 p115_s1 p118_s1 p119_s1 p120_s1 p120_s2 p121_s1 p123_s1 p124_s1 p125_s1 p127_s1 p129_s1 p130_s1 p133_s1 p134_s1 p136_s1 p137_s1 p138_s1 p13_s1 p13_s2 p140_s1 p142_s1 p148_s1 p149_s1 p14_s1 p151_s1 p152_s1 p153_s1 p154_s1 p156_s1 p158_s1 p15_s1 p160_s1 p161_s1 p16_s2 p17_s1 p18_s1 p18_s2 p20_s1 p20_s2 p22_s1 p24_s1 p25_s1 p27_s1 p29_s1 p29_s2 p33_s1 p34_s1 p36_s1 p37_s1 p38_s1 p39_s1 p39_s2 p3_s1 p41_s1 p42_s1 p43_s1 p44_s2 p46_s1 p48_s1 p48_s2 p49_s1 p4_s1 p50_s1 p54_s1 p55_s1 p57_s1 p58_s1 p61_s1 p62_s1 p62_s2 p63_s1 p64_s1 p64_s2 p68_s1 p69_s1 p6_s1 p6_s2 p71_s2 p72_s1 p72_s2 p73_s1 p74_s2 p75_s1 p77_s1 p78_s1 p79_s1 p7_s1 p81_s2 p82_s1 p82_s2 p83_s1 p85_s2 p86_s1 p87_s1 p87_s2 p88_s1 p8_s1 p90_s1 p90_s2 p91_s1 p91_s2 p94_s2 p95_s1 p97_s1 p98_s1 p98_s2 p99_s1&quot;
 
 for V in ${groupN}
@@ -571,9 +570,9 @@ mkdir bad.accnos.done
 mkdir good.fna.done  
 for sample in $(ls *.fna)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#align.seqs(fasta=\$sample, reference=silva.bacteria.fasta, processors=8)&quot;  
-mv $sample good.fna.done  
-mv *logfile logfiles.done  
+  /share/scratch/schloss/mothur/mothur &quot;#align.seqs(fasta=\$sample, reference=silva.bacteria.fasta, processors=8)&quot;  
+  mv $sample good.fna.done  
+  mv *logfile logfiles.done  
 done
 </code></pre>
 <p>For the next code it might be best to just double check that the start and end are what is written here. To make it go faster I made a custom pcr.seqs based on the start and end of the sequences on the aligned file. It shouldn’t make a difference but…..you never know.</p>
@@ -583,33 +582,33 @@ done
 mkdir align.done  
 for sample2 in $(ls *.align)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$sample2, start=8, end=2448, maxhomop=8, processors=8)&quot;  
-mv $sample2 align.done  
-mv *logfile logfiles.done  
+  /share/scratch/schloss/mothur/mothur &quot;#screen.seqs(fasta=$sample2, start=8, end=2448, maxhomop=8, processors=8)&quot;  
+  mv $sample2 align.done  
+  mv *logfile logfiles.done  
 done
 
 # Filter the sequences
 mkdir good.align.done  
 for sample3 in \$(ls \*good.align)  
 do  
-/share/scratch/schloss/mothur/mothur &quot;#filter.seqs(fasta=\$sample3, vertical=T, trump=., processors=8)&quot;  
-mv \$sample3 good.align.done  
-mv \*logfile logfiles.done  
+  /share/scratch/schloss/mothur/mothur &quot;#filter.seqs(fasta=\$sample3, vertical=T, trump=., processors=8)&quot;  
+  mv \$sample3 good.align.done  
+  mv \*logfile logfiles.done  
 done
 
 # Create a groups file and combine the fasta and groups together
 mkdir completed.good.groups  
 for sample in \$(ls \*.good.filter.fasta)  
 do  
-grep -e '^&gt;' \$sample &gt; test.fasta  
-sed 's/&gt;//' test.fasta &gt; test2.fasta  
-sed 's/_.*//' test2.fasta &gt; test3.fasta  
-paste -d&quot;\t&quot; test2.fasta test3.fasta &gt; \${sample}.groups  
+  grep -e '^&gt;' \$sample &gt; test.fasta  
+  sed 's/&gt;//' test.fasta &gt; test2.fasta  
+  sed 's/_.*//' test2.fasta &gt; test3.fasta  
+  paste -d&quot;\t&quot; test2.fasta test3.fasta &gt; \${sample}.groups  
 
-rm test.fasta  
-rm test2.fasta  
-rm test3.fasta  
-mv ~/Yatsunenko.Nature/${sample}.groups ~/Yatsunenko.Nature/completed.good.groups   
+  rm test.fasta  
+  rm test2.fasta  
+  rm test3.fasta  
+  mv ~/Yatsunenko.Nature/${sample}.groups  ~/Yatsunenko.Nature/completed.good.groups   
 
 done</code></pre>
 <p>From here I thought I might be able to get away with combining the data set and running everything together. Well that was not the case since it is just too large for the memory I have readily available without having the job restarting. The plan is to seperate everything back out again and run the <em>chimera.uchime</em> function. Then combine them and run the <em>pre.cluster</em> function. The code below shows what was used for this part:</p>
@@ -735,16 +734,16 @@ MH0080 MH0081 MH0082 MH0083 MH0084 MH0085 MH0086&quot;
 
 for s in ${test_samples}  
 do  
-cat ${s}*.1.fq &gt; ${s}.combined.1.fq  
-cat ${s}*.2.fq &gt; ${s}.combined.2.fq  
-mv ${s}*combined.1.fq completed.combined.fq  
-mv ${s}*combined.2.fq completed.combined.fq  
+  cat ${s}*.1.fq &gt; ${s}.combined.1.fq  
+  cat ${s}*.2.fq &gt; ${s}.combined.2.fq  
+  mv ${s}*combined.1.fq completed.combined.fq  
+  mv ${s}*combined.2.fq completed.combined.fq  
 done
 </code></pre>
 <p>This code was used to combine the fastq files since there are multiple files per sample. To actually implement the metaphlan2 program for these files see below:</p>
 <pre class="bash"><code>for s in ${test_samples}  
 do  
-metaphlan2.py /mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.1.fq,/mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.2.fq --mpa_pkl db_v20/mpa_v20_m200.pkl --bowtie2db db_v20/mpa_v20_m200 --input_type fastq --bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt  
+  metaphlan2.py /mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.1.fq,/mnt/EXT/Schloss-data/msze/test/danish.obesity.metagenome/raw.data.sep/completed.combined.fq/${s}.combined.2.fq --mpa_pkl db_v20/mpa_v20_m200.pkl --bowtie2db db_v20/mpa_v20_m200 --input_type fastq --bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt  
 
 done</code></pre>
 <p>In order to combine all the files into a single data table the following code was run:</p>
@@ -759,14 +758,14 @@ test_samples=&quot;SRS012849 SRS012969 SRS013098 SRS013216 SRS013638 SRS013639 S
 for s in ${test_samples}  
 do  
 #Download and unpack necessary files  
-wget -r -np -nd -k ftp://public-ftp.hmpdacc.org/Illumina/PHASEII/stool/${s}.tar.bz2  
+  wget -r -np -nd -k ftp://public-ftp.hmpdacc.org/Illumina/PHASEII/stool/${s}.tar.bz2  
 tar xvjf ${s}.tar.bz2  
-mv ${s}/${s}.denovo_duplicates_marked.trimmed.1.fastq ~/metaphlan2  
-mv ${s}/${s}.denovo_duplicates_marked.trimmed.2.fastq ~/metaphlan2  
-metaphlan2.py ${s}.denovo_duplicates_marked.trimmed.1.fastq,${s}.denovo_duplicates_marked.trimmed.2.fastq --mpa_pkl db_v20/mpa_v20_m200.pkl --bowtie2db db_v20/mpa_v20_m200 --input_type fastq --bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt  
-rm -r ${s}  
-rm ${s}.denovo_duplicates_marked.trimmed.1.fastq  
-rm ${s}.denovo_duplicates_marked.trimmed.2.fastq  
+  mv ${s}/${s}.denovo_duplicates_marked.trimmed.1.fastq ~/metaphlan2  
+  mv ${s}/${s}.denovo_duplicates_marked.trimmed.2.fastq ~/metaphlan2  
+  metaphlan2.py ${s}.denovo_duplicates_marked.trimmed.1.fastq,${s}.denovo_duplicates_marked.trimmed.2.fastq --mpa_pkl db_v20/mpa_v20_m200.pkl --bowtie2db db_v20/mpa_v20_m200 --input_type fastq --bowtie2out profiled_samples/${s}.bowtie2.bz2 -o profiled_samples/${s}.txt  
+  rm -r ${s}  
+  rm ${s}.denovo_duplicates_marked.trimmed.1.fastq  
+  rm ${s}.denovo_duplicates_marked.trimmed.2.fastq  
 done</code></pre>
 <p>You can then go into the directory with all the seperate data tables and combined them into one with the following command:</p>
 <pre class="bash"><code>python ~/metaphlan2/utils/merge_metaphlan_tables.py profiled_samples*.txt &gt; profiled_samples/output/merged_abundance_table.txt</code></pre>
