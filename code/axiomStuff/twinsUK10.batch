@@ -1,0 +1,3 @@
+classify.seqs(fasta=combined.unique.pick.abund.subsample10000000.fasta, count=combined.pick.abund.subsample10000000.count_table, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80)
+cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15)
+make.shared(list=current, count=current, label=0.03)

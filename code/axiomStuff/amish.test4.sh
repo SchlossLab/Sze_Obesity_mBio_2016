@@ -1,0 +1,19 @@
+#!/bin/bash
+
+
+
+groupN="102 107 113 116 11 126 128 12 13 14 150 156 157 160 162 168 169 177 179 186 190 191 192 1 201 208 211 212 213 214 216 217 219 224 226 230 234 238 242 24 259 269 275 283 287 289 297 2 308 313 316 323 327 333 346 349 352 354 358 367 373 376 381 388 392 395 397 398 401 406 410 411 416 423 424 427 429 444 445 44 453 455 459 463 464 46 473 474 475 481 482 483 488 48 49 50 51 523 52 53 54 59 61 66 68 77 7 81 83 84 87 92 p0_s1 p0_s2 p100_s1 p103_s1 p105_s1 p105_s2 p106_s1 p106_s2 p108_s1 p10_s1 p111_s1 p112_s1 p113_s1 p114_s1 p115_s1 p118_s1 p119_s1 p120_s1 p120_s2 p121_s1 p123_s1 p124_s1 p125_s1 p127_s1 p129_s1 p130_s1 p133_s1 p134_s1 p136_s1 p137_s1 p138_s1 p13_s1 p13_s2 p140_s1 p142_s1 p148_s1 p149_s1 p14_s1 p151_s1 p152_s1 p153_s1 p154_s1 p156_s1 p158_s1 p15_s1 p160_s1 p161_s1 p16_s2 p17_s1 p18_s1 p18_s2 p20_s1 p20_s2 p22_s1 p24_s1 p25_s1 p27_s1 p29_s1 p29_s2 p33_s1 p34_s1 p36_s1 p37_s1 p38_s1 p39_s1 p39_s2 p3_s1 p41_s1 p42_s1 p43_s1 p44_s2 p46_s1 p48_s1 p48_s2 p49_s1 p4_s1 p50_s1 p54_s1 p55_s1 p57_s1 p58_s1 p61_s1 p62_s1 p62_s2 p63_s1 p64_s1 p64_s2 p68_s1 p69_s1 p6_s1 p6_s2 p71_s2 p72_s1 p72_s2 p73_s1 p74_s2 p75_s1 p77_s1 p78_s1 p79_s1 p7_s1 p81_s2 p82_s1 p82_s2 p83_s1 p85_s2 p86_s1 p87_s1 p87_s2 p88_s1 p8_s1 p90_s1 p90_s2 p91_s1 p91_s2 p94_s2 p95_s1 p97_s1 p98_s1 p98_s2 p99_s1"
+
+for V in ${groupN}
+do
+	grep -e '^>' ${V}.fasta > test.fasta
+	sed 's/>//' test.fasta > test2.fasta
+	sed "s/$/\t$V/" test2.fasta > ${V}.groups
+	rm test.fasta
+	rm test2.fasta
+done 
+
+cat *fasta > combined.fasta
+cat *groups > combined.groups
+
+

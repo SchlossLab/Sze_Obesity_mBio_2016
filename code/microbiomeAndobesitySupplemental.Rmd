@@ -1,0 +1,190 @@
+---
+title: "Bacterial Microbiome and Obesity Meta-analysis Supplemental"
+author: "Marc Sze"
+date: "January 26, 2016"
+output: 
+  html_document:
+    keep_md: yes
+bibliography: metaAnalysis.obesity.microbiome.bib
+---
+<br><br>
+
+```{r data_table_loading, include=FALSE}
+setwd("C:/Users/marc/Desktop/obesity2/HMP.analysis")
+
+metaphlanData <- read.table("HMP_metaphlan2_merged_abundance_table.txt", header=T)
+IDconversion <- read.csv("HMP.stool.IDs.csv")
+microbiome <- read.table("Stool.an.0.03.subsample.shared", header=T)
+
+#Only interested in first visit microbiome data
+#need to create microbiome data set for only that
+
+Data16S <- microbiome[grep("\\.01\\.", microbiome$Group), ] #selecting by .01. 
+
+microb.rownames <- gsub("([0-9]+).*", "\\1", Data16S$Group) #extracting only numeric before first "."
+rownames(Data16S) <- microb.rownames
+
+#Get rid of information not used in downstram analysis
+Data16S <- Data16S[, -c(1:3)]
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.csv("phyla.data.csv")
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(Data16S)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- Data16S
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing, keep, microb.rownames, phyla.names)
+
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Deinococcus-Thermus", "Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "Tenericutes", "TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4, 6, 7, 9, 10:12)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(phyla.total)
+
+# Create comparable data set with 
+metaphlanPhlyaData <- read.csv("HMP.metaphlan.phyla.data.csv", header=T)
+rownames(metaphlanPhlyaData) <- metaphlanPhlyaData$ID
+metaphlanPhlyaData <- metaphlanPhlyaData[,-1]
+metaphlanPhlyaData <- as.data.frame(t(metaphlanPhlyaData))
+
+#combine phyla that are not that abundant
+metaphlanPhlyaData$other <- apply(metaphlanPhlyaData[, c("Acidobacteria", "Candidatus_Saccharibacteria", "Deinococcus_Thermus", "Fusobacteria", "Spirochaetes", "Synergistetes", "Tenericutes")], 1, sum)
+metaphlanPhlyaData <- metaphlanPhlyaData[, -c(1, 4:5, 7, 9:11)]
+
+#Create a relative abundance table for phyla
+metaphlanPhlyaData.total <- apply(metaphlanPhlyaData[, c(1:6)], 1, sum)
+metaphlanPhlyaData.rel.abund <- (metaphlanPhlyaData/metaphlanPhlyaData.total)*100
+
+#Need to get sampleIDs to match 16S data
+metaphlanNames <- rownames(metaphlanPhlyaData)
+rownames(IDconversion) <- IDconversion[,1]
+matchedData <- IDconversion[metaphlanNames, c(1,3)]
+IndIDmatched <- matchedData[,2]
+
+#Need to find and remove duplicated values (No idea which sample goes with which)
+test1 <- as.data.frame(table(matchedData$Individual.ID))
+good <- which(test1$Freq == 1)
+unique <- test1[good, ]
+uniqueNames <- as.character(unique$Var1)
+
+test <- phyla.table.rel.abund[rownames(phyla.table.rel.abund) %in% uniqueNames, ]
+finalUniqueNames <- rownames(test)
+UpdatedMatchedData <- matchedData[matchedData$Individual.ID %in% finalUniqueNames, ]
+
+goodMetaphlanPhylaData.rel.abund <- metaphlanPhlyaData.rel.abund[rownames(metaphlanPhlyaData.rel.abund) %in% rownames(UpdatedMatchedData), ]
+rownames(goodMetaphlanPhylaData.rel.abund) <- UpdatedMatchedData[, 2]
+testing <- goodMetaphlanPhylaData.rel.abund[order(rownames(goodMetaphlanPhylaData.rel.abund)), ]
+
+phyla16SData <- test
+phylaMetaphlanData <- testing
+rm(finalUniqueNames, good, IndIDmatched, metaphlanNames, metaphlanPhlyaData.total, uniqueNames, goodMetaphlanPhylaData.rel.abund, matchedData, metaphlanPhlyaData, metaphlanPhlyaData.rel.abund, phyla.good, phyla.table, phyla.table.rel.abund, phylogenetic.info, test, test1, testing, unique, UpdatedMatchedData)
+
+# Can start off with a general bar plot of the two side by side 
+library(qdap)
+library(plyr)
+library(reshape2)
+library(ggplot2)
+library(RColorBrewer)
+library(scales)
+library(gridExtra) #using grid.arrange() can add different plots together
+library(plotrix)
+library(ggExtra)
+library(BlandAltmanLeh)
+
+#phyla16SData <- phyla16SData[,-5] only if want to ignore unclassified
+phylaMetaphlanData$unclassified <- 0
+phylaMetaphlanData <- subset(phylaMetaphlanData, select=c(Actinobacteria:Proteobacteria, unclassified, Verrucomicrobia, other))
+phyla16SData$dataset <- 1 
+phylaMetaphlanData$dataset <- 2
+
+```
+
+**Figure S1:Comparison of Phyla between 16S Sequencing and Metaphlan2.** 
+
+```{r Figure_S1, echo=FALSE}
+testset <- rbind(phyla16SData, phylaMetaphlanData)
+testset$dataset <- factor(testset$dataset)
+melt.testset <- melt(testset, id.vars=c("dataset"))
+colnames(melt.testset)[2] <- "phyla"
+barplotAnalysisData <- ddply(melt.testset, c("dataset", "phyla"), summarise, mean = mean(value), sd=sd(value), sem=sd(value/sqrt(length(value))))
+  
+bpg1 <- ggplot(barplotAnalysisData, aes(x=dataset, y=mean, fill=phyla)) + geom_bar(position = "fill", stat="identity")
+bpg2 <- bpg1 + scale_fill_brewer(palette="Set1") + scale_y_continuous(label=percent)
+bpg3 <- bpg2 + theme(axis.text=element_text(size=15), axis.title=element_text(size=20, face="bold"))
+bpg4 <- bpg3 + xlab("Analysis Used") + ylab("Mean Relative Abundance (%)")
+bpg5 <- bpg4 + guides(fill=guide_legend(title="Phyla")) + theme(legend.title = element_text(size=16, face="bold"))
+bpg6 <- bpg5 + theme(axis.line=element_line(colour="black"), 
+                 panel.grid.major = element_blank(), 
+                 panel.grid.minor = element_blank(), 
+                 panel.border = element_blank(), 
+                 panel.background = element_blank())
+bpg7 <- bpg6 + scale_x_discrete(breaks = 1:2, labels=c("16S", "Metaphlan2"))
+
+bpg7
+```
+
+
+<br><br><br><br>
+
+**Figure S2: Bacteroidetes Linear Correlation between 16S Sequencing and Metaphlan2.**  Bacteroidetes has the best correlation of all the phyla (P-value = 0.0002277, R^2^ = 0.2358). The histogram for the 16S samples are on the x-axis while the histogram for Metaphlan2 is on the y-axis.
+
+```{r Figure_S2, echo=FALSE, warning=FALSE, message=FALSE}
+graphData <- as.data.frame(cbind(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes))
+colnames(graphData) <- c("rRNA_16S", "Metaphlan2")
+
+p1 <- ggplot(graphData, aes(x=rRNA_16S, y=Metaphlan2)) + geom_point(colour="blue", size=4)
+p2 <- p1 + geom_smooth(method="lm", colour="black", se=TRUE)
+p3 <- p2 + theme(axis.text=element_text(size=15), axis.title=element_text(size=20, face="bold"))
+p4 <- p3 + xlim(0, 100) + xlab("16S") + ylim(0, 100)
+p5 <- p4 + theme(axis.line=element_line(colour="black"), 
+                 panel.grid.major = element_blank(), 
+                 panel.grid.minor = element_blank(), 
+                 panel.border = element_blank(), 
+                 panel.background = element_blank())
+
+ggExtra::ggMarginal(p5, type = "histogram")
+
+```
+
+
+<br><br><br><br>
+
+
+**Figure S3: Bland-Altman plot of Bacteroidetes measurements for Metaphlan2 and 16S sequencing.**
+
+```{r Figure_S3, echo=FALSE}
+
+ba <- bland.altman.plot(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes, graph.sys="ggplot2", main="Bland Altman Plot of Bacteroidetes", xlab="Means", ylab="Differences")
+
+
+
+ba1 <- ba + theme(axis.text=element_text(size=15), axis.title=element_text(size=25, face="bold"))
+ba2 <- ba1 + ylab("Difference") + xlab("Mean of Measurements")
+ba3 <- ba2 + geom_point(size=4)
+ba4 <- ba3 + theme(axis.line=element_line(colour="black"), 
+                     panel.grid.major = element_blank(), 
+                     panel.grid.minor = element_blank(), 
+                     panel.border = element_blank(), 
+                     panel.background = element_blank())
+
+ba4
+```
+
+
+
+
+
+
+

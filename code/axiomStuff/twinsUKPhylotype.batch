@@ -1,0 +1,3 @@
+phylotype(taxonomy=combined.unique.pds.wang.pick.taxonomy)
+make.shared(list=current, count=combined.pick.count_table, label=1)
+count.groups()
