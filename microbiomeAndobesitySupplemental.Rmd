@@ -112,7 +112,7 @@ phylaMetaphlanData$dataset <- 2
 ```
 
 
-**In-Depth Overview of Search Strategy:**
+###In-Depth Overview of Search Strategy:
 
 The inital search strategy included looking for all papers that initially fit under the below NCBI PubMed advanced search criteria.  The terms included in this criteria were that the manuscript had to have "Bacterial Microbiome" and "Obesity, BMI, bmi, obesity" in their manuscript criteria, it was not published more than 10 years ago, they were not review articles, and it contained research on humans only.  The below formula when put into PubMed should recapitulate our initial search on the website.
 
@@ -151,7 +151,7 @@ This included a total of 10 studies in the qualitative synthesis of the analysis
 * Study was a review
 
 
-**A Comparison of 16S Amplicon Sequencing and Metaphlan2:**
+###A Comparison of 16S Amplicon Sequencing and Metaphlan2:
 
 ```{r Figure_S1, echo=FALSE}
 testset <- rbind(phyla16SData, phylaMetaphlanData)
@@ -204,9 +204,6 @@ ggExtra::ggMarginal(p5, type = "histogram")
 
 
 
-
-
-
 ```{r Figure_S3, echo=FALSE}
 
 ba <- bland.altman.plot(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes, graph.sys="ggplot2", main="Bland Altman Plot of Bacteroidetes", xlab="Means", ylab="Differences")
@@ -228,7 +225,55 @@ ba4
 **Figure S3: Bland-Altman plot of Bacteroidetes measurements for Metaphlan2 and 16S sequencing.**
 
 
+###Supplemental Results:
 
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+#Load required packages
+library(meta)
+library(metafor) #This package is used mostly for the more in-depth graph
+
+#Change working directory
+setwd("C:/users/marc/Desktop/obesity2")
+
+StudyNo <- c(1, 2, 3, 4, 5, 6, 7)
+Study <- c("Baxter", "HMP", "Escobar", "Arumugam", "Turnbaugh", "Zupancic", "Wu")
+Year <- c("2015", "2011", "2014", "2010", "2009", "2012", "2012")
+Total <- c("n=172", "n=256", "n=30", "n=85", "n=146", "n=201", "n=58")
+tpos <- c(36, 13, 7, 17, 22, 55, 2) #obese in low Rumi group
+tneg <- c(59, 140, 8, 26, 56, 103, 37) #nonobese in low Rumi group
+cpos <- c(11, 13, 3, 20, 25, 23, 3) #obese in high Rumi group
+cneg <- c(66, 90, 12, 22, 43, 26, 16) #nonobese in high Rumi group
+RR <- c(2.65, 0.67, 2.33, 0.83, 0.77, 0.74, 0.32)
+low <- c(1.45, 0.33, 0.74, 0.51, 0.48, 0.51, 0.06)
+high <- c(4.86, 1.39, 7.35, 1.35, 1.23, 1.07, 1.78)
+
+numeric.data <-as.data.frame(cbind(tpos, tneg, cpos, cneg))
+raw.overall <- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
+
+dat <- escalc(measure = "RR", ai = tpos, bi = tneg, ci = cpos, di = cneg, data=raw.overall, append=TRUE)
+k <- length(dat$StudyNo)
+dat.fm <- data.frame(study=factor(rep(1:k, each = 4)))
+dat.fm$grp <- factor(rep(c("T", "T", "C", "C"), k), levels = c("T", "C"))
+dat.fm$out <- factor(rep(c("+", "-", "+", "-"), k), levels = c("+", "-"))
+dat.fm$freq <- with(raw.overall, c(rbind(tpos, tneg, cpos, cneg)))
+
+#escalc(out ~ grp | study, weights = freq, data = dat.fm, measure = "RR")
+
+
+#Used to generate the RE Model estimate based on all the studies
+res <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", slab=paste(Study, Year, Total, sep=", "), method="REML")
+
+#To create a graph visualize the data
+forest(res, at=log(c(0.01, 1, 10)), atransf=exp, xlab="RR of Obesity in high versus low Ruminococcaceae based on Median", cex=0.8)
+par(font=2) #Switch to bold
+
+text(7.4, 8.3, "Relative Risk [95% CI]", pos=2, cex=0.8)  
+text(-8.0, 8.3, "Study, Year, and n", pos=4, cex=0.8)   
+
+```
+
+**Figure S4: Forest Plot of the Relative Risk based on the Ruminococcaceae classified OTU.**
 
 *******
 ##### References:

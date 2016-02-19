@@ -6,7 +6,7 @@ January 26, 2016
 
 
 
-**In-Depth Overview of Search Strategy:**
+###In-Depth Overview of Search Strategy:
 
 The inital search strategy included looking for all papers that initially fit under the below NCBI PubMed advanced search criteria.  The terms included in this criteria were that the manuscript had to have "Bacterial Microbiome" and "Obesity, BMI, bmi, obesity" in their manuscript criteria, it was not published more than 10 years ago, they were not review articles, and it contained research on humans only.  The below formula when put into PubMed should recapitulate our initial search on the website.
 
@@ -46,7 +46,7 @@ This included a total of 10 studies in the qualitative synthesis of the analysis
 * Study was a review
 
 
-**A Comparison of 16S Amplicon Sequencing and Metaphlan2:**
+###A Comparison of 16S Amplicon Sequencing and Metaphlan2:
 
 ![](microbiomeAndobesitySupplemental_files/figure-html/Figure_S1-1.png)\
 
@@ -63,15 +63,17 @@ This included a total of 10 studies in the qualitative synthesis of the analysis
 
 
 
-
-
-
 ![](microbiomeAndobesitySupplemental_files/figure-html/Figure_S3-1.png)\
 
 **Figure S3: Bland-Altman plot of Bacteroidetes measurements for Metaphlan2 and 16S sequencing.**
 
 
+###Supplemental Results:
 
+
+![](microbiomeAndobesitySupplemental_files/figure-html/unnamed-chunk-2-1.png)\
+
+**Figure S4: Forest Plot of the Relative Risk based on the Ruminococcaceae classified OTU.**
 
 *******
 ##### References:

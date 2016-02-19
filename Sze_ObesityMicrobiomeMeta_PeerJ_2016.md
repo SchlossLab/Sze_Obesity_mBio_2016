@@ -92,6 +92,8 @@ When the Shannon diversity RR, all studies but Wu et al had those with lower Sha
 
 Using a funnel plot to asses the bias of the 9 data sets used in this meta-analysis we can observe that there does not seem to be any significant  bias [Figure 4].  Both funnel plots have almost equal number of studies scattered on either side of the estimated true value.
 
+We also investigated how the different OTUs, classified to Ruminococcaceae, that were important for the classification of obese and non-obese based on the OOB AUC performed from each study performed when analyzed with RR [Figure S4].  There was no significant increase in RR based on the Ruminococcaceae OTU (RR = 0.98 (CI 0.63, 1.53), P-value = 0.9225).  Thus it would seem that although Ruminococcaceae is important for classification the directionality is study dependent [Figure S4].    
+
 *ZScore Normalization Pooled Analysis:*
 
 Using this approach we found that there was a significant difference in the normalized Shannon diversity between the obese and non-obese group (P-value = 0.00493) [Figure 5A].  Further there was also a significant difference in the normalized Shannon diversity variance when the data was split between the three BMI groups (P-value = 0.03826) [Figure 5B].  Using a Tukey post hoc test this difference was driven by the overweight versus the obese group (P-value = 0.03945).  With respect to the B/F ratio using the ZScore normalization we found that there was no significant difference between obese and non-obese indivdiuals (P-value = 0.4516) [Figure 5C].  Additionally, we did not observe a difference when the indivdiuals were seperated by BMI groups (P-value = 0.3317) [Figure 5D].
