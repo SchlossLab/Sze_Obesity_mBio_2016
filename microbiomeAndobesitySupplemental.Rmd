@@ -1,0 +1,235 @@
+---
+title: "Bacterial Microbiome and Obesity Meta-analysis Supplemental"
+author: "Marc Sze"
+date: "January 26, 2016"
+output: 
+  html_document:
+    keep_md: yes
+bibliography: metaAnalysis.obesity.microbiome.bib
+---
+<br><br>
+
+```{r data_table_loading, include=FALSE}
+setwd("C:/Users/marc/Desktop/obesity2/HMP.analysis")
+
+metaphlanData <- read.table("HMP_metaphlan2_merged_abundance_table.txt", header=T)
+IDconversion <- read.csv("HMP.stool.IDs.csv")
+microbiome <- read.table("Stool.an.0.03.subsample.shared", header=T)
+
+#Only interested in first visit microbiome data
+#need to create microbiome data set for only that
+
+Data16S <- microbiome[grep("\\.01\\.", microbiome$Group), ] #selecting by .01. 
+
+microb.rownames <- gsub("([0-9]+).*", "\\1", Data16S$Group) #extracting only numeric before first "."
+rownames(Data16S) <- microb.rownames
+
+#Get rid of information not used in downstram analysis
+Data16S <- Data16S[, -c(1:3)]
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.csv("phyla.data.csv")
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(Data16S)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- Data16S
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing, keep, microb.rownames, phyla.names)
+
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Deinococcus-Thermus", "Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "Tenericutes", "TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4, 6, 7, 9, 10:12)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(phyla.total)
+
+# Create comparable data set with 
+metaphlanPhlyaData <- read.csv("HMP.metaphlan.phyla.data.csv", header=T)
+rownames(metaphlanPhlyaData) <- metaphlanPhlyaData$ID
+metaphlanPhlyaData <- metaphlanPhlyaData[,-1]
+metaphlanPhlyaData <- as.data.frame(t(metaphlanPhlyaData))
+
+#combine phyla that are not that abundant
+metaphlanPhlyaData$other <- apply(metaphlanPhlyaData[, c("Acidobacteria", "Candidatus_Saccharibacteria", "Deinococcus_Thermus", "Fusobacteria", "Spirochaetes", "Synergistetes", "Tenericutes")], 1, sum)
+metaphlanPhlyaData <- metaphlanPhlyaData[, -c(1, 4:5, 7, 9:11)]
+
+#Create a relative abundance table for phyla
+metaphlanPhlyaData.total <- apply(metaphlanPhlyaData[, c(1:6)], 1, sum)
+metaphlanPhlyaData.rel.abund <- (metaphlanPhlyaData/metaphlanPhlyaData.total)*100
+
+#Need to get sampleIDs to match 16S data
+metaphlanNames <- rownames(metaphlanPhlyaData)
+rownames(IDconversion) <- IDconversion[,1]
+matchedData <- IDconversion[metaphlanNames, c(1,3)]
+IndIDmatched <- matchedData[,2]
+
+#Need to find and remove duplicated values (No idea which sample goes with which)
+test1 <- as.data.frame(table(matchedData$Individual.ID))
+good <- which(test1$Freq == 1)
+unique <- test1[good, ]
+uniqueNames <- as.character(unique$Var1)
+
+test <- phyla.table.rel.abund[rownames(phyla.table.rel.abund) %in% uniqueNames, ]
+finalUniqueNames <- rownames(test)
+UpdatedMatchedData <- matchedData[matchedData$Individual.ID %in% finalUniqueNames, ]
+
+goodMetaphlanPhylaData.rel.abund <- metaphlanPhlyaData.rel.abund[rownames(metaphlanPhlyaData.rel.abund) %in% rownames(UpdatedMatchedData), ]
+rownames(goodMetaphlanPhylaData.rel.abund) <- UpdatedMatchedData[, 2]
+testing <- goodMetaphlanPhylaData.rel.abund[order(rownames(goodMetaphlanPhylaData.rel.abund)), ]
+
+phyla16SData <- test
+phylaMetaphlanData <- testing
+rm(finalUniqueNames, good, IndIDmatched, metaphlanNames, metaphlanPhlyaData.total, uniqueNames, goodMetaphlanPhylaData.rel.abund, matchedData, metaphlanPhlyaData, metaphlanPhlyaData.rel.abund, phyla.good, phyla.table, phyla.table.rel.abund, phylogenetic.info, test, test1, testing, unique, UpdatedMatchedData)
+
+# Can start off with a general bar plot of the two side by side 
+library(qdap)
+library(plyr)
+library(reshape2)
+library(ggplot2)
+library(RColorBrewer)
+library(scales)
+library(gridExtra) #using grid.arrange() can add different plots together
+library(plotrix)
+library(ggExtra)
+library(BlandAltmanLeh)
+
+#phyla16SData <- phyla16SData[,-5] only if want to ignore unclassified
+phylaMetaphlanData$unclassified <- 0
+phylaMetaphlanData <- subset(phylaMetaphlanData, select=c(Actinobacteria:Proteobacteria, unclassified, Verrucomicrobia, other))
+phyla16SData$dataset <- 1 
+phylaMetaphlanData$dataset <- 2
+
+```
+
+
+**In-Depth Overview of Search Strategy:**
+
+The inital search strategy included looking for all papers that initially fit under the below NCBI PubMed advanced search criteria.  The terms included in this criteria were that the manuscript had to have "Bacterial Microbiome" and "Obesity, BMI, bmi, obesity" in their manuscript criteria, it was not published more than 10 years ago, they were not review articles, and it contained research on humans only.  The below formula when put into PubMed should recapitulate our initial search on the website.
+
+```{bash, eval=FALSE}
+(((((((((Bacterial Microbiome) AND (Obesity or bmi or body mass index or BMI or obesity) AND "last 10 years"[PDat] AND Humans[Mesh])) NOT review[ptyp]) AND "last 10 years"[PDat] AND Humans[Mesh])) AND "last 10 years"[PDat] AND Humans[Mesh])) AND "last 10 years"[PDat] AND Humans[Mesh])
+```
+
+This search yielded a total of 187 manuscripts.  From two previous other reviews of obesity and the bacterial microbiome along with knowledge of two other published papers that investigated obesity but were missed by the database search we obtained a total of 7 more articles.  We also had access to normal healthy individuals from an unpublished dataset.  This brought our total number of records to 196.  
+
+From this total we browsed abstracts for mention of stool or feces examination, that did not involve children, was not a clinical trial for probiotics or other diet related treatments, did not only have participants with inflammatory bowel disease, the articles were in English, did not only use PCR, qPCR, or RT-PCR only for their analysis, and sequecning that used only clone libraries.  This ultimately excluded all but a total of 11 studies.
+
+From this total of 12 studies the full text was reviewed for whether or not sequencing data was publicly available, BMI information (either categorical or continuous) was available in a supplement or, if it was not available, whether authors upon contact were willing to share this information or direct us to repositories that stored this specific information.  One study was excluded [@yatsunenko_human_2012] because it contained children and their sequencing of the 16S rRNA gene involved amplicons of only 100bp in length.  They also did not have obesity as part of their results in the actual published manuscript.  The second study was excluded because they did not have BMI information available and when contacted the authors never returned any correspondance [@zeevi_personalized_2015].  
+
+This included a total of 10 studies in the qualitative synthesis of the analysis.  Because we decided a prioi to use the standard definition for BMI group classification one study from this ten did not have any individuals who were obese by this criteria [@nam_comparative_2011] and was excluded from the final quantitative synthesis and analysis.  
+
+*Inclusion Criteria:*
+
+* Contains mention of Bacterial Microbiome and Obesity
+* BMI, bmi, or obesity could be referenced instead of Obesity
+* Not published more than 10 years ago
+* Research on Humans only
+* At least one specific result examining obesity and a bacterial microbiome measure
+* Participants did not have Inflammatory Bowel Disease or Cancer
+* Greater than 100bp single or dual end reads for 16S Sequencing
+* DNA obtained from stool or feces
+
+*Exclusion Criteria:*
+
+* PCR, qPCR, or RT-PCR used as main analysis Tool
+* TRFLP or clone sequencing used to asses the bacterial community
+* Utilization of 100bp or less single end reads for sequencing
+* Sequencing Data not publicly available for download
+* BMI not available and authors do not return correspondance
+* Samples were not stool or feces
+* Study contained children
+* Study was a review
+
+
+**A Comparison of 16S Amplicon Sequencing and Metaphlan2:**
+
+```{r Figure_S1, echo=FALSE}
+testset <- rbind(phyla16SData, phylaMetaphlanData)
+testset$dataset <- factor(testset$dataset)
+melt.testset <- melt(testset, id.vars=c("dataset"))
+colnames(melt.testset)[2] <- "phyla"
+barplotAnalysisData <- ddply(melt.testset, c("dataset", "phyla"), summarise, mean = mean(value), sd=sd(value), sem=sd(value/sqrt(length(value))))
+  
+bpg1 <- ggplot(barplotAnalysisData, aes(x=dataset, y=mean, fill=phyla)) + geom_bar(position = "fill", stat="identity")
+bpg2 <- bpg1 + scale_fill_brewer(palette="Set1") + scale_y_continuous(label=percent)
+bpg3 <- bpg2 + theme(axis.text=element_text(size=15), axis.title=element_text(size=20, face="bold"))
+bpg4 <- bpg3 + xlab("Analysis Used") + ylab("Mean Relative Abundance (%)")
+bpg5 <- bpg4 + guides(fill=guide_legend(title="Phyla")) + theme(legend.title = element_text(size=16, face="bold"))
+bpg6 <- bpg5 + theme(axis.line=element_line(colour="black"), 
+                 panel.grid.major = element_blank(), 
+                 panel.grid.minor = element_blank(), 
+                 panel.border = element_blank(), 
+                 panel.background = element_blank())
+bpg7 <- bpg6 + scale_x_discrete(breaks = 1:2, labels=c("16S", "Metaphlan2"))
+
+bpg7
+```
+
+**Figure S1:Comparison of Phyla between 16S Sequencing and Metaphlan2.** 
+
+
+
+
+
+
+```{r Figure_S2, echo=FALSE, warning=FALSE, message=FALSE}
+graphData <- as.data.frame(cbind(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes))
+colnames(graphData) <- c("rRNA_16S", "Metaphlan2")
+
+p1 <- ggplot(graphData, aes(x=rRNA_16S, y=Metaphlan2)) + geom_point(colour="blue", size=4)
+p2 <- p1 + geom_smooth(method="lm", colour="black", se=TRUE)
+p3 <- p2 + theme(axis.text=element_text(size=15), axis.title=element_text(size=20, face="bold"))
+p4 <- p3 + xlim(0, 100) + xlab("16S") + ylim(0, 100)
+p5 <- p4 + theme(axis.line=element_line(colour="black"), 
+                 panel.grid.major = element_blank(), 
+                 panel.grid.minor = element_blank(), 
+                 panel.border = element_blank(), 
+                 panel.background = element_blank())
+
+ggExtra::ggMarginal(p5, type = "histogram")
+
+```
+
+**Figure S2: Bacteroidetes Linear Correlation between 16S Sequencing and Metaphlan2.**  Bacteroidetes has the best correlation of all the phyla (P-value = 0.0002277, R^2^ = 0.2358). The histogram for the 16S samples are on the x-axis while the histogram for Metaphlan2 is on the y-axis.
+
+
+
+
+
+
+```{r Figure_S3, echo=FALSE}
+
+ba <- bland.altman.plot(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes, graph.sys="ggplot2", main="Bland Altman Plot of Bacteroidetes", xlab="Means", ylab="Differences")
+
+
+
+ba1 <- ba + theme(axis.text=element_text(size=15), axis.title=element_text(size=25, face="bold"))
+ba2 <- ba1 + ylab("Difference") + xlab("Mean of Measurements")
+ba3 <- ba2 + geom_point(size=4)
+ba4 <- ba3 + theme(axis.line=element_line(colour="black"), 
+                     panel.grid.major = element_blank(), 
+                     panel.grid.minor = element_blank(), 
+                     panel.border = element_blank(), 
+                     panel.background = element_blank())
+
+ba4
+```
+
+**Figure S3: Bland-Altman plot of Bacteroidetes measurements for Metaphlan2 and 16S sequencing.**
+
+
+
+
+*******
+##### References:
+
