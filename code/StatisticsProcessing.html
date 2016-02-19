@@ -576,6 +576,239 @@ plot(fit)</code></pre>
 </div>
 <div id="goodrich-et-al.-2014" class="section level5">
 <h5><strong>Goodrich et al. 2014:</strong></h5>
+<pre class="r"><code>###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+
+setwd(&quot;C:/users/marc/Desktop/obesity2/twinsUK&quot;)
+
+#Read in and match metadata to microbiome data
+metadata &lt;- read.csv(&quot;TwinsUKStudy_metadata.csv&quot;)
+rownames(metadata) &lt;- metadata[, 1]
+shared.data &lt;- read.table(&quot;combined.tx.1.subsample.shared&quot;, header=T)
+rownames(shared.data) &lt;- shared.data[, 2]
+microbiome &lt;- shared.data[, -c(1:3)]
+keep  &lt;- rownames(metadata)
+
+microbiome&lt;- microbiome[keep, ]
+
+rm(good.metadata, shared.data, keep)
+
+
+#generate alpha diversity measures with vegan
+library(vegan)
+H &lt;- diversity(microbiome)
+S &lt;- specnumber(microbiome)
+J &lt;- H/log(S)
+alpha.diversity &lt;- as.data.frame(cbind(H, S, J))
+alpha.test &lt;- alpha.diversity
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info &lt;- read.table(&quot;phyla.txt&quot;, header=T)
+rownames(phylogenetic.info) &lt;- phylogenetic.info[,1]
+phylogenetic.info &lt;- phylogenetic.info[,-c(1)]
+phyla.names &lt;- as.character(phylogenetic.info$Taxonomy)
+keep &lt;- colnames(microbiome)
+phyla.good &lt;- phylogenetic.info[keep, ]
+phyla.names &lt;- as.character(phyla.good[,2])
+phyla.table &lt;- microbiome
+colnames(phyla.table) &lt;- phyla.names
+#add all the same columns up and then return the sum
+testing &lt;- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table &lt;- as.data.frame(testing)
+rm(testing)
+#combine phyla that are not that abundant
+phyla.table$other &lt;- apply(phyla.table[, c(&quot;Acidobacteria&quot;, &quot;Chloroflexi&quot;, &quot;Deferribacteres&quot;, &quot;Elusimicrobia&quot;, &quot;Fusobacteria&quot;, &quot;Gemmatimonadetes&quot;, &quot;Lentisphaerae&quot;, &quot;OD1&quot;, &quot;Planctomycetes&quot;, &quot;Spirochaetes&quot;, &quot;SR1&quot;, &quot;Synergistetes&quot;, &quot;Tenericutes&quot;)], 1, sum)
+phyla.table &lt;- phyla.table[, -c(1, 4:6, 8:12, 14:17)]
+
+#Create a relative abundance table for phyla
+phyla.total &lt;- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund &lt;- (phyla.table/phyla.total)*100
+
+#Create BMI groups
+metadata$BMI.class[metadata$body_mass_index_s&lt;=24] &lt;- &quot;Normal&quot;
+metadata$BMI.class[metadata$body_mass_index_s&gt;24 &amp; metadata$body_mass_index_s&lt;30] &lt;- &quot;Overweight&quot;
+metadata$BMI.class[metadata$body_mass_index_s&gt;=30 &amp; metadata$body_mass_index_s&lt;40] &lt;- &quot;Obese&quot;
+metadata$BMI.class[metadata$body_mass_index_s&gt;=40] &lt;- &quot;Extreme Obesity&quot;
+
+#Create Obese Yes/No groups
+metadata$obese[metadata$BMI.class==&quot;Normal&quot; | metadata$BMI.class==&quot;Overweight&quot;] &lt;- &quot;No&quot;
+metadata$obese[metadata$BMI.class==&quot;Obese&quot; | metadata$BMI.class==&quot;Extreme Obesity&quot;] &lt;- &quot;Yes&quot;
+
+#Create a column with obese and extreme obese as single entity
+metadata$BMIclass2[metadata$BMI.class==&quot;Normal&quot;] &lt;- &quot;Normal&quot;
+metadata$BMIclass2[metadata$BMI.class==&quot;Overweight&quot;] &lt;- &quot;Overweight&quot;                     
+metadata$BMIclass2[metadata$BMI.class==&quot;Obese&quot; | metadata$BMI.class==&quot;Extreme Obesity&quot;] &lt;- &quot;Obese&quot;
+
+#Get paitent demographics to be tested
+bmi &lt;- metadata$body_mass_index_s
+obese &lt;- factor(metadata$obese)
+bmi.class &lt;- factor(metadata$BMI.class)
+bmi.class2 &lt;- factor(metadata$BMIclass2)
+
+
+###########################################################################
+######### First Level Analysis &amp; Alpha Diversity with BMI #################
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+anova(lm(H ~ obese)) #P-value=0.6671
+anova(lm(H ~ bmi.class)) #P-value=0.9732
+anova(lm(H ~ bmi.class2)) #P-value=0.8987
+
+anova(lm(S ~ obese)) #P-value=0.9073
+anova(lm(S ~ bmi.class)) #P-value=0.9124
+anova(lm(S ~ bmi.class2)) #P-value=0.8202
+
+anova(lm(J ~ obese)) #P-value=0.6319
+anova(lm(J ~ bmi.class)) #P-value=0.943
+anova(lm(J ~ bmi.class2)) #P-value=0.8394
+
+##linear correlations
+summary(lm(H ~ bmi)) #P-value=0.8662, R2=5.63x10-5
+summary(lm(S ~ bmi)) #P-value=0.9142, R2=2.302x10-5
+summary(lm(J ~ bmi)) #P-value=0.8582, R2=6.332x10-5
+
+#B and F tests against obesity
+bacter &lt;- phyla.table.rel.abund$Bacteroidetes
+firm &lt;- phyla.table.rel.abund$Firmicutes
+BFratio &lt;- bacter/firm
+
+anova(lm(bacter ~ obese)) #P-value=0.6661
+anova(lm(bacter ~ bmi.class)) #P-value=0.3184
+anova(lm(bacter ~ bmi.class2)) #P-value=0.3184
+
+anova(lm(firm ~ obese)) #P-value=0.9688
+anova(lm(firm ~ bmi.class)) #P-value=0.399
+anova(lm(firm ~ bmi.class2)) #P-value=0.2455
+
+anova(lm(BFratio ~ obese)) #P-value=0.8709
+anova(lm(BFratio ~ bmi.class)) #P-value=0.7915
+anova(lm(BFratio ~ bmi.class2)) #P-value=0.5976
+
+###########################################################################
+############ NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+adonis(microbiome ~ obese, permutations=1000) 
+#PERMANOVA=0.004995, pseudo-F=2.9308
+
+set.seed(3)
+adonis(microbiome ~ bmi.class, permutations=1000) 
+#PERMANOVA=0.005994, pseudo-F=1.8853
+
+set.seed(3)
+adonis(microbiome ~ bmi.class2, permutations=1000) 
+#PERMANOVA=0.007992, pseudo-F=2.1453
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+library(epiR)
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+median(H) # 2.725646
+alpha.test &lt;- within(alpha.test, {shannon.cat = ifelse(H &lt;= median(H), &quot;less&quot;, &quot;higher&quot;)})
+
+#OTU Richness
+median(S) # 73
+alpha.test &lt;- within(alpha.test, {S.cat = ifelse(S &lt;= median(S), &quot;less&quot;, &quot;higher&quot;)})
+
+#Evenness
+median(J) # 0.6311328
+alpha.test &lt;- within(alpha.test, {J.cat = ifelse(J &lt;= median(J), &quot;less&quot;, &quot;higher&quot;)})
+
+##Shannon Diversity
+H.cat &lt;- alpha.test$shannon.cat
+S.cat &lt;- alpha.test$S.cat
+J.cat &lt;- alpha.test$J.cat
+bmi.cat &lt;- as.character(obese)
+test3 &lt;- cbind(H.cat, S.cat, J.cat, bmi.cat)
+test3 &lt;- test3[order(H.cat), ]
+table(test3[c(1:253), 4])
+table(test3[c(254:507), 4])
+#Group1 (Higher than median), obese = 47 and non-obese = 206
+#Group2 (Lower than median), obese = 56 and non-obese = 198
+
+group1 &lt;- c(47, 206)
+group2 &lt;- c(56, 198)
+r.test &lt;- rbind(group2, group1)
+colnames(r.test) &lt;- c(&quot;Obese&quot;, &quot;Not.Obese&quot;)
+rownames(r.test) &lt;- c(&quot;group2&quot;, &quot;group1&quot;)
+
+epi.2by2(r.test, method=&quot;cohort.count&quot;)
+## Risk Ratio = 1.19
+## CI = 0.84, 1.68
+## p-value = 0.332
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$Bacteroidetes
+Firm = phyla.table.rel.abund$Firmicutes
+BFRatio = Bacter/Firm
+BFRatio &lt;- as.data.frame(BFRatio)
+
+median(BFRatio$BFRatio) # 0.5304444
+BFRatio &lt;- within(BFRatio, {BFRatio.cat = ifelse(BFRatio &lt;= median(BFRatio), &quot;less&quot;, &quot;higher&quot;)})
+
+BFRatio.cat &lt;- BFRatio$BFRatio.cat
+test4 &lt;- cbind(BFRatio.cat, obese)
+test4 &lt;- test4[order(BFRatio.cat), ]
+table(test4[c(1:253), 2]) #higher group
+table(test4[c(254:507), 2]) #lower group
+#Group1 (Higher than median), obese = 52 and non-obese = 201
+#Group2 (Lower than median), obese = 51 and non-obese = 203
+
+group1 &lt;- c(52, 201)
+group2 &lt;- c(51, 203)
+r.test &lt;- rbind(group2, group1)
+colnames(r.test) &lt;- c(&quot;Obese&quot;, &quot;Not.Obese&quot;)
+rownames(r.test) &lt;- c(&quot;group2&quot;, &quot;group1&quot;)
+
+epi.2by2(r.test, method=&quot;cohort.count&quot;)
+## Risk Ratio = 0.98
+## CI = 0.69, 1.38
+## p-value = 0.894
+
+###########################################################################
+############ Classification using AUCRF####################################
+###########################################################################
+
+library(AUCRF)
+
+#Create Obese.num group
+metadata$obese.num[metadata$obese==&quot;No&quot;] &lt;- 0
+metadata$obese.num[metadata$obese==&quot;Yes&quot;] &lt;- 1
+obese &lt;- factor(metadata$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset &lt;- Filter(function(x)(length(unique(x))&gt;5), microbiome)
+testset &lt;- cbind(obese, testset)
+colnames(testset)[1] &lt;- &quot;obese&quot;
+testset &lt;- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+set.seed(3)
+fit &lt;- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+summary(fit) # list of 8 Measures, AUCopt = 0.6767159
+plot(fit)
+
+
+#Try AUCRF with only phyla and alpha diversity measures in the testset
+testset &lt;- cbind(obese, H, S, J, phyla.table.rel.abund)
+set.seed(3)
+fit &lt;- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+summary(fit) 
+# list of 7 Measures, AUCopt = 0.538138
+# Proteobacteria, unclassified, Verrucomicrobia
+plot(fit)</code></pre>
 <p><br><br></p>
 </div>
 <div id="escobar-et-al.-2014" class="section level5">
@@ -831,12 +1064,12 @@ keep  &lt;- rownames(shared.data)
 
 test2 &lt;- test[keep, ]
 good.metadata &lt;- test2
-rm(metadata, test, test2)
-
-metadata &lt;- good.metadata[!grepl(&quot;_s2&quot;, good.metadata$submitted_sample_id_s),]
-keep &lt;- rownames(metadata)
+test3 &lt;- test2[!duplicated(test2$submitted_subject_id_s), ]
+keep &lt;- rownames(test3)
 microbiome &lt;- shared.data[keep, ]
-rm(good.metadata, shared.data, keep)
+metadata &lt;- test3
+
+rm(good.metadata, shared.data, keep, test, test2, test3)
 
 
 #generate alpha diversity measures with vegan
@@ -892,25 +1125,25 @@ obese &lt;- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-anova(lm(H ~ obese)) #P-value=0.2145
-anova(lm(S ~ obese)) #P-value=0.05925
-anova(lm(J ~ obese)) #P-value=0.5093
+anova(lm(H ~ obese)) #P-value=0.2034
+anova(lm(S ~ obese)) #P-value=0.03516
+anova(lm(J ~ obese)) #P-value=0.5369
 
 #B and F tests against obesity
 bacter &lt;- phyla.table.rel.abund$Bacteroidetes
 firm &lt;- phyla.table.rel.abund$Firmicutes
 BFratio &lt;- bacter/firm
 
-anova(lm(bacter ~ obese)) #P-value=0.9485
-anova(lm(firm ~ obese)) #P-value=0.2379
-anova(lm(BFratio ~ obese)) #P-value=0.9277
+anova(lm(bacter ~ obese)) #P-value=0.9582
+anova(lm(firm ~ obese)) #P-value=0.2654
+anova(lm(BFratio ~ obese)) #P-value=0.9899
 
 ####################################################################################### NMDS and PERMANOVA Analysis###################################
 ###########################################################################
 
 set.seed(3)
 adonis(microbiome ~ obese, permutations=1000) 
-#PERMANOVA=0.5504, pseudo-F=0.97273
+#PERMANOVA=0.5734, pseudo-F=0.95626
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -939,21 +1172,21 @@ J.cat &lt;- alpha.test$J.cat
 bmi.cat &lt;- as.character(obese)
 test3 &lt;- cbind(H.cat, S.cat, J.cat, bmi.cat)
 test3 &lt;- test3[order(H.cat), ]
-table(test3[c(1:100), 4])
-table(test3[c(101:201), 4])
-#Group1 (Higher than median), obese = 29 and non-obese = 71
-#Group2 (Lower than median), obese = 45 and non-obese = 56
+table(test3[c(1:103), 4])
+table(test3[c(104:207), 4])
+#Group1 (Higher than median), obese = 31 and non-obese = 72
+#Group2 (Lower than median), obese = 47 and non-obese = 57
 
-group1 &lt;- c(29, 71)
-group2 &lt;- c(45, 56)
+group1 &lt;- c(31, 72)
+group2 &lt;- c(47, 57)
 r.test &lt;- rbind(group2, group1)
 colnames(r.test) &lt;- c(&quot;Obese&quot;, &quot;Not.Obese&quot;)
 rownames(r.test) &lt;- c(&quot;group2&quot;, &quot;group1&quot;)
 
 epi.2by2(r.test, method=&quot;cohort.count&quot;)
-## Risk Ratio = 1.54
-## CI = 1.05, 2.24
-## p-value = 0.022
+## Risk Ratio = 1.50
+## CI = 1.04, 2.16
+## p-value = 0.025
 
 
 ##Run the RR for B/F ratio
@@ -962,27 +1195,27 @@ Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio &lt;- as.data.frame(BFRatio)
 
-median(BFRatio$BFRatio) # 0.537415
+median(BFRatio$BFRatio) # 0.5414258
 BFRatio &lt;- within(BFRatio, {BFRatio.cat = ifelse(BFRatio &lt;= median(BFRatio), &quot;less&quot;, &quot;higher&quot;)})
 
 BFRatio.cat &lt;- BFRatio$BFRatio.cat
 test4 &lt;- cbind(BFRatio.cat, obese)
 test4 &lt;- test4[order(BFRatio.cat), ]
-table(test4[c(1:100), 2]) #higher group
-table(test4[c(101:201), 2]) #lower group
-#Group1 (Higher than median), obese = 38 and non-obese = 62
-#Group2 (Lower than median), obese = 36 and non-obese = 65
+table(test4[c(1:103), 2]) #higher group
+table(test4[c(104:207), 2]) #lower group
+#Group1 (Higher than median), obese = 41 and non-obese = 62
+#Group2 (Lower than median), obese = 37 and non-obese = 67
 
-group1 &lt;- c(38, 62)
-group2 &lt;- c(36, 65)
+group1 &lt;- c(41, 62)
+group2 &lt;- c(37, 67)
 r.test &lt;- rbind(group2, group1)
 colnames(r.test) &lt;- c(&quot;Obese&quot;, &quot;Not.Obese&quot;)
 rownames(r.test) &lt;- c(&quot;group2&quot;, &quot;group1&quot;)
 
 epi.2by2(r.test, method=&quot;cohort.count&quot;)
-## Risk Ratio = 0.94
-## CI = 0.65, 1.35
-## p-value = 0.729
+## Risk Ratio = 0.89
+## CI = 0.66, 1.27
+## p-value = 0.53
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -1003,7 +1236,7 @@ testset &lt;- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 fit &lt;- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-summary(fit) # list of 32 Measures, AUCopt = 0.6679613
+summary(fit) # list of 42 Measures, AUCopt = 0.6365534
 plot(fit)</code></pre>
 </div>
 <div id="yatsunenko-et-al.-2012" class="section level5">
@@ -2279,17 +2512,17 @@ library(rmeta)  #This package was used for the less intensive graph
 #Change working directory
 setwd(&quot;C:/users/marc/Desktop/obesity2&quot;)
 
-StudyNo &lt;- c(1, 2, 3, 4, 5, 6, 7, 8)
-Study &lt;- c(&quot;Baxter&quot;, &quot;HMP&quot;, &quot;Ross&quot;, &quot;Escobar&quot;, &quot;Argumugam&quot;, &quot;Turnbaugh&quot;, &quot;Zupancic&quot;, &quot;Wu&quot;)
-Year &lt;- c(&quot;2015&quot;, &quot;2011&quot;, &quot;2015&quot;, &quot;2014&quot;, &quot;2010&quot;, &quot;2009&quot;, &quot;2012&quot;, &quot;2012&quot;)
-Total &lt;- c(&quot;n=172&quot;, &quot;n=256&quot;, &quot;n=63&quot;, &quot;n=30&quot;, &quot;n=85&quot;, &quot;n=146&quot;, &quot;n=201&quot;, &quot;n=58&quot;)
-tpos &lt;- c(25, 16, 20, 6, 20, 52, 45, 2) #obese in low diversity group
-tneg &lt;- c(61, 112, 12, 9, 23, 21, 56, 27) #nonobese in low diversity group
-cpos &lt;- c(22, 10, 18, 4, 17, 47, 29, 3) #obese in high diversity group
-cneg &lt;- c(64, 118, 13, 11, 25, 26, 71, 26) #nonobese in high diversity group
-RR &lt;- c(1.14, 1.6, 1.08, 1.50, 1.15, 1.11, 1.54, 0.67)
-low &lt;- c(0.70, 0.75, 0.72, 0.53, 0.71, 0.88, 1.05, 0.12)
-high &lt;- c(1.85, 3.39, 1.61, 4.26, 1.87, 1.38, 2.24, 3.70)
+StudyNo &lt;- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+Study &lt;- c(&quot;Baxter&quot;, &quot;HMP&quot;, &quot;Ross&quot;, &quot;Escobar&quot;, &quot;Arumugam&quot;, &quot;Turnbaugh&quot;, &quot;Zupancic&quot;, &quot;Wu&quot;, &quot;Goodrich&quot;)
+Year &lt;- c(&quot;2015&quot;, &quot;2011&quot;, &quot;2015&quot;, &quot;2014&quot;, &quot;2010&quot;, &quot;2009&quot;, &quot;2012&quot;, &quot;2012&quot;, &quot;2014&quot;)
+Total &lt;- c(&quot;n=172&quot;, &quot;n=256&quot;, &quot;n=63&quot;, &quot;n=30&quot;, &quot;n=85&quot;, &quot;n=146&quot;, &quot;n=207&quot;, &quot;n=58&quot;, &quot;n=507&quot;)
+tpos &lt;- c(25, 16, 20, 6, 20, 52, 47, 2, 56) #obese in low diversity group
+tneg &lt;- c(61, 112, 12, 9, 23, 21, 57, 27, 198) #nonobese in low diversity group
+cpos &lt;- c(22, 10, 18, 4, 17, 47, 31, 3, 47) #obese in high diversity group
+cneg &lt;- c(64, 118, 13, 11, 25, 26, 72, 26, 206) #nonobese in high diversity group
+RR &lt;- c(1.14, 1.6, 1.08, 1.50, 1.15, 1.11, 1.50, 0.67, 1.19)
+low &lt;- c(0.70, 0.75, 0.72, 0.53, 0.71, 0.88, 1.04, 0.12, 0.84)
+high &lt;- c(1.85, 3.39, 1.61, 4.26, 1.87, 1.38, 2.16, 3.70, 1.68)
 
 numeric.data &lt;-as.data.frame(cbind(tpos, tneg, cpos, cneg))
 raw.overall &lt;- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
@@ -2316,13 +2549,13 @@ par(font=2) #Switch to bold
 #text(3.2, 3.10, &quot;Relative Risk [95% CI]&quot;, pos=2, cex=0.8)#
   #large scale (Plot in R studio at full)                 #
                                                           #
-text(5.5, 9.3, &quot;Relative Risk [95% CI]&quot;, pos=2, cex=0.8)  #
+text(5.5, 10.3, &quot;Relative Risk [95% CI]&quot;, pos=2, cex=0.8)  #
   #smaller scale (Plot in R studia at normal)             #
 ###########################################################
 
 # Group Title#############################################
                                                          #
-text(-6.5, 9.3, &quot;Study, Year, and n&quot;, pos=4, cex=0.8)    #
+text(-6.5, 10.3, &quot;Study, Year, and n&quot;, pos=4, cex=0.8)    #
                                                          #
 ##########################################################
 
@@ -2345,12 +2578,12 @@ metaplot(logRR, SE, labels=Study, nn=1, logeffect=TRUE, col=meta.colors(&quot;bl
 
 ##Calculate combined P-value
 m = 8
-T = -2*log(0.608)-2*log(0.214)-2*log(0.236)-2*log(0.439)-2*log(0.575)-2*log(0.376)-2*log(0.022)-2*log(0.64)
-T.pval = 1-pchisq(T,m) #P-value = 0.01
+T = -2*log(0.608)-2*log(0.214)-2*log(0.236)-2*log(0.439)-2*log(0.575)-2*log(0.376)-2*log(0.025)-2*log(0.64)-2*log(0.332)
+T.pval = 1-pchisq(T,m) #P-value = 0.00464
 
 ##Alternatively can use built in package (I trust this more)
 anova.rma(res)
-# QM = 5.0973, p-value = 0.0240</code></pre>
+# QM = 6.0488, p-value = 0.0139</code></pre>
 <p><br> This second R chunk shows the code used to generate the RR for obesity and B/F ratio.</p>
 <pre class="r"><code>#Load required packages
 library(meta)
@@ -2359,17 +2592,17 @@ library(metafor) #This package is used mostly for the more in-depth graph
 #Change working directory
 setwd(&quot;C:/users/marc/Desktop/obesity2&quot;)
 
-StudyNo &lt;- c(1, 2, 3, 4, 5, 6, 7, 8)
-Study &lt;- c(&quot;Baxter&quot;, &quot;HMP&quot;, &quot;Ross&quot;, &quot;Escobar&quot;, &quot;Argumugam&quot;, &quot;Turnbaugh&quot;, &quot;Zupancic&quot;, &quot;Wu&quot;)
-Year &lt;- c(&quot;2015&quot;, &quot;2011&quot;, &quot;2015&quot;, &quot;2014&quot;, &quot;2010&quot;, &quot;2009&quot;, &quot;2012&quot;, &quot;2012&quot;)
-Total &lt;- c(&quot;n=172&quot;, &quot;n=256&quot;, &quot;n=63&quot;, &quot;n=30&quot;, &quot;n=85&quot;, &quot;n=146&quot;, &quot;n=201&quot;, &quot;n=58&quot;)
-tpos &lt;- c(24, 13, 16, 3, 17, 45, 36, 2) #obese in low BF group
-tneg &lt;- c(62, 115, 16, 12, 26, 28, 65, 27) #nonobese in low BF group
-cpos &lt;- c(23, 13, 22, 7, 20, 54, 38, 3) #obese in high BF group
-cneg &lt;- c(63, 115, 9, 8, 22, 19, 62, 26) #nonobese in high BF group
-RR &lt;- c(1.04, 1.00, 0.70, 0.43, 0.83, 0.83, 0.94, 0.67)
-low &lt;- c(0.64, 0.48, 0.47, 0.14, 0.51, 0.66, 0.65, 0.12)
-high &lt;- c(1.70, 2.07, 1.07, 1.35, 1.35, 1.05, 1.35, 3.70)
+StudyNo &lt;- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
+Study &lt;- c(&quot;Baxter&quot;, &quot;HMP&quot;, &quot;Ross&quot;, &quot;Escobar&quot;, &quot;Arumugam&quot;, &quot;Turnbaugh&quot;, &quot;Zupancic&quot;, &quot;Wu&quot;, &quot;Goodrich&quot;)
+Year &lt;- c(&quot;2015&quot;, &quot;2011&quot;, &quot;2015&quot;, &quot;2014&quot;, &quot;2010&quot;, &quot;2009&quot;, &quot;2012&quot;, &quot;2012&quot;, &quot;2014&quot;)
+Total &lt;- c(&quot;n=172&quot;, &quot;n=256&quot;, &quot;n=63&quot;, &quot;n=30&quot;, &quot;n=85&quot;, &quot;n=146&quot;, &quot;n=201&quot;, &quot;n=58&quot;, &quot;n=507&quot;)
+tpos &lt;- c(24, 13, 16, 3, 17, 45, 37, 2, 51) #obese in low BF group
+tneg &lt;- c(62, 115, 16, 12, 26, 28, 67, 27, 203) #nonobese in low BF group
+cpos &lt;- c(23, 13, 22, 7, 20, 54, 41, 3, 52) #obese in high BF group
+cneg &lt;- c(63, 115, 9, 8, 22, 19, 62, 26, 201) #nonobese in high BF group
+RR &lt;- c(1.04, 1.00, 0.70, 0.43, 0.83, 0.83, 0.89, 0.67, 0.98)
+low &lt;- c(0.64, 0.48, 0.47, 0.14, 0.51, 0.66, 0.66, 0.12, 0.69)
+high &lt;- c(1.70, 2.07, 1.07, 1.35, 1.35, 1.05, 1.27, 3.70, 1.38)
 
 numeric.data &lt;-as.data.frame(cbind(tpos, tneg, cpos, cneg))
 raw.overall &lt;- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
@@ -2396,13 +2629,13 @@ par(font=2) #Switch to bold
 #text(3.2, 3.10, &quot;Relative Risk [95% CI]&quot;, pos=2, cex=0.8)#
 #large scale (Plot in R studio at full)                 #
 #
-text(5.5, 9.3, &quot;Relative Risk [95% CI]&quot;, pos=2, cex=0.8)  #
+text(5.5, 10.3, &quot;Relative Risk [95% CI]&quot;, pos=2, cex=0.8)  #
 #smaller scale (Plot in R studia at normal)             #
 ###########################################################
 
 # Group Title#############################################
 #
-text(-6.0, 9.3, &quot;Study, Year, and n&quot;, pos=4, cex=0.8)    #
+text(-6.0, 10.3, &quot;Study, Year, and n&quot;, pos=4, cex=0.8)    #
 #
 ##########################################################
 
@@ -2410,17 +2643,16 @@ dev.off()
 
 ##Calculate combined P-value
 m = 8
-T = -2*log(0.864)-2*log(1.00)-2*log(0.089)-2*log(0.121)-2*log(0.452)-2*log(0.111)-2*log(0.729)-2*log(0.64)
-T.pval = 1-pchisq(T,m) #P-value = 0.03155827
+T = -2*log(0.864)-2*log(1.00)-2*log(0.089)-2*log(0.121)-2*log(0.452)-2*log(0.111)-2*log(0.53)-2*log(0.64)-2*log(0.894)
+T.pval = 1-pchisq(T,m) #P-value = 0.02338081
 
 ##Alternatively can use built in package (I trust this more)
 anova.rma(res)
-  # QM = 4.8452, p-value = 0.0277</code></pre>
+  # QM = 4.7318, p-value = 0.0296</code></pre>
 </div>
 <div id="part-3-pooled-analysis-using-zscore-normalizations" class="section level4">
 <h4><strong>Part 3: Pooled Analysis Using ZScore Normalizations</strong></h4>
-<pre class="r"><code>## Load in libraries to be used as well as directory with the data
-library(ggplot2)
+<pre class="r"><code>library(ggplot2)
 library(plyr)
 library(reshape2)
 library(RColorBrewer)
@@ -2437,8 +2669,8 @@ turn.data &lt;- read.csv(&quot;Turnbaugh.normalized.csv&quot;)
 #Load in Amish data
 amish.data &lt;- read.csv(&quot;Amish.normalized.csv&quot;)
 
-#Amish STD = 0.6010608
-amish.ZScore.H &lt;- amish.data$H.corr/0.6010608
+#Amish STD = 0.5893173
+amish.ZScore.H &lt;- amish.data$H.corr/0.5893173
 hist(amish.ZScore.H)
 #Turnbaugh STD = 0.4818751
 turn.ZScore.H &lt;- turn.data$H.corr/0.4818751
@@ -2478,14 +2710,19 @@ keepCOMBO &lt;- which(data1$dataset == &quot;COMBO&quot;)
 COMBOdata &lt;- data1[keepCOMBO, ]
 COMBO.ZScore.H &lt;- COMBOdata$H.corr/0.6870763
 hist(COMBO.ZScore.H)
+#COMBO STD = 0.3489582
+keeptwinsUK &lt;- which(data1$dataset == &quot;twinsUK&quot;)
+twinsUKdata &lt;- data1[keeptwinsUK, ]
+twinsUK.ZScore.H &lt;- twinsUKdata$H.corr/0.3489582
+hist(twinsUK.ZScore.H)
 
-#data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit
-HZScore &lt;- c(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, COMBO.ZScore.H)
+#data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit, COMBO, twinsUK
+HZScore &lt;- c(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H)
 data1 &lt;- cbind(HZScore, data1)
 
 amish.data &lt;- cbind(amish.ZScore.H, amish.data)
 turn.data &lt;- cbind(turn.ZScore.H, turn.data)
-rm(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, amish.ZScore.H, turn.ZScore.H, COMBO.ZScore.H)
+rm(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, amish.ZScore.H, turn.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H)
 rm(keepmetahit, keepCCHC, keepescobar, keepGLNE, keepHMP, keepKorean)
 
 #Create BMI groups
@@ -2522,27 +2759,27 @@ group.data.test2 &lt;- cbind(comb2.H.Zscore, comb2.obese)
 colnames(group.data.test1) &lt;- c(&quot;H.Zscore&quot;, &quot;obese&quot;, &quot;BMI.class&quot;)
 colnames(group.data.test2) &lt;- c(&quot;H.Zscore&quot;, &quot;obese&quot;)
 #Look at Obese versus non-obese
-t.test(H.Zscore ~ obese, data=group.data.test2) #P-value = 0.002792
-table(group.data.test2$obese) # No = 693 | Yes = 336
+t.test(H.Zscore ~ obese, data=group.data.test2) #P-value = 0.00493
+table(group.data.test2$obese) # No = 1099 | Yes = 443
 p1 &lt;- ggplot(group.data.test2, aes(obese, H.Zscore)) + geom_boxplot()
 
 #A more in-depth look, breaking down the groups
-anova(lm(H.Zscore ~ BMI.class, data=group.data.test1)) #P-value = 0.01783
+anova(lm(H.Zscore ~ BMI.class, data=group.data.test1)) #P-value = 0.03826
 a2 &lt;- aov(H.Zscore ~ BMI.class, data=group.data.test1)
 posthoc &lt;- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
-  # Obese-Lean (p-value=0.070), Over-Norm (p-value=0.791), Over-Obese (p-value=0.021)
+  # Obese-Lean (p-value=0.107), Over-Norm (p-value=0.872), Over-Obese (p-value=0.0394479)
 
 table(group.data.test1$BMI.class) 
-  # Lean = 326 | Overweight = 240 | Obese = 262
+  # Lean = 509 | Overweight = 365 | Obese = 461
 ddply(group.data.test1, ~BMI.class, summarise, mean=mean(H.Zscore), sd=sd(H.Zscore))
-  # Lean = 0.042 +\- 0.940 | Overweight = 0.097 +/- 0.993 | Obese = -0.140 +\- 1.052
+  # Lean = 0.027 +\- 0.993| Overweight = 0.059 +/- 0.982 | Obese = -0.111 +\- 1.016
 
 #Let's change the order so it makes sense
 group.data.test1$BMI.class &lt;- factor(group.data.test1$BMI.class, levels = c(&quot;Lean&quot;, &quot;Overweight&quot;, &quot;Obese&quot;))
 
 p2 &lt;- ggplot(group.data.test1, aes(BMI.class, H.Zscore)) + geom_boxplot()
 
-summary(lm(HZScore ~ bmi, data=data1)) #P-value 0.06558, R2= 0.004977
+summary(lm(HZScore ~ bmi, data=data1)) #P-value 0.1272, R2= 0.001959
 plot(HZScore ~ bmi, data=data1)
 abline(lm(HZScore ~ bmi, data=data1), col=&quot;red&quot;)
 
@@ -2573,10 +2810,10 @@ data2$BMI.class[data2$bmi&gt;=30] &lt;- &quot;Obese&quot;
 data2$obese[data2$BMI.class==&quot;Lean&quot; | data2$BMI.class==&quot;Overweight&quot;] &lt;- &quot;No&quot;
 data2$obese[data2$BMI.class==&quot;Obese&quot;] &lt;- &quot;Yes&quot;
 
-#Amish SD = 0.7990372
+#Amish SD = 0.7918527
 am.BF.corr &lt;- as.character(amish.data$BF.ratio.corr)
 am.BF.corr &lt;- as.numeric(am.BF.corr) # Value 19 has no value
-amish.norm.BF &lt;- am.BF.corr/0.7990372
+amish.norm.BF &lt;- am.BF.corr/0.7918527
 hist(amish.norm.BF)
 #Turnbaugh SD = 0.4578937
 turn.norm.BF &lt;- turn.data$BF.corr/0.4578937
@@ -2616,14 +2853,19 @@ keepCOMBO &lt;- which(data2$dataset == &quot;COMBO&quot;)
 COMBOdata &lt;- data2[keepCOMBO, ]
 COMBO.norm.BF &lt;- COMBOdata$BF.ratio.corr/5.928664
 hist(COMBO.norm.BF)
+#twinsUK SD = 0.9802656
+keeptwinsUK &lt;- which(data2$dataset == &quot;twinsUK&quot;)
+twinsUKdata &lt;- data2[keeptwinsUK, ]
+twinsUK.norm.BF &lt;- twinsUKdata$BF.ratio.corr/0.9802656
+hist(twinsUK.norm.BF)
 
 #data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit
-BFScore &lt;- c(Escobar.norm.BF, GLNE.norm.BF, CCHC.norm.BF, HMP.norm.BF, Korean.norm.BF, metahit.norm.BF, COMBO.norm.BF)
+BFScore &lt;- c(Escobar.norm.BF, GLNE.norm.BF, CCHC.norm.BF, HMP.norm.BF, Korean.norm.BF, metahit.norm.BF, COMBO.norm.BF, twinsUK.norm.BF)
 data2 &lt;- cbind(BFScore, data2)
 
 amish.data &lt;- cbind(amish.norm.BF, amish.data)
 turn.data &lt;- cbind(turn.norm.BF, turn.data)
-rm(Escobar.norm.BF, GLNE.norm.BF, CCHC.norm.BF, HMP.norm.BF, Korean.norm.BF, metahit.norm.BF, amish.norm.BF, turn.norm.BF, COMBO.norm.BF)
+rm(Escobar.norm.BF, GLNE.norm.BF, CCHC.norm.BF, HMP.norm.BF, Korean.norm.BF, metahit.norm.BF, amish.norm.BF, turn.norm.BF, COMBO.norm.BF, twinsUK.norm.BF)
 rm(keepmetahit, keepCCHC, keepescobar, keepGLNE, keepHMP, keepKorean)
 
 d1.BF.corr &lt;- data2$BFScore
@@ -2640,25 +2882,25 @@ colnames(group.data.test2)[1] &lt;- &quot;BF.ratio.corr&quot;
 
 #Look at Obese versus non-obese
 t.test(BF.ratio.corr ~ obese, data=group.data.test2) 
-  # P-value = 0.05066
+  # P-value = 0.07283
 table(group.data.test2$obese)
-  # No = 693 | Yes = 336
+  # No = 1099 | Yes = 443
 bf1 &lt;- ggplot(group.data.test2, aes(obese, BF.ratio.corr)) + geom_boxplot()
 
 #A more in-depth look, breaking down the groups
 anova(lm(BF.ratio.corr ~ BMI.class, data=group.data.test)) 
-  # P-value = 0.0227
+  # P-value = 0.005442
 a2 &lt;- aov(BF.ratio.corr ~ BMI.class, data=group.data.test)
 posthoc &lt;- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
-  # Obese-Norm (p-value=0.026) | Over-Norm (p-value=0.117), Over-Obese (p-value=0.863)
+  # Obese-Norm (p-value=0.016) | Over-Norm (p-value=0.017), Over-Obese (p-value=0.979)
 table(group.data.test$BMI.class)
   # Lean = 326 | Overweight = 240 | Obese = 262
 ddply(group.data.test, ~BMI.class, summarise, mean=mean(BF.ratio.corr), sd=sd(BF.ratio.corr))
-  # Lean = -0.361 +\- 1.431 | Overweight = -0.695 +/- 2.032 | Obese = -0.787 +\- 2.461
+  # Lean = -0.392 +\- 1.319 | Overweight = -0.695 +/- 1.705 | Obese = -0.718 +\- 2.180
 bf2 &lt;- ggplot(group.data.test, aes(BMI.class, BF.ratio.corr)) + geom_boxplot()
 
 
-summary(lm(BFScore ~ bmi, data=data2)) #P-value 0.07859, R2= 0.004543
+summary(lm(BFScore ~ bmi, data=data2)) #P-value 0.06589, R2= 0.002847
 plot(BFScore ~ bmi, data=data2)
 abline(lm(BFScore ~ bmi, data=data2), col=&quot;red&quot;)
 
@@ -2711,25 +2953,25 @@ colnames(group.data.test2)[1] &lt;- &quot;zbf&quot;
 ###################################Bacteroidetes#######################################
 #Look at Obese versus non-obese
 t.test(Zbacter ~ obese, data=group.data.test2) 
-  # P-value = 0.3161
+  # P-value = 0.2892
 table(group.data.test2$obese)
-  # No = 693 | Yes = 336
+  # No = 1099 | Yes = 443
 bacter1 &lt;- ggplot(group.data.test2, aes(obese, Zbacter)) + geom_boxplot()
 
 #A more in-depth look, breaking down the groups
-anova(lm(Zbacter ~ BMI.class, data=group.data.test)) #P-value = 0.0957
+anova(lm(Zbacter ~ BMI.class, data=group.data.test)) #P-value = 0.03564
 a2 &lt;- aov(Zbacter ~ BMI.class, data=group.data.test)
 posthoc &lt;- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
-  # Obese-Norm (p-value=0.979) | Over-Norm (p-value=0.151) | Over-Obese (p-value=0.125)
+  # Obese-Norm (p-value=0.999) | Over-Norm (p-value=0.054) | Over-Obese (p-value=0.085)
 table(group.data.test$BMI.class)
-  # Lean = 326 | Overweight = 240 | Obese = 262
+  # Lean = 509 | Overweight = 461 | Obese = 365
 ddply(group.data.test, ~BMI.class, summarise, mean=mean(Zbacter), sd=sd(Zbacter))
-  # Lean = 0.041 +/- 0.966 | Overweight = -0.117 +/- 1.000 | Obese = 0.057 +/- 1.02
+  # Lean = 0.051 +/- 0.970 | Overweight = -0.097 +/- 1.000 | Obese = 0.051 +/- 1.02
 
 bacter2 &lt;- ggplot(group.data.test, aes(BMI.class, Zbacter)) + geom_boxplot()
 
 
-summary(lm(Zbacter ~ bmi, data=data2)) #P-value 0.7168, R2= 0.0001936
+summary(lm(Zbacter ~ bmi, data=data2)) #P-value 0.8789, R2= 1.957x10-5
 plot(Zbacter ~ bmi, data=data2)
 abline(lm(Zbacter ~ bmi, data=data2), col=&quot;red&quot;)
 
@@ -2741,26 +2983,26 @@ b4 &lt;- b3 + geom_smooth(method=&quot;lm&quot;, se=TRUE)
 
 ###################################Firmicutes#######################################
 #Look at Obese versus non-obese
-t.test(Zfirm ~ obese, data=group.data.test2) #P-value = 0.8298
+t.test(Zfirm ~ obese, data=group.data.test2) #P-value = 0.8582
 table(group.data.test2$obese)
-  # No = 693 | Yes = 336
+  # No = 1099 | Yes = 443
 firm1 &lt;- ggplot(group.data.test2, aes(obese, Zfirm)) + geom_boxplot()
 
 #A more in-depth look, breaking down the groups
 anova(lm(Zfirm ~ BMI.class, data=group.data.test)) 
-  #P-value = 0.05521
+  #P-value = 0.01847
 a2 &lt;- aov(Zfirm ~ BMI.class, data=group.data.test)
 posthoc &lt;- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
-  # Obese-Norm (p-value=0.976), Over-Norm (p-value=0.063), Over-Obese (p-value=0.1252)
+  # Obese-Norm (p-value=0.812), Over-Norm (p-value=0.017), Over-Obese (p-value=0.134)
 table(group.data.test$BMI.class)
-  # Lean = 326 | Overweight = 240 | Obese = 262
+  # Lean = 509 | Overweight = 461 | Obese = 365
 ddply(group.data.test, ~BMI.class, summarise, mean=mean(Zfirm), sd=sd(Zfirm))
-  # Lean = -0.061 +/- 0.959 | Overweight = 0.130 +/- 1.018 | Obese = -0.043 +/- 1.013
+  # Lean = -0.072 +/- 0.965 | Overweight = 0.104 +/- 1.008 | Obese = -0.030 +/- 1.020
 
 firm2 &lt;- ggplot(group.data.test, aes(BMI.class, Zfirm)) + geom_boxplot()
 
 
-summary(lm(Zfirm ~ bmi, data=data2)) #P-value 0.8682, R2= 4.06x10-5
+summary(lm(Zfirm ~ bmi, data=data2)) #P-value 0.7604, R2= 7.835x10-5
 plot(Zfirm ~ bmi, data=data2)
 abline(lm(Zfirm ~ bmi, data=data2), col=&quot;red&quot;)
 
@@ -2772,25 +3014,25 @@ b4 &lt;- b3 + geom_smooth(method=&quot;lm&quot;, se=TRUE)
 
 ###################################Bacteroidetes/Firmicutes#######################################
 #Look at Obese versus non-obese
-t.test(zbf ~ obese, data=group.data.test2) #P-value = 0.4167
+t.test(zbf ~ obese, data=group.data.test2) #P-value = 0.4516
 table(group.data.test2$obese)
-  # No = 693 | Yes = 336
+  # No = 1099 | Yes = 443
 zbf1 &lt;- ggplot(group.data.test2, aes(obese, zbf)) + geom_boxplot()
 
 #A more in-depth look, breaking down the groups
 anova(lm(zbf ~ BMI.class, data=group.data.test)) 
-  # P-value = 0.4769
+  # P-value = 0.3317
 a2 &lt;- aov(zbf ~ BMI.class, data=group.data.test)
 posthoc &lt;- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
-  # Obese-Norm (p-value=0.892) | Over-Norm (p-value=0.692) | Over-Obese (p-value=0.452)
+  # Obese-Norm (p-value=0.979) | Over-Norm (p-value=0.434) | Over-Obese (p-value=0.383)
 table(group.data.test$BMI.class)
-  # Lean = 326 | Overweight = 240 | Obese = 262
+  # Lean = 509 | Overweight = 461 | Obese = 365
 ddply(group.data.test, ~BMI.class, summarise, mean=mean(zbf), sd=sd(zbf))
-  # Lean = 0.0081 +/- 0.954 | Overweight = -0.064 +/- 0.951 | Obese = 0.046 +/- 1.084
+  # Lean = 0.0024 +/- 0.979 | Overweight = -0.055 +/- 0.988 | Obese = 0.037 +/- 1.033
 zbf2 &lt;- ggplot(group.data.test, aes(BMI.class, zbf)) + geom_boxplot()
 
 
-summary(lm(ZBF ~ bmi, data=data2)) #P-value 0.7118, R2= 0.0002008
+summary(lm(ZBF ~ bmi, data=data2)) #P-value 0.8311, R2= 3.836x10-5
 plot(ZBF ~ bmi, data=data2)
 abline(lm(ZBF ~ bmi, data=data2), col=&quot;red&quot;)
 

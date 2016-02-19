@@ -172,8 +172,8 @@ BMI.microbiome <- microbiome[-test,]
 bmi.class.group <- factor(BMI.class.demo$BMI.classification)
 
 set.seed(3)
-adonis(BMI.microbiome ~ bmi.class.group, permutations=1000)
-#Not significant PERMANOVA = 0.2278, pseudo-F = 1.1323
+adonis(microbiome ~ obese, permutations=1000)
+#Not significant PERMANOVA = 0.06394, pseudo-F = 1.4246
 
 set.seed(3)
 adonis(microbiome ~ bmi.class, permutations=1000)
