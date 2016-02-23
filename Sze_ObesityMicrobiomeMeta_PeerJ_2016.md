@@ -30,10 +30,14 @@ Phone: 734-936-2951
 
 *******
 ##### **Abstract:**
-**Rationale:** It has been well accepted within the literature that changes to the bacterial microbiome are related to obesity.  However, recent reports from two different research groups re-examining existing data suggests that there may not be a strong association between the bacterial microbiome and obesity.  These two newer studies, however, did not look at the results of pooling all the data together.  In this meta analysis, we drastically increase the number of data sets examined and investigate the pooled data to provide clearity on the association between the bacterial microbiome and obesity.  
-**Methods:** A total of 196 data sets were initially identified for inclusion in this meta-analysis.  A total of 9 data sets were included once all the search criteria were completed (controls from the GLNE07 cohort, Ross et al. 2015, Goodrich et al. 2014, Escobar et al. 2014, Zupancic et al. 2012, Human Microbiome Project, Wu et al. 2011, MetaHit, and Turnbaugh et al. 2009.  Three analysis piplines were pursued for the data.  First, each data set was analyzed separately for relationships with BMI, similar to previous reports on the re-analysis of the bacterial microbiome and obesity.  Second, a classical apporach for pooling data in a meta analysis was used to invesitigate the over all relative risk (RR) ratio from all studies of being obese based on the bacterial microbiome.  Finally, data normalization was used to investigate all data sets together for relationships between the microbiome and obesity.  
-**Results:** For the first part of the analysis there was no significant difference (P > 0.05) between non-obese and obese individuals in Bacteroidetes, Firmicutes, or B/F ratio.  Shannon diversity, OTU richness, relative risk, or the NMDS of the Bray-Curtis distance matrix analyzed by PERMANOVA was significant in at least one study (P<0.05).  For the second part of the analysis there was a signifcant pooled difference in RR of obesity based on Shannon diversity (RR = 1.19, CI = 1.04, 1.36, (P-value = 0.0139)).  There was also a significant difference in RR based in the B/F ratio for the pooled data (RR = 0.86, CI = 0.75, 0.99, (P-value = 0.0296)).  
-**Conclusion:** Our meta-analysis supports the  hypothesis that there is a difference between non-obese and obese individuals in Shannon diversity and B/F ratio, based on the currently avialable bacterial microbiome data included in this meta-analysis.  
+**Rationale:** The hypothesis that changes in the microbiome and obesity are associated has been widely accepted.  However, two recent reports that re-examined existing data suggest that acceptance of this hypothesis is unwarranted.  These studies, however, studied the original studies in isolation from each other. We hypothesized that by statistically pooling the individual results, the statistical power to identify a significant association would increase.  In this meta analysis, we tested the significance of the association between the microbiome and obesity by increasing the number of data sets examined and investigating the effect of pooling the results across the individual studies. 
+
+**Methods:** We identified 196 studies that tested the microbiome-obesity association hypothesis; however when we limited the studies to those that did microbiome sequencing, had publicly available sequences, and were either willing to share the BMI information for every individual or were already published, a total of 9 data sets were identified. We applied three analysis piplines to the data from each study. First, we tested the association between the community diversity, Bacteroides to Firmicutes ratio (B/F), and relative risk (RR) with the subjects' body mass index (BMI) and obesity category.  We also used random forest to identify variables for classification of obese and non-obese indivdiuals.  Second, we pooled the relative risk (RR) ratio of being obese based on characteristics of the microbiome for each studies.  Finally, data normalization was used to investigate all data sets together for relationships between the microbiome and obesity.  [aren't these two points the same thing?  didn't you have to normalize the data to pool the results? No, they  aren't I did not have have to normalize to perform the RR pooled result. Also, what about the RF stuff? I added a sentence to address the omission]  
+
+**Results:** There were no significant differences (P > 0.05) between the relative abundance of Bacteroidetes, Firmicutes, or thier ratio in non-obese and obese individuals. The Shannon diversity, OTU richness, relative risk, or oveall community dissimilarity was significant in at least one study (P<0.05).  Overall, the random forest results for Area Under the Curve (AUC) was 0.7553 +/- 0.0888 and 7/9 studies contained an OTU that could be classified to the Ruminococcaceae family.  When we pooled the results across studies, there was a signifcant difference in RR of obesity based on Shannon diversity (RR = 1.19, CI = 1.04, 1.36, (P-value = 0.0139)) and B/F ratio (RR = 0.86, CI = 0.75, 0.99, (P-value = 0.0296)). [RF results? Added] 
+
+**Conclusion:** We show that by pooling the results of many indivdiual studies we can test the generalizability of the bacterial microbiome.  Our meta-analysis supports the  hypothesis that there is a difference between non-obese and obese individuals in Shannon diversity and B/F ratio, based on the currently avialable bacterial microbiome data included in this meta-analysis.  
+  		   
 
 
 
@@ -63,7 +67,7 @@ The overall demographics for indivdiuals used in this meta-analysis split by the
   
 *Sequence Analysis Pipeline*
 <br><br>
-All data was publically available and the sequence data was downloaded from the NCBI Sequence Read Archive, MG-RAST, or the European Nucleotide Archive.  A total of 6/9 [@turnbaugh_core_2009; @ross_16s_2015; @zupancic_analysis_2012; @wu_linking_2011; @escobar_gut_2014; @conlan_species-level_2012] studies were processed by staying as close as possible to the mothur 454 standard operating procedure, which can be found at http://www.mothur.org/wiki/454_SOP.  A total of 2/9 [@goodrich_human_2014] of the studies were processed by staying as close as possible to the mothur MiSeq standard operating procedure found at http://www.mothur.org/wiki/MiSeq_SOP.  The final data set [@arumugam_enterotypes_2011] that was used took advantage of the Metaphlan2 package [@truong_metaphlan2_2015] to generate the necessary data for this analysis.  A comparison of the similarity of Metaphlan2 to 16S sequencing using the Human Microbiome Project (HMP) data set can be found in the online supplement [Figure S1-S3]. For the studies that utilized 16S rRNA gene sequencing three studies used primers targeting the V1-V3 region [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], two studies used the V4 region [@goodrich_human_2014], and one study used the V1-V2 region [@wu_linking_2011].  Where there were two choices of data sets to use we used the V3-V5 data of the HMP [@conlan_species-level_2012] and the V2 data from the Turnbaugh study [-@turnbaugh_core_2009].  A detailed walkthrough of the entire analysis pipeline can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/blob/master/code/sequenceProcessing.md.
+All data was publically available and the sequence data was downloaded from the NCBI Sequence Read Archive, MG-RAST, or the European Nucleotide Archive.  A total of 6/9 [@turnbaugh_core_2009; @ross_16s_2015; @zupancic_analysis_2012; @wu_linking_2011; @escobar_gut_2014; @conlan_species-level_2012] studies were processed by staying as close as possible to the mothur 454 standard operating procedure, which can be found at http://www.mothur.org/wiki/454_SOP.  A total of 2/9 [@goodrich_human_2014] of the studies were processed by staying as close as possible to the mothur MiSeq standard operating procedure found at http://www.mothur.org/wiki/MiSeq_SOP.  The final data set [@arumugam_enterotypes_2011] that was used took advantage of the Metaphlan2 package [@truong_metaphlan2_2015] to generate the necessary data for this analysis.  A comparison of the similarity of Metaphlan2 to 16S sequencing using the Human Microbiome Project (HMP) data set can be found in the online supplement [Figure S1-S3]. For the studies that utilized 16S rRNA gene sequencing three studies used primers targeting the V1-V3 region [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], two studies used the V4 region [@goodrich_human_2014], and one study used the V1-V2 region [@wu_linking_2011].  Where there were two choices of data sets to use we used the V3-V5 data of the HMP [@conlan_species-level_2012] and the V2 data from the Turnbaugh study [-@turnbaugh_core_2009].  A detailed walkthrough of the entire analysis pipeline can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/.
 
 *Data Analysis*
 <br><br>
@@ -165,17 +169,37 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 **Table 3:Summary of P-values for Measurements of Interest for each Individual Study for Obese versus Normal** 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 |    Study    |  Bacteroidetes  |  Firmicutes  |  B/F Ratio  |  Shannon Diversity  |  OTU Richness  |  Evenness  |  Bray Curtis  |
 |:-----------:|:---------------:|:------------:|:-----------:|:-------------------:|:--------------:|:----------:|:-------------:|
-|   Baxter    |      0.318      |    0.682     |    0.631    |        0.016        |     0.016      |   0.032    |     0.064     |
+|   Baxter    |      0.318      |    0.682     |    0.631    |       0.0164        |     0.0157     |   0.0324   |    0.0639     |
 |    Ross     |      0.209      |    0.257     |    0.251    |        0.166        |     0.184      |   0.254    |     0.715     |
-|  Goodrich   |      0.666      |    0.967     |    0.871    |        0.667        |     0.907      |   0.632    |     0.005     |
-|   Escobar   |      0.093      |     0.36     |    0.466    |        0.864        |     0.195      |   0.476    |     0.089     |
-|  Zupancic   |      0.958      |    0.265     |    0.99     |        0.203        |     0.035      |   0.537    |     0.573     |
+|  Goodrich   |      0.666      |    0.969     |    0.871    |        0.667        |     0.907      |   0.632    |     0.005     |
+|   Escobar   |     0.0925      |     0.36     |    0.466    |        0.864        |     0.195      |   0.476    |    0.0889     |
+|  Zupancic   |      0.958      |    0.265     |    0.99     |        0.203        |     0.0352     |   0.537    |     0.573     |
 |     HMP     |      0.352      |    0.636     |    0.569    |        0.585        |     0.845      |   0.356    |     0.811     |
-|     Wu      |      0.917      |    0.577     |    0.674    |        0.749        |     0.751      |   0.556    |     0.892     |
-|  Arumugam   |      0.191      |    0.293     |    0.053    |        0.217        |     0.988      |   0.187    |     0.055     |
-|  Turnbaugh  |      0.577      |    0.407     |    0.222    |        0.07         |     0.024      |   0.125    |     0.095     |
+|     Wu      |      0.917      |    0.577     |    0.673    |        0.749        |     0.751      |   0.556    |     0.892     |
+|  Arumugam   |      0.191      |    0.293     |   0.0525    |        0.217        |     0.988      |   0.187    |    0.0549     |
+|  Turnbaugh  |      0.577      |    0.407     |    0.222    |       0.0698        |     0.0244     |   0.125    |    0.0949     |
 
 
 
