@@ -92,18 +92,18 @@ The third and final category involved using  Zscore normalizations to pool all t
 
 *Seperate Analysis:*
 
-We used the categorical variable of obese or non-obese to analyze each data set seperately for significant correlations to Bacteroidetes, Firmicutes, Bacteroidetes/Firmicute (B/F) ratio, Shannon diversity, OTU richness, evenness, and the Bray-Curtis distance matrix which was a similar approach taken by two previous reviews [@walters_meta-analyses_2014; @finucane_taxonomic_2014].  Using a P-value cutoff for significance as less than 0.05 we found a total of 1 significant result for Shannon diversity, 3 significant results for OTU richness, and 1 signficant result for the Bray-Curtis distance matrix.  There were no significant results for Bacteroidetes, Firmicutes, or the B/F ratio.  The full summary of the exact P-values for each respective study and variable tested can be found in table 3.
+We used the categorical variable of obese or non-obese to analyze each data set seperately for significant correlations to Bacteroidetes, Firmicutes, Bacteroidetes/Firmicute (B/F) ratio, Shannon diversity, OTU richness, evenness, and the Bray-Curtis distance matrix which was a similar approach taken by two previous reviews [@walters_meta-analyses_2014; @finucane_taxonomic_2014].  Using a P-value cutoff for significance as less than 0.05 we found a total of 1 significant result for Shannon diversity, 2 significant results for OTU richness, and 1 signficant result for the Bray-Curtis distance matrix.  There were no significant results for Bacteroidetes, Firmicutes, or the B/F ratio.  The full summary of the exact P-values for each respective study and variable tested can be found in table 3.
 
-Next we investigated how well the OTUs in each study were able to classify obese and non-obese individuals using the random forest algorithm.  We found that the average Out Of Bag (OOB) Area Under the Curve (AUC) was 0.7553 +/- 0.0888.  We found that the total range for the total number of variables used for the classification ranged from 3 (Ross and Escobar) to 32 (Zupancic).  The total number of trees and node size was standardized to 1000 and 20 respectively for each data set.  One aspect we found surprising was that there was very little overlap in the variables used by the random forest algorithm for the classification of obese and non-obese individuals by study.  The three most common variables was for an OTU that could be classified to the family Ruminococcaceae (7/9 studies), an OTU that could be classified to the family Lachnospiraceae (5/9 studies), and the Shannon diversity metric (4/9 studies).   
+Next we investigated how well the OTUs in each study were able to classify obese and non-obese individuals using the random forest algorithm.  We found that the average Out Of Bag (OOB) Area Under the Curve (AUC) was 0.7553 +/- 0.0855.  We found that the total range for the total number of variables used for the classification ranged from 3 (Ross and Escobar) to 40 (Zupancic).  The total number of trees and node size was standardized to 1000 and 20 respectively for each data set.  One aspect we found surprising was that there was very little overlap in the variables used by the random forest algorithm for the classification of obese and non-obese individuals by study.  The three most common variables was for an OTU that could be classified to the family Ruminococcaceae (7/9 studies), an OTU that could be classified to the family Lachnospiraceae (5/9 studies), and the Shannon diversity metric (4/9 studies).   
 
 
 *Classical Pooled Meta-analysis:*
 
-We next moved on to the pooled meta-analysis.  For the Shannon diversity RR, all studies but Wu et al had those with a lower Shannon diversity then the median as being higher risk for obesity [Figure 2].  This was confirmed with the pooled analysis showing an increased RR of 1.19 (CI 1.04, 1.36) for obesity in the lower then median Shannon diversity group (P-value = 0.0139).  When investigated the B/F ratio RR most studies showed that a low B/F ratio tended to have less obese individuals than those with a high B/F ratio [Figure 3].  A notable exception to this was the HMP data set and the Baxter data set [Figure 3].  The pooled RR was 0.86 (CI 0.75, 0.99) suggesting that a low B/F ratio does indeed have less obese individuals (P-value = 0.0296).
+We next moved on to the pooled meta-analysis.  For the Shannon diversity RR, all studies but Wu et al had those with a lower Shannon diversity then the median as being higher risk for obesity [Figure 2].  This was confirmed with the pooled analysis showing an increased RR of 1.18 (CI 1.03, 1.36) for obesity in the lower then median Shannon diversity group (P-value = 0.0187).  When investigated the B/F ratio RR most studies showed that a low B/F ratio tended to have less obese individuals than those with a high B/F ratio [Figure 3].  A notable exception to this was the HMP data set and the Baxter data set [Figure 3].  The pooled RR was 0.86 (CI 0.75, 0.99) suggesting that a low B/F ratio does indeed have less obese individuals (P-value = 0.0376).
 
 We also used a funnel plot to asses the bias of the 9 data sets used in this meta-analysis.  From the graph we can observe that there does not seem to be any significant  bias [Figure 4].  Both funnel plots have almost equal number of studies scattered on either side of the estimated true value.
 
-The final forest plot that we used for this analysis investigated how the different OTUs, classified to Ruminococcaceae, that were important for the classification of obese and non-obese based on the OOB AUC in the the seperate study analysis looked when pooled together to assess the RR [Figure S4].  There was no significant increase in RR based on the Ruminococcaceae OTU (RR = 0.98 (CI 0.63, 1.53), P-value = 0.9225).  Thus it would seem that although Ruminococcaceae is important for classification the directionality is study dependent [Figure S4].    
+The final forest plot that we used for this analysis investigated how the different OTUs, classified to Ruminococcaceae, that were important for the classification of obese and non-obese based on the OOB AUC in the the seperate study analysis looked when pooled together to assess the RR [Figure S4].  There was no significant increase in RR based on the Ruminococcaceae OTU (RR = 0.96 (CI 0.60, 1.52), P-value = 0.8575).  Thus it would seem that although Ruminococcaceae is important for classification the directionality is study dependent [Figure S4].    
 
 *ZScore Normalization Pooled Analysis:*
 
@@ -122,7 +122,7 @@ We do acknowledge that this study does have a few limitations that are worth men
 Second, although we make attempts to normalize the data for the pooled analysis so that we can compare the bacterial microbiome across studies it is possible that the different variable regions sampled, sequencing machines used, and the quality of the output data could have an impact on the overall conclusions reached.  However, what our analysis shows is that despite these differences, we are still able to identify an overall signal from the data.    
 Third, this meta-analysis and review of the data to date is still rather preliminary.  Only a total of 1542 individuals were included in the pooled analysis which is relatively small compared to other meta-analysis in non-microbiome fields of study.  It will be necessary to continuously update this analysis, as more studies become available, in order to obtain a more accurate estimate of the true effect that obesity has on the bacterial microbiome within humans.   
 
-Fourth, although a significant result exists for the RR for both Shannon diversity and the B/F ratio, it is small.  This is also the case for the ZScore normalization analysis of the Shannon diversity.  As an example, a lower than median Shannon diversity only has an overall 19% increase of obesity in it versus the higher than median Shannon diversity group.  So even though there is a detectable signal it remains to be seen if this is a biologically significant phenomenon that could have a tangible effect on obesity. 
+Fourth, although a significant result exists for the RR for both Shannon diversity and the B/F ratio, it is small.  This is also the case for the ZScore normalization analysis of the Shannon diversity.  As an example, a lower than median Shannon diversity only has an overall 18% increase of obesity in it versus the higher than median Shannon diversity group.  So even though there is a detectable signal it remains to be seen if this is a biologically significant phenomenon that could have a tangible effect on obesity. 
 
 Despite the many problems that could add more noise to the measurements used, this study provides a reasonable first pass attempt to pool this data together in an effort to find a correlation between the bacterial microbiome and obesity.  In doing so we believe that it provides a tanatalizing result that despite the large differences between studies it is still possible to detect a correlation between the bacterial microbiome and obesity.  However, we emphaszie that it should still be viewed with caution since there are still many aspects of this analysis that could be improved upon.  It truly is only a first attempt at trying to summerize and analyze the pooled data that is available.  We hope that this study helps to add important information and clarity to the on-going dialogue of the bacterial microbiome's role in obesity.
 
@@ -986,22 +986,44 @@ setwd("C:/users/marc/Desktop/obesity2/Amish/updatedGOOD")
 
 #Read in and match metadata to microbiome data
 metadata <- read.csv("amish_obesity_table2.csv")
+metadata2 <- read.csv("amish.metadata.csv")
 test <- metadata[!duplicated(metadata$submitted_sample_id_s), ]
 rownames(test) <- test[, 4]
+test2 <- metadata2[!duplicated(metadata2$SUBJID), ]
+rownames(test2) <- test2[, 1]
 shared.data <- read.table("combined.0.03.subsample.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 shared.data <- shared.data[, -c(1:3)]
+BactFamily <- read.csv("BacterialFamilyData.csv")
+rownames(BactFamily) <- BactFamily[, 1]
+BactFamily <- BactFamily[, -1]
 keep  <- rownames(shared.data)
 
-test2 <- test[keep, ]
-good.metadata <- test2
-test3 <- test2[!duplicated(test2$submitted_subject_id_s), ]
-keep <- rownames(test3)
+test3 <- test[keep, ]
+good.metadata <- test3
+test4 <- test2[keep, ]
+good.metadata2 <- test4
+
+family <- BactFamily[keep, ]
 microbiome <- shared.data[keep, ]
-metadata <- test3
+metadata <- cbind(good.metadata, good.metadata2)
 
-rm(good.metadata, shared.data, keep, test, test2, test3)
+rm(good.metadata, shared.data, keep, test, test2, test3, test4, BactFamily, good.metadata2, metadata2)
 
+test <- metadata[!duplicated(metadata$submitted_subject_id_s), ]
+keep  <- rownames(test)
+metadata <- test
+family <- family[keep, ]
+microbiome <- microbiome[keep, ]
+
+rm(test, keep)
+
+metadata <- metadata[complete.cases(metadata), ]
+keep <- rownames(metadata)
+family <- family[keep, ]
+microbiome <- microbiome[keep, ]
+
+rm(keep)
 
 #generate alpha diversity measures with vegan
 library(vegan)
@@ -1036,17 +1058,24 @@ phyla.table <- phyla.table[, -c(4, 6)]
 phyla.total <- apply(phyla.table[, c(1:6)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 
+#Create BMI groups
+metadata$BMI.class[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class[metadata$BMI>=30 & metadata$BMI<40] <- "Obese"
+metadata$BMI.class[metadata$BMI>=40] <- "Extreme Obesity"
+
+
 #Create Obese Yes/No groups
-# One problem is that we are assuming those with "not provided" are defaulting to the not affected group
-metadata$obese[metadata$subject_is_affected_s=="<not provided>" | metadata$subject_is_affected_s=="No"] <- "No"
-metadata$obese[metadata$subject_is_affected_s=="Yes"] <- "Yes"
+metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
+metadata$obese[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Yes"
 
-
-#Create Obese.num group
-metadata$obese.num[metadata$obese=="No"] <- 0
-metadata$obese.num[metadata$obese=="Yes"] <- 1
+#Create BMI class 2 groups
+metadata$BMI.class2[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class2[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class2[metadata$BMI>=30] <- "Obese"
 
 #create groups to be used
+bmi <- metadata$BMI
 obese <- factor(metadata$obese)
 
 
@@ -1056,18 +1085,18 @@ obese <- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-zupancicH <- anova(lm(H ~ obese)) #P-value=0.2034
-zupancicS <- anova(lm(S ~ obese)) #P-value=0.03516
-zupancicJ <- anova(lm(J ~ obese)) #P-value=0.5369
+zupancicH <- anova(lm(H ~ obese)) #P-value=0.2671
+zupancicS <- anova(lm(S ~ obese)) #P-value=0.05423
+zupancicJ <- anova(lm(J ~ obese)) #P-value=0.6229
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-zupancicBacter <- anova(lm(bacter ~ obese)) #P-value=0.9582
-zupancicFirm <- anova(lm(firm ~ obese)) #P-value=0.2654
-zupancicBF <- anova(lm(BFratio ~ obese)) #P-value=0.9899
+zupancicBacter <- anova(lm(bacter ~ obese)) #P-value=0.8592
+zupancicFirm <- anova(lm(firm ~ obese)) #P-value=0.2564
+zupancicBF <- anova(lm(BFratio ~ obese)) #P-value=0.989
 
 ####################################################################################### NMDS and PERMANOVA Analysis###################################
 ###########################################################################
@@ -1075,7 +1104,7 @@ zupancicBF <- anova(lm(BFratio ~ obese)) #P-value=0.9899
 set.seed(3)
 zupancic2 <- adonis(microbiome ~ obese, permutations=1000) 
 zupancicPERM <- zupancic2$aov.tab
-#PERMANOVA=0.5734, pseudo-F=0.95626
+#PERMANOVA=0.6863, pseudo-F=0.92888
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -1110,9 +1139,9 @@ zupancicHEpi <- epi.2by2(r.test, method="cohort.count")
 zupancicHMassoc <- zupancicHEpi$massoc
 zupancicHRR <- zupancicHMassoc$RR.strata.score
 zupancicHRRsig <- zupancicHMassoc$chisq.strata
-## Risk Ratio = 1.50
-## CI = 1.04, 2.16
-## p-value = 0.025
+## Risk Ratio = 1.49
+## CI = 1.01, 2.19
+## p-value = 0.043
 
 
 ##Run the RR for B/F ratio
@@ -1143,15 +1172,17 @@ zupancicBFEpi <- epi.2by2(r.test, method="cohort.count")
 zupancicBFMassoc <- zupancicBFEpi$massoc
 zupancicBFRR <- zupancicBFMassoc$RR.strata.score
 zupancicBFRRsig <- zupancicBFMassoc$chisq.strata
-## Risk Ratio = 0.89
-## CI = 0.63, 1.27
-## p-value = 0.53
+## Risk Ratio = 0.94
+## CI = 0.64, 1.36
+## p-value = 0.727
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
 ###########################################################################
 
 #Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
 obese <- factor(metadata$obese.num)
 
 #generate test set
@@ -1164,7 +1195,8 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 #set.seed(3)
 #zupancicAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-# list of 42 Measures, AUCopt = 0.6365534
+#zupAUC <- fit$`OOB-AUCopt`
+# list of 40 Measures, AUCopt = 0.6596899
 
 ```
 
@@ -2012,7 +2044,7 @@ library(gridExtra)
 StudyNo <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
 Study <- c("Baxter", "HMP", "Ross", "Escobar", "Arumugam", "Turnbaugh", "Zupancic", "Wu", "Goodrich")
 Year <- c("2015", "2011", "2015", "2014", "2010", "2009", "2012", "2012", "2014")
-Total <- c("n=172", "n=256", "n=63", "n=30", "n=85", "n=146", "n=207", "n=58", "n=507")
+Total <- c("n=172", "n=256", "n=63", "n=30", "n=85", "n=146", "n=199", "n=58", "n=507")
 tpos <- c(BaxLowShannonGroup[2, 2], HMPLowShannonGroup[2, 2], RossLowShannonGroup[2, 2], EscoLowShannonGroup[2, 2], AruLowShannonGroup[2, 2], TurnLowShannonGroup[2, 2], ZupaLowShannonGroup[2, 2], WuLowShannonGroup[2, 2], GoodLowShannonGroup[2, 2]) #obese in low diversity group
 tneg <- c(BaxLowShannonGroup[1, 2], HMPLowShannonGroup[1, 2], RossLowShannonGroup[1, 2], EscoLowShannonGroup[1, 2], AruLowShannonGroup[1, 2], TurnLowShannonGroup[1, 2], ZupaLowShannonGroup[1, 2], WuLowShannonGroup[1, 2], GoodLowShannonGroup[1, 2]) #nonobese in low diversity group
 cpos <- c(BaxHighShannonGroup[2, 2], HMPHighShannonGroup[2, 2], RossHighShannonGroup[2, 2], EscoHighShannonGroup[2, 2], AruHighShannonGroup[2, 2], TurnHighShannonGroup[2, 2], ZupaHighShannonGroup[2, 2], WuHighShannonGroup[2, 2], GoodHighShannonGroup[2, 2]) #obese in high diversity group
@@ -2044,7 +2076,7 @@ text(-6.5, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 
 ```
 
-**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study.  The overall pooled relative risk was 1.19 for the low diversity group (P-value = 0.0139).
+**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study.  The overall pooled relative risk was 1.18 for the low diversity group (P-value = 0.0187).
 
 
 ```{r Figure_3, echo=FALSE, message=FALSE, warning=FALSE}
@@ -2052,7 +2084,7 @@ text(-6.5, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 StudyNo <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
 Study <- c("Baxter", "HMP", "Ross", "Escobar", "Arumugam", "Turnbaugh", "Zupancic", "Wu", "Goodrich")
 Year <- c("2015", "2011", "2015", "2014", "2010", "2009", "2012", "2012", "2014")
-Total <- c("n=172", "n=256", "n=63", "n=30", "n=85", "n=146", "n=201", "n=58", "n=507")
+Total <- c("n=172", "n=256", "n=63", "n=30", "n=85", "n=146", "n=199", "n=58", "n=507")
 tpos <- c(BaxLowBFGroup[2, 2], HMPLowBFGroup[2, 2], RossLowBFGroup[2, 2], EscoLowBFGroup[2, 2], AruLowBFGroup[2, 2], TurnLowBFGroup[2, 2], ZupaLowBFGroup[2, 2], WuLowBFGroup[2, 2], GoodLowBFGroup[2, 2]) #obese in low BF group
 tneg <- c(BaxLowBFGroup[1, 2], HMPLowBFGroup[1, 2], RossLowBFGroup[1, 2], EscoLowBFGroup[1, 2], AruLowBFGroup[1, 2], TurnLowBFGroup[1, 2], ZupaLowBFGroup[1, 2], WuLowBFGroup[1, 2], GoodLowBFGroup[1, 2]) #nonobese in low BF group
 cpos <- c(BaxHighBFGroup[2, 2], HMPHighBFGroup[2, 2], RossHighBFGroup[2, 2], EscoHighBFGroup[2, 2], AruHighBFGroup[2, 2], TurnHighBFGroup[2, 2], ZupaHighBFGroup[2, 2], WuHighBFGroup[2, 2], GoodHighBFGroup[2, 2]) #obese in high BF group
@@ -2083,7 +2115,7 @@ text(5.6, 10.3, "Relative Risk [95% CI]", pos=2, cex=0.8)
 text(-6.0, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 ```
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study.  The overall pooled relative risk was 0.86 for the low diversity group (P-value = 0.0296).
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study.  The overall pooled relative risk was 0.86 for the low diversity group (P-value = 0.0376).
 
 
 ```{r Figure_4, echo=FALSE}
@@ -2104,51 +2136,60 @@ setwd("C:/Users/marc/Desktop/obesity2/BMI.normalization")
 data1 <- read.csv("combined.H.corr.data.csv")
 #Load in Turnbaugh data
 turn.data <- read.csv("Turnbaugh.normalized.csv")
-#Load in Amish data
-amish.data <- read.csv("Amish.normalized.csv")
 
-#Amish STD = 0.5893173
-amish.ZScore.H <- amish.data$H.corr/0.5893173
 #Turnbaugh STD = 0.4818751
 turn.ZScore.H <- turn.data$H.corr/0.4818751
+
+#Amish STD = 0.5932651
+keepamish <- which(data1$dataset == "Amish")
+amishdata <- data1[keepamish, ]
+amish.ZScore.H <- amishdata$H.corr/0.5932651
+
 #MetaHit-Den STD = 0.4038558
 keepmetahit <- which(data1$dataset == "MetaHit")
 metahitdata <- data1[keepmetahit, ]
 metahit.ZScore.H <- metahitdata$H.corr/0.4038558
+
 #Korean STD = 0.5400615
 keepKorean <- which(data1$dataset == "Korean")
 Koreandata <- data1[keepKorean, ]
 Korean.ZScore.H <- Koreandata$H.corr/0.5400615
+
 #HMP STD = 0.6774514
 keepHMP <- which(data1$dataset == "HMP")
 hmpdata <- data1[keepHMP, ]
 HMP.ZScore.H <- hmpdata$H.corr/0.6774514
+
 #CCHC STD = 0.5784522
 keepCCHC <- which(data1$dataset == "CCHC")
 CCHCdata <- data1[keepCCHC, ]
 CCHC.ZScore.H <- CCHCdata$H.corr/0.5784522
+
 #GLNE07 STD = 0.4663871
 keepGLNE <- which(data1$dataset == "GLNE")
 GLNEdata <- data1[keepGLNE, ]
 GLNE.ZScore.H <- GLNEdata$H.corr/0.4663871
+
 #Escobar STD = 0.5378935
 keepescobar <- which(data1$dataset == "Escobar")
 escobardata <- data1[keepescobar, ]
 Escobar.ZScore.H <- escobardata$H.corr/0.5378935
+
 #COMBO STD = 0.6870763
 keepCOMBO <- which(data1$dataset == "COMBO")
 COMBOdata <- data1[keepCOMBO, ]
 COMBO.ZScore.H <- COMBOdata$H.corr/0.6870763
+
 #COMBO STD = 0.3489582
 keeptwinsUK <- which(data1$dataset == "twinsUK")
 twinsUKdata <- data1[keeptwinsUK, ]
 twinsUK.ZScore.H <- twinsUKdata$H.corr/0.3489582
 
+
 #data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit, COMBO, twinsUK
-HZScore <- c(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H)
+HZScore <- c(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H, amish.ZScore.H)
 data1 <- cbind(HZScore, data1)
 
-amish.data <- cbind(amish.ZScore.H, amish.data)
 turn.data <- cbind(turn.ZScore.H, turn.data)
 rm(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, amish.ZScore.H, turn.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H)
 rm(keepmetahit, keepCCHC, keepescobar, keepGLNE, keepHMP, keepKorean)
@@ -2166,26 +2207,20 @@ data1$obese[data1$BMI.class=="Obese"] <- "Yes"
 #For ZScore normalization
 d1.obese <- data1$obese
 t.obese <- as.character(turn.data$obese)
-am.obese <- as.character(amish.data$obese)
 
 d1.bmi.class <- data1$BMI.class
 t.bmi.class <- as.character(turn.data$BMI.category)
 
 d1.H.Zscore <- data1$HZScore
 t.H.Zscore <- turn.data$turn.ZScore.H
-am.H.Zscore<- amish.data$amish.ZScore.H
 
 #Combine everything together
 comb1.obese <- c(d1.obese, t.obese)
-comb2.obese <- c(d1.obese, t.obese, am.obese)
 comb1.bmi.class <- c(d1.bmi.class, t.bmi.class)
 comb1.H.Zscore <- as.data.frame(c(d1.H.Zscore, t.H.Zscore))
-comb2.H.Zscore <- as.data.frame(c(d1.H.Zscore, t.H.Zscore, am.H.Zscore))
 
 group.data.test1 <- cbind(comb1.H.Zscore, comb1.obese, comb1.bmi.class)
-group.data.test2 <- cbind(comb2.H.Zscore, comb2.obese)
 colnames(group.data.test1) <- c("H.Zscore", "obese", "BMI.class")
-colnames(group.data.test2) <- c("H.Zscore", "obese")
 
 setwd("C:/Users/marc/Desktop/obesity2/BF.normalization")
 
@@ -2210,16 +2245,11 @@ data2$obese[data2$BMI.class=="Obese"] <- "Yes"
 #data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit
 d1.zbf.corr <- data2$ZBF
 t.zbf.corr <- turn.data$ZBF
-am.zbf.corr <- amish.data$ZBF
 
 #Bacteroidetes/Firmicutes Datasets
 comb.zbf.corr <- as.data.frame(c(d1.zbf.corr, t.zbf.corr))
 group.data.test <- cbind(comb.zbf.corr, group.data.test)
 colnames(group.data.test)[1] <- "zbf"
-
-comb2.zbf.corr <- as.data.frame(c(d1.zbf.corr, t.zbf.corr, am.zbf.corr))
-group.data.test2 <- cbind(comb2.zbf.corr, group.data.test2)
-colnames(group.data.test2)[1] <- "zbf"
 
 
 ```
@@ -2228,7 +2258,7 @@ colnames(group.data.test2)[1] <- "zbf"
 
 ```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE}
 # Section A
-p1 <- ggplot(group.data.test2, aes(obese, H.Zscore)) 
+p1 <- ggplot(group.data.test, aes(obese, H.Zscore)) 
 p2 <- p1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 p3 <- p2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
 p4 <- p3 + xlab("Obese Category") + ylab("ZScore Normalized H") 
@@ -2241,7 +2271,7 @@ p6 <- p5 + theme(axis.line=element_line(colour="black"),
 p7 <- p6 + ggtitle('A') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
 # Section B
-q1 <- ggplot(group.data.test1, aes(BMI.class, H.Zscore)) 
+q1 <- ggplot(group.data.test, aes(BMI.class, H.Zscore)) 
 q2 <- q1 + geom_boxplot(aes(fill = BMI.class)) + scale_fill_brewer(palette="Set1")
 q3 <- q2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
 q4 <- q3 + xlab("BMI Classification") + ylab("ZScore Normalized H") 
@@ -2254,7 +2284,7 @@ q6 <- q5 + theme(axis.line=element_line(colour="black"),
 q7 <- q6 + ggtitle('B') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
 # Section C
-bf1 <- ggplot(group.data.test2, aes(obese, zbf)) 
+bf1 <- ggplot(group.data.test, aes(obese, zbf)) 
 bf2 <- bf1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 bf3 <- bf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
 bf4 <- bf3 + xlab("Obese Category") + ylab("ZScore Normalized B/F Ratio") 
@@ -2283,7 +2313,7 @@ grid.arrange(p7, q7, bf7, qbf7)
 ```
 
 
-**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** ZScore Normalized Shannon Diversity and Obesity.  There was a significant difference between non-obese (n=1099) and obese groups (n=443) (P-value = 0.00493).  **B)** ZScore Normalized Shannon Diversity by BMI Group.  Total n for lean, overweight, and obese groups are 509, 365, 461 respectively.  Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.03944) but no difference between lean and obese group (P-value = 0.107).  **C)** ZScore Normalized B/F Ratio and Obesity.  There was no significant difference between the non-obese (n=1099) and obese (n=443) group based on B/F ratio (P-value = 0.4516).  **D)** ZScore Normalized B/F Ratio by BMI Group.  Total n for lean, overweight, and obese groups are 509, 365, 461 respectively.  There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.3317).  
+**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** ZScore Normalized Shannon Diversity and Obesity.  There was a significant difference between non-obese (n=1099) and obese groups (n=435) (P-value = 0.005992).  **B)** ZScore Normalized Shannon Diversity by BMI Group.  Total n for lean, overweight, and obese groups are 575, 435, 524 respectively.  Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.018) but no difference between lean and obese group (P-value = 0.081).  **C)** ZScore Normalized B/F Ratio and Obesity.  There was no significant difference between the non-obese (n=1099) and obese (n=435) group based on B/F ratio (P-value = 0.456).  **D)** ZScore Normalized B/F Ratio by BMI Group.  Total n for lean, overweight, and obese groups are 575, 435, 524 respectively.  There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.398).  
 
 
 

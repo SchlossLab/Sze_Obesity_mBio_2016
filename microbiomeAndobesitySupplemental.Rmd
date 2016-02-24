@@ -239,14 +239,14 @@ setwd("C:/users/marc/Desktop/obesity2")
 StudyNo <- c(1, 2, 3, 4, 5, 6, 7)
 Study <- c("Baxter", "HMP", "Escobar", "Arumugam", "Turnbaugh", "Zupancic", "Wu")
 Year <- c("2015", "2011", "2014", "2010", "2009", "2012", "2012")
-Total <- c("n=172", "n=256", "n=30", "n=85", "n=146", "n=201", "n=58")
-tpos <- c(36, 13, 7, 17, 22, 55, 2) #obese in low Rumi group
-tneg <- c(59, 140, 8, 26, 56, 103, 37) #nonobese in low Rumi group
-cpos <- c(11, 13, 3, 20, 25, 23, 3) #obese in high Rumi group
-cneg <- c(66, 90, 12, 22, 43, 26, 16) #nonobese in high Rumi group
-RR <- c(2.65, 0.67, 2.33, 0.83, 0.77, 0.74, 0.32)
-low <- c(1.45, 0.33, 0.74, 0.51, 0.48, 0.51, 0.06)
-high <- c(4.86, 1.39, 7.35, 1.35, 1.23, 1.07, 1.78)
+Total <- c("n=172", "n=256", "n=30", "n=85", "n=146", "n=199", "n=58")
+tpos <- c(36, 13, 7, 17, 22, 52, 2) #obese in low Rumi group
+tneg <- c(59, 140, 8, 26, 56, 110, 37) #nonobese in low Rumi group
+cpos <- c(11, 13, 3, 20, 25, 18, 3) #obese in high Rumi group
+cneg <- c(66, 90, 12, 22, 43, 19, 16) #nonobese in high Rumi group
+RR <- c(2.65, 0.67, 2.33, 0.83, 0.77, 0.66, 0.32)
+low <- c(1.45, 0.33, 0.74, 0.51, 0.48, 0.44, 0.06)
+high <- c(4.86, 1.39, 7.35, 1.35, 1.23, 0.98, 1.78)
 
 numeric.data <-as.data.frame(cbind(tpos, tneg, cpos, cneg))
 raw.overall <- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
