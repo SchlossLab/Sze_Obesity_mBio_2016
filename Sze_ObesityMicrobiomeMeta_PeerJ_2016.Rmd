@@ -141,17 +141,17 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 ```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
 library(knitr)
 
-Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic*", "HMP", "Wu", "Arumugam", "Turnbaugh**")
+Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", "HMP", "Wu", "Arumugam", "Turnbaugh*")
 
-Age <- c("54.3 +/- 9.9", "57.0 +/- 11.2", "61.5 +/- 8.9", "38.1 +/- 11.1", "48.2 +/- 13.2", "26.1 +/- 5.0", "26.4 +/- 9.4", "56.5 +/- 7.7", "21 - 32")
+Age <- c("54.3 +/- 9.9", "57.0 +/- 11.2", "61.5 +/- 8.9", "38.1 +/- 11.1", "46.7 +/- 13.1", "26.1 +/- 5.0", "26.4 +/- 9.4", "56.5 +/- 7.7", "21 - 32")
 
-Sex <- c("111|61", "48|15", "505|2", "14|16", "198|112", "127|129", "31|27", "45|40", "Not Available")
+Sex <- c("111|61", "48|15", "505|2", "14|16", "112|87", "127|129", "31|27", "45|40", "Not Available")
 
 Ancestry <- c(87.8, 0, "Not Available", 0, 100, 83, "Not Available", "Not Available", 51.4)
 
-BMI <- c("27.0 +/- 5.3", "31.6 +/- 5.3", "26.3 +/- 4.9", "27.4 +/- 4.5", "29.2 +/- 5.2", "24.1 +/- 3.4", "24.6 +/- 4.8", "27.8 +/- 5.8", "Not Available")
+BMI <- c("27.0 +/- 5.3", "31.6 +/- 5.3", "26.3 +/- 4.9", "27.4 +/- 4.5", "27.7 +/- 5.3", "24.1 +/- 3.4", "24.6 +/- 4.8", "27.8 +/- 5.8", "Not Available")
 
-Min <- c(17.5, 22.1, 16.2, 19.5, 16.7, 19, 14.0, 18.6, "Not Available")
+Min <- c(17.5, 22.1, 16.2, 19.5, 18.2, 19, 14.0, 18.6, "Not Available")
 
 Max <- c(46.9, 47.9, 44.8, 37.6, 51.1, 34, 41.3, 40.2, "Not Available")
 
@@ -164,9 +164,7 @@ kable(table1, format = "markdown", align = 'c', padding = 2)
 
 ```
 
-*If numerical BMI information was not available then ranges and demographic information was taken from the authors published manuscript for this table.
-
-**Only BMI group information was provided and only an age range was given.
+*Only BMI group information was provided and only an age range was given.
 
 
 **Table 2:Summary of Important Study Characteristics** 
