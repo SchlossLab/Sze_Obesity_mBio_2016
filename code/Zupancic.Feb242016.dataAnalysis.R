@@ -1,6 +1,6 @@
 #Zupancic et al.
 # Single study analysis
-#Feb 5th, 2016
+#Feb 24th, 2016
 
 ###########################################################################
 ############ Preparing Data Tables for Analysis ###########################
@@ -11,22 +11,44 @@ setwd("C:/users/marc/Desktop/obesity2/Amish/updatedGOOD")
 
 #Read in and match metadata to microbiome data
 metadata <- read.csv("amish_obesity_table2.csv")
+metadata2 <- read.csv("amish.metadata.csv")
 test <- metadata[!duplicated(metadata$submitted_sample_id_s), ]
 rownames(test) <- test[, 4]
+test2 <- metadata2[!duplicated(metadata2$SUBJID), ]
+rownames(test2) <- test2[, 1]
 shared.data <- read.table("combined.0.03.subsample.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 shared.data <- shared.data[, -c(1:3)]
+BactFamily <- read.csv("BacterialFamilyData.csv")
+rownames(BactFamily) <- BactFamily[, 1]
+BactFamily <- BactFamily[, -1]
 keep  <- rownames(shared.data)
 
-test2 <- test[keep, ]
-good.metadata <- test2
-test3 <- test2[!duplicated(test2$submitted_subject_id_s), ]
-keep <- rownames(test3)
+test3 <- test[keep, ]
+good.metadata <- test3
+test4 <- test2[keep, ]
+good.metadata2 <- test4
+
+family <- BactFamily[keep, ]
 microbiome <- shared.data[keep, ]
-metadata <- test3
+metadata <- cbind(good.metadata, good.metadata2)
 
-rm(good.metadata, shared.data, keep, test, test2, test3)
+rm(good.metadata, shared.data, keep, test, test2, test3, test4, BactFamily, good.metadata2, metadata2)
 
+test <- metadata[!duplicated(metadata$submitted_subject_id_s), ]
+keep  <- rownames(test)
+metadata <- test
+family <- family[keep, ]
+microbiome <- microbiome[keep, ]
+
+rm(test, keep)
+
+metadata <- metadata[complete.cases(metadata), ]
+keep <- rownames(metadata)
+family <- family[keep, ]
+microbiome <- microbiome[keep, ]
+
+rm(keep)
 
 #generate alpha diversity measures with vegan
 library(vegan)
@@ -61,17 +83,24 @@ phyla.table <- phyla.table[, -c(4, 6)]
 phyla.total <- apply(phyla.table[, c(1:6)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 
+#Create BMI groups
+metadata$BMI.class[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class[metadata$BMI>=30 & metadata$BMI<40] <- "Obese"
+metadata$BMI.class[metadata$BMI>=40] <- "Extreme Obesity"
+
+
 #Create Obese Yes/No groups
-# One problem is that we are assuming those with "not provided" are defaulting to the not affected group
-metadata$obese[metadata$subject_is_affected_s=="<not provided>" | metadata$subject_is_affected_s=="No"] <- "No"
-metadata$obese[metadata$subject_is_affected_s=="Yes"] <- "Yes"
+metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
+metadata$obese[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Yes"
 
-
-#Create Obese.num group
-metadata$obese.num[metadata$obese=="No"] <- 0
-metadata$obese.num[metadata$obese=="Yes"] <- 1
+#Create BMI class 2 groups
+metadata$BMI.class2[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class2[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class2[metadata$BMI>=30] <- "Obese"
 
 #create groups to be used
+bmi <- metadata$BMI
 obese <- factor(metadata$obese)
 
 
@@ -81,25 +110,25 @@ obese <- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-anova(lm(H ~ obese)) #P-value=0.2034
-anova(lm(S ~ obese)) #P-value=0.03516
-anova(lm(J ~ obese)) #P-value=0.5369
+anova(lm(H ~ obese)) #P-value=0.2671
+anova(lm(S ~ obese)) #P-value=0.05423
+anova(lm(J ~ obese)) #P-value=0.6229
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-anova(lm(bacter ~ obese)) #P-value=0.9582
-anova(lm(firm ~ obese)) #P-value=0.2654
-anova(lm(BFratio ~ obese)) #P-value=0.9899
+anova(lm(bacter ~ obese)) #P-value=0.8592
+anova(lm(firm ~ obese)) #P-value=0.2564
+anova(lm(BFratio ~ obese)) #P-value=0.989
 
 ####################################################################################### NMDS and PERMANOVA Analysis###################################
 ###########################################################################
 
 set.seed(3)
 adonis(microbiome ~ obese, permutations=1000) 
-#PERMANOVA=0.5734, pseudo-F=0.95626
+#PERMANOVA=0.6863, pseudo-F=0.92888
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -110,15 +139,15 @@ library(epiR)
 #Generate median values and put them into existing alpha.test dataframe
 #Shannon diversity
 
-median(H) # 3.073974
+median(H) # 3.058573
 alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
 
 #OTU Richness
-median(S) # 93
+median(S) # 92
 alpha.test <- within(alpha.test, {S.cat = ifelse(S <= median(S), "less", "higher")})
 
 #Evenness
-median(J) # 0.6790902
+median(J) # 0.677342
 alpha.test <- within(alpha.test, {J.cat = ifelse(J <= median(J), "less", "higher")})
 
 ##Shannon Diversity
@@ -128,21 +157,21 @@ J.cat <- alpha.test$J.cat
 bmi.cat <- as.character(obese)
 test3 <- cbind(H.cat, S.cat, J.cat, bmi.cat)
 test3 <- test3[order(H.cat), ]
-table(test3[c(1:103), 4])
-table(test3[c(104:207), 4])
-#Group1 (Higher than median), obese = 31 and non-obese = 72
-#Group2 (Lower than median), obese = 47 and non-obese = 57
+table(test3[c(1:99), 4])
+table(test3[c(100:199), 4])
+#Group1 (Higher than median), obese = 28 and non-obese = 71
+#Group2 (Lower than median), obese = 42 and non-obese = 58
 
-group1 <- c(31, 72)
-group2 <- c(47, 57)
+group1 <- c(28, 71)
+group2 <- c(42, 58)
 r.test <- rbind(group2, group1)
 colnames(r.test) <- c("Obese", "Not.Obese")
 rownames(r.test) <- c("group2", "group1")
 
 epi.2by2(r.test, method="cohort.count")
-## Risk Ratio = 1.50
-## CI = 1.04, 2.16
-## p-value = 0.025
+## Risk Ratio = 1.49
+## CI = 1.01, 2.19
+## p-value = 0.043
 
 
 ##Run the RR for B/F ratio
@@ -157,21 +186,47 @@ BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "le
 BFRatio.cat <- BFRatio$BFRatio.cat
 test4 <- cbind(BFRatio.cat, obese)
 test4 <- test4[order(BFRatio.cat), ]
-table(test4[c(1:103), 2]) #higher group
-table(test4[c(104:207), 2]) #lower group
-#Group1 (Higher than median), obese = 41 and non-obese = 62
-#Group2 (Lower than median), obese = 37 and non-obese = 67
+table(test4[c(1:99), 2]) #higher group
+table(test4[c(100:199), 2]) #lower group
+#Group1 (Higher than median), obese = 36 and non-obese = 63
+#Group2 (Lower than median), obese = 34 and non-obese = 66
 
-group1 <- c(41, 62)
-group2 <- c(37, 67)
+group1 <- c(36, 63)
+group2 <- c(34, 66)
 r.test <- rbind(group2, group1)
 colnames(r.test) <- c("Obese", "Not.Obese")
 rownames(r.test) <- c("group2", "group1")
 
 epi.2by2(r.test, method="cohort.count")
-## Risk Ratio = 0.89
-## CI = 0.66, 1.27
-## p-value = 0.53
+## Risk Ratio = 0.94
+## CI = 0.64, 1.36
+## p-value = 0.727
+
+# Ruminococcaceae RR analysis
+rumi <- as.data.frame(family$Ruminococcaceae)
+colnames(rumi) <- "rumi"
+median(rumi$rumi) # 9.2
+rumi <- within(rumi, {rumiTest = ifelse(rumi <= median(rumi), "less", "higher")})
+
+bmi.cat <- as.character(obese)
+test3 <- cbind(rumi, bmi.cat)
+test3 <- test3[order(test3$rumiTest), ]
+table(test3[c(1:99), 3])
+table(test3[c(100:199), 3])
+#Group1 (Higher than median), obese = 32 and non-obese = 67
+#Group2 (Lower than median), obese = 38 and non-obese = 62
+
+group1 <- c(32, 67)
+group2 <- c(38, 62)
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+epi.2by2(r.test, method="cohort.count")
+## Risk Ratio = 1.18
+## CI = 0.80, 1.72
+## p-value = 0.402
+
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -180,6 +235,8 @@ epi.2by2(r.test, method="cohort.count")
 library(AUCRF)
 
 #Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
 obese <- factor(metadata$obese.num)
 
 #generate test set
@@ -192,5 +249,32 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 fit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-summary(fit) # list of 42 Measures, AUCopt = 0.6365534
+summary(fit) # list of 40 Measures, AUCopt = 0.6365534
+zupAUC <- fit$`OOB-AUCopt`
 plot(fit)
+
+#Try AUCRF with only phyla and alpha diversity measures in the testset
+testset <- cbind(obese, H, S, J, phyla.table.rel.abund)
+set.seed(3)
+fit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+summary(fit) 
+# list of 3 Measures, AUCopt = 0.600477
+# S, Actinobacteria, H
+plot(fit)
+
+# Generate data for the ZScore analysis
+
+H.corr <- H - mean(H)
+sd(H) #0.5932651
+
+BF.ratio.corr <- log(BFratio) - log(mean(BFratio))
+ZBF <- scale(BFratio)
+Zbacter <- scale(bacter)
+Zfirm <- scale(firm)
+sd(BF.ratio.corr) # 1.463952
+
+HNormData <- cbind(H.corr, bmi)
+BFNormData <- cbind(ZBF, Zbacter, Zfirm, BF.ratio.corr, bmi)
+
+write.csv(HNormData, "Amish.H.norm.csv")
+write.csv(BFNormData, "Amish.BF.norm.csv")
