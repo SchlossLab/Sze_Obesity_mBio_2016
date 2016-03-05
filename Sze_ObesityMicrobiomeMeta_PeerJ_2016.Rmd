@@ -390,6 +390,14 @@ testset <- cbind(obese, testset)
 #set.seed(3)
 #baxterAUCfit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+BaxterZH <- scale(H)
+BaxterZLogBF <- scale(log(BFratio))
+BaxterBMI <- bmi
+
 ```
 
 ```{r Data_Ross, echo=FALSE, message=FALSE, warning=FALSE}
@@ -591,6 +599,14 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #rossAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 3 Measures, AUCopt = 0.7526
 
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+RossZH <- scale(H)
+RossZLogBF <- scale(log(BFratio))
+RossBMI <- bmi
+
 ```
 
 ```{r Goodrich_data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -784,6 +800,15 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #set.seed(3)
 #goodrichAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 8 Measures, AUCopt = 0.6767159
+
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+GoodrichZH <- scale(H)
+GoodrichZLogBF <- scale(log(BFratio))
+GoodrichBMI <- bmi
+
 
 ```
 
@@ -979,6 +1004,14 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #set.seed(3)
 #escobarAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 3 Measures, AUCopt = 0.95
+
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+EscobarZH <- scale(H)
+EscobarZLogBF <- scale(log(BFratio))
+EscobarBMI <- bmi
 
 ```
 
@@ -1204,6 +1237,15 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #zupAUC <- fit$`OOB-AUCopt`
 # list of 40 Measures, AUCopt = 0.6596899
 
+
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+ZupancicZH <- scale(H)
+ZupancicZLogBF <- scale(log(BFratio))
+ZupancicBMI <- bmi
+
 ```
 
 
@@ -1400,6 +1442,14 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #set.seed(3)
 #HMPAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 6 Measures, AUCopt = 0.7031773
+
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+HMPZH <- scale(H)
+HMPZLogBF <- scale(log(BFratio))
+HMPBMI <- bmi
 
 ```
 
@@ -1610,6 +1660,14 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #WuAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 15 Measures, AUCopt = 0.7075472
 
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+WuZH <- scale(H)
+WuZLogBF <- scale(log(BFratio))
+WuBMI <- bmi
+
 ```
 
 ```{r Arumugam_data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -1803,6 +1861,14 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #ArumugamAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 19 Measures, AUCopt = 0.7649212
 
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+ArumugamZH <- scale(H)
+ArumugamZLogBF <- scale(log(BFratio))
+ArumugamBMI <- bmi
+
 ```
 
 ```{r Turnbaugh_data, echo=FALSE, message=FALSE, warning=FALSE}
@@ -1992,6 +2058,14 @@ turnbaughBFRRsig <- turnbaughBFMassoc$chisq.strata
 #TurnbaughAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 # list of 11 Measures, AUCopt = 0.7764883
 
+###########################################################################
+############ ZScore Data Preperation ###################################
+###########################################################################
+
+TurnbaughZH <- scale(H)
+TurnbaughZLogBF <- scale(log(BFratio))
+TurnbaughObese <- as.character(obese)
+TurnbaughBMICat <- as.character(bmi)
 
 ```
 
@@ -2138,67 +2212,18 @@ funnel(res2, main="B")
 
 setwd("C:/Users/marc/Desktop/obesity2/BMI.normalization")
 
-#Load in BMI data
-data1 <- read.csv("combined.H.corr.data.csv")
-#Load in Turnbaugh data
-turn.data <- read.csv("Turnbaugh.normalized.csv")
+#data1 order Escobar, Baxter, Ross, HMP, Arumugam, Wu, Goodrich, Zupancic
 
-#Turnbaugh STD = 0.4818751
-turn.ZScore.H <- turn.data$H.corr/0.4818751
+ZH <- c(EscobarZH, BaxterZH, RossZH, HMPZH, ArumugamZH, WuZH, GoodrichZH, ZupancicZH)
+bmi <- c(EscobarBMI, BaxterBMI, RossBMI, HMPBMI, ArumugamBMI, WuBMI, GoodrichBMI, ZupancicBMI)
+ZlogBF <- c(EscobarZLogBF, BaxterZLogBF, RossZLogBF, HMPZLogBF, ArumugamZLogBF, WuZLogBF, GoodrichZLogBF, ZupancicZLogBF)
 
-#Amish STD = 0.5932651
-keepamish <- which(data1$dataset == "Amish")
-amishdata <- data1[keepamish, ]
-amish.ZScore.H <- amishdata$H.corr/0.5932651
+data1 <- as.data.frame(cbind(ZH, ZlogBF, bmi))
 
-#MetaHit-Den STD = 0.4038558
-keepmetahit <- which(data1$dataset == "MetaHit")
-metahitdata <- data1[keepmetahit, ]
-metahit.ZScore.H <- metahitdata$H.corr/0.4038558
-
-#Korean STD = 0.5400615
-keepKorean <- which(data1$dataset == "Korean")
-Koreandata <- data1[keepKorean, ]
-Korean.ZScore.H <- Koreandata$H.corr/0.5400615
-
-#HMP STD = 0.6774514
-keepHMP <- which(data1$dataset == "HMP")
-hmpdata <- data1[keepHMP, ]
-HMP.ZScore.H <- hmpdata$H.corr/0.6774514
-
-#CCHC STD = 0.5784522
-keepCCHC <- which(data1$dataset == "CCHC")
-CCHCdata <- data1[keepCCHC, ]
-CCHC.ZScore.H <- CCHCdata$H.corr/0.5784522
-
-#GLNE07 STD = 0.4663871
-keepGLNE <- which(data1$dataset == "GLNE")
-GLNEdata <- data1[keepGLNE, ]
-GLNE.ZScore.H <- GLNEdata$H.corr/0.4663871
-
-#Escobar STD = 0.5378935
-keepescobar <- which(data1$dataset == "Escobar")
-escobardata <- data1[keepescobar, ]
-Escobar.ZScore.H <- escobardata$H.corr/0.5378935
-
-#COMBO STD = 0.6870763
-keepCOMBO <- which(data1$dataset == "COMBO")
-COMBOdata <- data1[keepCOMBO, ]
-COMBO.ZScore.H <- COMBOdata$H.corr/0.6870763
-
-#COMBO STD = 0.3489582
-keeptwinsUK <- which(data1$dataset == "twinsUK")
-twinsUKdata <- data1[keeptwinsUK, ]
-twinsUK.ZScore.H <- twinsUKdata$H.corr/0.3489582
-
-
-#data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit, COMBO, twinsUK
-HZScore <- c(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H, amish.ZScore.H)
-data1 <- cbind(HZScore, data1)
-
-turn.data <- cbind(turn.ZScore.H, turn.data)
-rm(Escobar.ZScore.H, GLNE.ZScore.H, CCHC.ZScore.H, HMP.ZScore.H, Korean.ZScore.H, metahit.ZScore.H, amish.ZScore.H, turn.ZScore.H, COMBO.ZScore.H, twinsUK.ZScore.H)
-rm(keepmetahit, keepCCHC, keepescobar, keepGLNE, keepHMP, keepKorean)
+turn.comb.meta <- as.data.frame(cbind(TurnbaughBMICat, TurnbaughObese))
+turn.comb.cont <- as.data.frame(cbind(TurnbaughZH, TurnbaughZLogBF))
+turn.data <- cbind(turn.comb.cont, turn.comb.meta)
+colnames(turn.data) <- c("ZH", "ZLogBF", "BMI.class", "obese")
 
 #Create BMI groups
 data1$BMI.class[data1$bmi<=24] <- "Lean"
@@ -2211,14 +2236,14 @@ data1$obese[data1$BMI.class=="Obese"] <- "Yes"
 
 #Create group analysis table to harness full data set
 #For ZScore normalization
-d1.obese <- data1$obese
+d1.obese <- as.character(data1$obese)
 t.obese <- as.character(turn.data$obese)
 
 d1.bmi.class <- data1$BMI.class
-t.bmi.class <- as.character(turn.data$BMI.category)
+t.bmi.class <- as.character(turn.data$BMI.class)
 
-d1.H.Zscore <- data1$HZScore
-t.H.Zscore <- turn.data$turn.ZScore.H
+d1.H.Zscore <- data1$ZH
+t.H.Zscore <- turn.data$ZH
 
 #Combine everything together
 comb1.obese <- c(d1.obese, t.obese)
@@ -2228,35 +2253,36 @@ comb1.H.Zscore <- as.data.frame(c(d1.H.Zscore, t.H.Zscore))
 group.data.test1 <- cbind(comb1.H.Zscore, comb1.obese, comb1.bmi.class)
 colnames(group.data.test1) <- c("H.Zscore", "obese", "BMI.class")
 
-setwd("C:/Users/marc/Desktop/obesity2/BF.normalization")
 
 #Let's change the order so it makes sense
 group.data.test1$BMI.class <- factor(group.data.test1$BMI.class, levels = c("Lean", "Overweight", "Obese"))
 
 group.data.test <- group.data.test1
 
-#Load in data
-data2 <- read.csv("combined.BF.corr.csv")
-
-#Create BMI groups
-data2$BMI.class[data2$bmi<=24] <- "Lean"
-data2$BMI.class[data2$bmi>24 & data2$bmi<30] <- "Overweight"
-data2$BMI.class[data2$bmi>=30] <- "Obese"
-
-#Create Obese Yes/No groups
-data2$obese[data2$BMI.class=="Lean" | data2$BMI.class=="Overweight"] <- "No"
-data2$obese[data2$BMI.class=="Obese"] <- "Yes"
 
 ##Run Zscore normalized Bacter and Firm overall analysis
 #data1 order Escobar, GLNE, CCHC, HMP, Korean, MetaHit
-d1.zbf.corr <- data2$ZBF
-t.zbf.corr <- turn.data$ZBF
+d1.lzbf.corr <- data1$ZlogBF
+t.lzbf.corr <- turn.data$ZLogBF
 
 #Bacteroidetes/Firmicutes Datasets
-comb.zbf.corr <- as.data.frame(c(d1.zbf.corr, t.zbf.corr))
-group.data.test <- cbind(comb.zbf.corr, group.data.test)
-colnames(group.data.test)[1] <- "zbf"
+comb.lzbf.corr <- as.data.frame(c(d1.lzbf.corr, t.lzbf.corr))
+group.data.test <- cbind(comb.lzbf.corr, group.data.test)
+colnames(group.data.test)[1] <- "ZLogBF"
 
+## Perform the statistical tests
+combZHTtest <- t.test(H.Zscore ~ obese, data=group.data.test) #P-value = 0.006061
+combZHANOVA <- anova(lm(H.Zscore ~ BMI.class, data=group.data.test)) #P-value = 0.0193
+a2 <- aov(H.Zscore ~ BMI.class, data=group.data.test)
+combZHTukey <- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
+combZHTukeyFinal <- combZHTukey$BMI.class
+
+
+combZLogBFTtest <- t.test(ZLogBF ~ obese, data=group.data.test) #P-value = 0.866
+combZLogBFANOVA <- anova(lm(ZLogBF ~ BMI.class, data=group.data.test)) #P-value = 0.106
+a2 <- aov(ZLogBF ~ BMI.class, data=group.data.test)
+combZLogBFTukey <- TukeyHSD(x=a2, 'BMI.class', conf.level=0.95)
+combZLogBFTukeyFinal <- combZLogBFTukey$BMI.class
 
 ```
 
@@ -2290,10 +2316,10 @@ q6 <- q5 + theme(axis.line=element_line(colour="black"),
 q7 <- q6 + ggtitle('B') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
 # Section C
-bf1 <- ggplot(group.data.test, aes(obese, zbf))
+bf1 <- ggplot(group.data.test, aes(obese, ZLogBF))
 bf2 <- bf1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 bf3 <- bf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-bf4 <- bf3 + xlab("Obese Category") + ylab("ZScore Normalized B/F Ratio")
+bf4 <- bf3 + xlab("Obese Category") + ylab("ZScore Normalized Log B/F Ratio")
 bf5 <- bf4 + guides(fill=guide_legend(title="Obese")) + theme(legend.title = element_text(size=8, face="bold"))
 bf6 <- bf5 + theme(axis.line=element_line(colour="black"),
                    panel.grid.major = element_blank(),
@@ -2303,10 +2329,10 @@ bf6 <- bf5 + theme(axis.line=element_line(colour="black"),
 bf7 <- bf6 + ggtitle('C') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
 # Section D
-qbf1 <- ggplot(group.data.test, aes(BMI.class, zbf))
+qbf1 <- ggplot(group.data.test, aes(BMI.class, ZLogBF))
 qbf2 <- qbf1 + geom_boxplot(aes(fill = BMI.class)) + scale_fill_brewer(palette="Set1")
 qbf3 <- qbf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-qbf4 <- qbf3 + xlab("BMI Classification") + ylab("ZScore Normalized B/F Ratio")
+qbf4 <- qbf3 + xlab("BMI Classification") + ylab("ZScore Normalized Log B/F Ratio")
 qbf5 <- qbf4 + guides(fill=guide_legend(title="BMI Class")) + theme(legend.title = element_text(size=8, face="bold"))
 qbf6 <- qbf5 + theme(axis.line=element_line(colour="black"),
                      panel.grid.major = element_blank(),
@@ -2319,7 +2345,7 @@ grid.arrange(p7, q7, bf7, qbf7)
 ```
 
 
-**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** ZScore Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n=1081) and obese groups (n=435) (P-value = 0.005992). **B)** ZScore Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.018) but no difference between lean and obese group (P-value = 0.081). **C)** ZScore Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n=1081) and obese (n=435) group based on B/F ratio (P-value = 0.456). **D)** ZScore Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.398).
+**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** ZScore Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n=1081) and obese groups (n=435) (P-value = `r signif(combZHTtest$p.value, 3)`). **B)** ZScore Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = `r signif(combZHTukeyFinal[3, 4], 3)`) but no difference between lean and obese group (P-value = `r signif(combZHTukeyFinal[2, 4], 3)`). **C)** ZScore Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n=1081) and obese (n=435) group based on B/F ratio (P-value = `r signif(combZLogBFTtest$p.value, 3)`). **D)** ZScore Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = `r signif(combZLogBFANOVA[1, 5], 3)`).
 
 
 
