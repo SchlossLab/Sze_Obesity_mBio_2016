@@ -2118,7 +2118,7 @@ dat.fm$freq <- with(raw.overall, c(rbind(tpos, tneg, cpos, cneg)))
 
 #Used to generate the RE Model estimate based on all the studies
 res <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", slab=paste(Study, Year, Total, sep=", "), method="REML")
-
+RRSDPvalue <- anova.rma(res)
 
 #To create a graph visualize the data
 forest(res, at=log(c(0.3, 1, 5)), atransf=exp, xlab="RR of Obesity in high versus low Shannon diversity based on Median", cex=0.8)
@@ -2129,7 +2129,7 @@ text(-6.5, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 
 ```
 
-**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.18 for the low diversity group (P-value = 0.0187).
+**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.18 for the low diversity group (P-value = `r signif(RRSDPvalue$QMp, 3)`).
 
 
 ```{r Figure_3, echo=FALSE, message=FALSE, warning=FALSE}
@@ -2158,7 +2158,7 @@ dat.fm$freq <- with(raw.overall, c(rbind(tpos, tneg, cpos, cneg)))
 
 #Used to generate the RE Model estimate based on all the studies
 res2 <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", slab=paste(Study, Year, Total, sep=", "), method="REML")
-
+RRBFPvalue <- anova.rma(res2)
 
 #To create a graph visualize the data
 forest(res2, at=log(c(0.1, 1, 3)), atransf=exp, xlab="RR of Obesity in high versus low B/F ratio based on Median", cex=0.8)
@@ -2168,7 +2168,7 @@ text(5.6, 10.3, "Relative Risk [95% CI]", pos=2, cex=0.8)
 text(-6.0, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 ```
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.86 for the low diversity group (P-value = 0.0376).
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.87 for the low diversity group (P-value = `r signif(RRBFPvalue$QMp, 3)`).
 
 
 ```{r Figure_4, echo=FALSE}
