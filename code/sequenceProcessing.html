@@ -70,7 +70,7 @@ img {
 
 <div id="preamble" class="section level4">
 <h4><strong>Preamble</strong></h4>
-<p>Each study is brought up one at a time. This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study. You will also need the latest version of mothur, SRA Toolkit, Metaphlan2, Python 2.7, and Python 3+ installed on your system. There are also a few reference files that you will need. The first is the <a href="http://www.mothur.org/wiki/Silva_reference_files">SILVA reference</a> database and the second is the <a href="http://www.mothur.org/wiki/RDP_reference_files">RDP database</a> of which we used release 102 and version 9 respectively. In general, we tried to keep close to the Schloss SOP for processsing sequence reads. However, where this was not possible (mostly due to a high loss of reads resulting in a high loss of samples) we defaulted to the processing used by the published authors. Where it was not possible to use a <em>de novo</em> approach (mostly due to high numbers of unique sequences) and the authors used a closed-reference approach we used the RDP database instead of greengenes.</p>
+<p>Each study is brought up one at a time. This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study. You will also need the latest version of mothur, SRA Toolkit, Metaphlan2, Python 2.7, and Python 3+ installed on your system. There are also a few reference files that you will need. The first is the <a href="http://www.mothur.org/wiki/Silva_reference_files">SILVA reference</a> database and the second is the <a href="http://www.mothur.org/wiki/RDP_reference_files">RDP database</a> of which we used release 102 and version 9 respectively or the <a href="http://www.mothur.org/wiki/Greengenes-formatted_databases">greengenes database</a> depending on what was used by each respective study. In general, we tried to keep close to the Schloss SOP for processsing sequence reads. However, where this was not possible (mostly due to a high loss of reads resulting in a high loss of samples) we defaulted to the processing used by the published authors. Where it was not possible to use a <em>de novo</em> approach (mostly due to high numbers of unique sequences) and the authors used a closed-reference approach we used the RDP database instead of greengenes.</p>
 <p><br> <br></p>
 <div id="baxter-et-al.-2016" class="section level5">
 <h5><strong>Baxter et al. 2016:</strong></h5>
@@ -200,7 +200,42 @@ paste -d&quot;\t&quot; test2.fasta test3.fasta &gt; combined.groups
 </code></pre>
 <p>After this program was run I thought perhaps naively that I could simply run a set a batch file and be done with this data set. Well not quite. The sheer size and the way our server was configured meant that if I called much more than 130GB of RAM my job would run the risk of starting over regularly. So I did use the batch method but only upto <em>pre.cluster</em>. After this the <em>chimera.uchime</em> step was just taking too long so I seperated everything again and did the <em>chimera.uchime</em> separately. This also meant having to redo the unique seqs step. The code for this is below:</p>
 <pre class="bash"><code>/share/scratch/schloss/mothur/mothur Goodrich.batch</code></pre>
-<p>So now the biggest challenge that I have found so far is getting the data into a distance matrix not based on the closed-reference approach. The file is just too big for cluster.split so we have had to use the closed-reference approach for this data set.</p>
+<p>After this I seperated all the files and ran <em>chimera.uchime</em> on each of the samples in smaller groups. After this I recombined everything back together and then used the greengenes database to classify the sequences along with using the closed reference approach adopted by Goodrich et al.</p>
+<pre class="bash"><code>/share/scratch/schloss/mothur/mothur &quot;#split.groups(fasta=combined.unique.good.filter.unique.precluster.fasta, count=combined.unique.good.filter.unique.precluster.count_table)&quot;
+
+#!/bin/sh
+
+#Create new directories for chimera completed files
+mkdir chimera.completed
+mkdir mothurLogfiles
+
+#Make loop to run the chimera step and move completed samples to respective directory
+for chim in $(ls *.fasta)
+do
+    CFile=${chim//fasta/count_table}
+    /share/scratch/schloss/mothur/mothur &quot;#chimera.uchime(fasta=$chim, count=$CFile, dereplicate=t, processors=8)&quot;
+    
+    mv $chim chimera.completed
+    mv $CFile chimera.completed
+    mv *logfile mothurLogfiles
+    
+done
+
+exit 0
+
+
+#!/bin/sh
+
+/share/scratch/schloss/mothur/mothur &quot;#merge.files(input=group1.fasta-group2.fasta-group3.fasta-group4.fasta-group5.fasta-group6.fasta-group7.fasta-group8.fasta-group9.fasta-group10.fasta-group11.fasta-group12.fasta-group13.fasta-group14.fasta-group15.fasta-group16.fasta-group17.fasta-group18.fasta-group19.fasta-group20.fasta-group21.fasta-group22.fasta-group23.fasta-group24.fasta-group25.fasta, output=combined.fasta)&quot;
+/share/scratch/schloss/mothur/mothur &quot;#merge.files(input=group1.groups-group2.groups-group3.groups-group4.groups-group5.groups-group6.groups-group7.groups-group8.groups-group9.groups-group10.groups-group11.groups-group12.groups-group13.groups-group14.groups-group15.groups-group16.groups-group17.groups-group18.groups-group19.groups-group20.groups-group21.groups-group22.groups-group23.groups-group24.groups-group25.groups, output=combined.groups)&quot;
+/share/scratch/schloss/mothur/mothur &quot;#unique.seqs(fasta=combined.fasta)&quot;
+/share/scratch/schloss/mothur/mothur &quot;#count.seqs(name=combined.names, group=combined.groups)&quot;
+
+mv *logfile mothurLogfiles 
+
+
+exit 0</code></pre>
+<p>This here is the final line of code needed to generate the necessary shared files for downstream statistical analysis.</p>
 <pre class="bash"><code>/share/scratch/schloss/mothur/mothur Goodrich2.batch</code></pre>
 <p><br><br></p>
 </div>
