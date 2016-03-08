@@ -141,13 +141,24 @@ Despite the many problems that could add more noise to the measurements used, th
 
 The authors would like to thank Nielson Baxter for his help and suggestions during the sequence analysis portion. We would also like to thank Shawn Whitefield for her help with making sure the manuscript adhered to the guidelines set out for a meta-analysis. Finally, we would like to thank Rick Bushman, Hongzhe Li, and Pixu Shi in agreeing to release and helping to get a hold of the subject specific metadata from the Wu et al study.
 
+```{r install_needed_packages, echo=FALSE, message=FALSE, warning=FALSE}
+deps = c("knitr","vegan","epiR","AUCRF","meta","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra");
+for (dep in deps){
+  if (dep %in% installed.packages()[,"Package"] == FALSE){
+    install.packages(as.character(dep), quiet=TRUE);
+  }
+  library(dep, verbose=FALSE, character.only=TRUE)
+}
+
+
+```
+
 
 *******
 ##### Tables:
 
 **Table 1:Summary Demographics of Individuals used in the Meta-analysis.**     
 ```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
-library(knitr)
 
 Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", "HMP", "Wu", "Arumugam", "Turnbaugh*")
 
@@ -243,7 +254,6 @@ phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 phyla.table.rel.abund <- phyla.table.rel.abund[, -8]
 
 #Generate Alpha Diversity Measures and alpha diversity table
-library(vegan)
 H <- diversity(microbiome)
 S <- specnumber(microbiome)
 J <- H/log(S)
@@ -302,8 +312,6 @@ baxterPERM <- baxter2$aov.tab
 ###########################################################################
 ############ Relative Risk#################################################
 ###########################################################################
-
-library(epiR)
 
 #Generate median values and put them into existing alpha.test dataframe
 
@@ -372,8 +380,6 @@ baxterBFRRsig <- baxterBFMassoc$chisq.strata
 ###########################################################################
 ############ Classification using AUCRF ###################################
 ###########################################################################
-
-library(AUCRF)
 
 #generate test set
   # get rid of values that only have 0 and something else
@@ -510,8 +516,6 @@ rossPERM <- ross2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-library(epiR)
-
 #Generate median values and put them into existing alpha.test dataframe
 #Shannon diversity
 
@@ -631,7 +635,6 @@ rm(good.metadata, shared.data, keep)
 
 
 #generate alpha diversity measures with vegan
-library(vegan)
 H <- diversity(microbiome)
 S <- specnumber(microbiome)
 J <- H/log(S)
@@ -1065,7 +1068,6 @@ microbiome <- microbiome[keep, ]
 rm(keep)
 
 #generate alpha diversity measures with vegan
-library(vegan)
 H <- diversity(microbiome)
 S <- specnumber(microbiome)
 J <- H/log(S)
@@ -1277,7 +1279,6 @@ select.meta.cat <- meta.cat[microb.rownames, ]
 select.meta.cont <- meta.cont[microb.rownames, ]
 
 #generate alpha diversity measures with vegan
-library(vegan)
 H <- diversity(test)
 S <- specnumber(test)
 J <- H/log(S)
@@ -1489,8 +1490,6 @@ rm(test)
 rm(seqData, keep, namesToKeep)
 
 #Get alpha diversity of the samples
-library(vegan)
-
 H <- diversity(microbiome)
 S <- specnumber(microbiome)
 J <- H/log(S)
@@ -1705,8 +1704,6 @@ phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 rm(phyla.table, phyla.info)
 
 #Get alpha diversity of the samples
-library(vegan)
-
 H <- diversity(microb.norm)
 S <- specnumber(microb.norm)
 J <- H/log(S)
@@ -1842,8 +1839,6 @@ ArumugamBFRRsig <- ArumugamBFMassoc$chisq.strata
 ############ Classification using AUCRF ###################################
 ###########################################################################
 
-library(AUCRF)
-
 #Create Obese.num group
 metadata$obese.num[metadata$obese=="No"] <- 0
 metadata$obese.num[metadata$obese=="Yes"] <- 1
@@ -1899,7 +1894,6 @@ s1.subsample.data <- subsample.data[keep1, ]
 
 
 #generate alpha diversity measures with vegan
-library(vegan)
 H <- diversity(s1.subsample.data)
 S <- specnumber(s1.subsample.data)
 J <- H/log(S)
@@ -2110,16 +2104,6 @@ kable(table3, format = "markdown", align = 'c', padding = 2)
 
 
 ```{r Figure_2, echo=FALSE, message=FALSE, warning=FALSE}
-
-library(meta)
-library(metafor)
-library(ggplot2)
-library(plyr)
-library(reshape2)
-library(RColorBrewer)
-library(scales)
-library(pheatmap)
-library(gridExtra)
 
 StudyNo <- c(1, 2, 3, 4, 5, 6, 7, 8, 9)
 Study <- c("Baxter", "HMP", "Ross", "Escobar", "Arumugam", "Turnbaugh", "Zupancic", "Wu", "Goodrich")
