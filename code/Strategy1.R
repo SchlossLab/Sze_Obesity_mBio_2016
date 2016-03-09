@@ -67,7 +67,7 @@ demographics$obese.num[demographics$obese=="Yes"] <- 1
 obese <- factor(demographics$obese.num)
 
 ######################################################################################## 
-First Level Analysis & Alpha Diversity with BMI #############
+########## First Level Analysis & Alpha Diversity with BMI #############
 ###########################################################################
 
 #Create a column with obese and extreme obese as single entity
@@ -80,18 +80,18 @@ demographics$BMIclass2[demographics$BMI.classification=="Obese" | demographics$B
 
 bmi <- demographics$BMI
 
-baxterH <- anova(lm(H ~ obese)) #P-value=0.01643
-baxterS <- anova(lm(S ~ obese)) #P-value=0.01571
-baxterJ <- anova(lm(J ~ obese)) #P-value=0.03241
+baxterH <- wilcox.test(H ~ obese) #P-value=0.065
+baxterS <- wilcox.test(S ~ obese) #P-value=0.03923
+baxterJ <- wilcox.test(J ~ obese) #P-value=0.1254
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-baxterBacter <- anova(lm(bacter ~ obese)) #P-value=0.3175
-baxterFirm <- anova(lm(firm ~ obese)) #P-value=0.6817
-baxterBF <- anova(lm(BFratio ~ obese)) #P-value=0.6305
+baxterBacter <- wilcox.test(bacter ~ obese) #P-value=0.3175
+baxterFirm <- wilcox.test(firm ~ obese) #P-value=0.6817
+baxterBF <- wilcox.test(BFratio ~ obese) #P-value=0.6305
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -203,7 +203,10 @@ BaxterBMI <- bmi
 ###########################################################################
 
 
-overallPTable <- as.data.frame(t(c(baxterBacter[1,5], baxterFirm[1,5], baxterBF[1,5], baxterH[1,5], baxterS[1,5], baxterJ[1,5], baxterPERM[1,6])))
+overallPTable <- as.data.frame(t(c(baxterBacter$p.value, baxterFirm$p.value, 
+                                   baxterBF$p.value, baxterH$p.value, 
+                                   baxterS$p.value, baxterJ$p.value, 
+                                   baxterPERM[1,6])))
 colnames(overallPTable) <- c("Bacteroidetes", "Firmicutes", "BFRatio", "Shannon", "OTURich", "Evenness", "BrayC")
 
 tpos <- BaxLowShannonGroup[2, 2]
@@ -315,18 +318,18 @@ obese <- factor(edit.metadata2$obese)
 ######################################################################################## First Level Analysis & Alpha Diversity with BMI #############
 ###########################################################################
 
-rossH <- anova(lm(H ~ obese)) #P-value=0.3154
-rossS <- anova(lm(S ~ obese)) #P-value=0.8179
-rossJ <- anova(lm(J ~ obese)) #P-value=0.2269
+rossH <- wilcox.test(H ~ obese) #P-value=0.6667
+rossS <- wilcox.test(S ~ obese) #P-value=0.9559
+rossJ <- wilcox.test(J ~ obese) #P-value=0.5462
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$p__Bacteroidetes
 firm <- phyla.table.rel.abund$p__Firmicutes
 BFratio <- bacter/firm
 
-rossBacter <- anova(lm(bacter ~ obese)) #P-value=0.06935
-rossFirm <- anova(lm(firm ~ obese)) #P-value=0.09236
-rossBF <- anova(lm(BFratio ~ obese)) #P-value=0.09534
+rossBacter <- wilcox.test(bacter ~ obese) #P-value=0.0867
+rossFirm <- wilcox.test(firm ~ obese) #P-value=0.1576
+rossBF <- wilcox.test(BFratio ~ obese) #P-value=0.096
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -437,7 +440,8 @@ RossBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
-Ross <- c(rossBacter[1,5], rossFirm[1,5], rossBF[1,5], rossH[1,5], rossS[1,5], rossJ[1,5], rossPERM[1,6])
+Ross <- c(rossBacter$p.value, rossFirm$p.value, rossBF$p.value, 
+          rossH$p.value, rossS$p.value, rossJ$p.value, rossPERM[1,6])
 overallPTable <- rbind(overallPTable, Ross)
 
 tpos <- c(tpos, RossLowShannonGroup[2, 2])
@@ -461,6 +465,1689 @@ rm(RossLowShannonGroup, RossHighShannonGroup, rossHRR, rossBacter,
    rossFirm, rossBF, rossH, rossS, rossJ, rossPERM, rossHEpi, 
    RossZH, RossZLogBF, RossBMI, ross2)
 
+############## GOODRICH ##################################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+
+setwd("C:/users/marc/Desktop/obesity2/twinsUK")
+
+#Read in and match metadata to microbiome data
+metadata <- read.csv("TwinsUKStudy_metadata.csv")
+rownames(metadata) <- metadata[, 1]
+shared.data <- read.table("combined.tx.1.subsample.shared", header=T)
+rownames(shared.data) <- shared.data[, 2]
+microbiome <- shared.data[, -c(1:3)]
+keep  <- rownames(metadata)
+
+microbiome<- microbiome[keep, ]
+
+rm(good.metadata, shared.data, keep)
+
+
+#generate alpha diversity measures with vegan
+H <- diversity(microbiome)
+S <- specnumber(microbiome)
+J <- H/log(S)
+alpha.diversity <- as.data.frame(cbind(H, S, J))
+alpha.test <- alpha.diversity
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.table("phyla.txt", header=T)
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(microbiome)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- microbiome
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing)
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Chloroflexi", "Deferribacteres", "Elusimicrobia", "Fusobacteria", "Gemmatimonadetes", "Lentisphaerae", "OD1", "Planctomycetes", "Spirochaetes", "SR1", "Synergistetes", "Tenericutes")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4:6, 8:12, 14:17)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+
+#Create BMI groups
+metadata$BMI.class[metadata$body_mass_index_s<=24] <- "Normal"
+metadata$BMI.class[metadata$body_mass_index_s>24 & metadata$body_mass_index_s<30] <- "Overweight"
+metadata$BMI.class[metadata$body_mass_index_s>=30 & metadata$body_mass_index_s<40] <- "Obese"
+metadata$BMI.class[metadata$body_mass_index_s>=40] <- "Extreme Obesity"
+
+#Create Obese Yes/No groups
+metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
+metadata$obese[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Yes"
+
+#Create a column with obese and extreme obese as single entity
+metadata$BMIclass2[metadata$BMI.class=="Normal"] <- "Normal"
+metadata$BMIclass2[metadata$BMI.class=="Overweight"] <- "Overweight"                     
+metadata$BMIclass2[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Obese"
+
+#Get paitent demographics to be tested
+bmi <- metadata$body_mass_index_s
+obese <- factor(metadata$obese)
 
 
 
+###########################################################################
+######### First Level Analysis & Alpha Diversity with BMI #################
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+goodrichH <- wilcox.test(H ~ obese) #P-value=0.6671
+goodrichS <- wilcox.test(S ~ obese) #P-value=0.9073
+goodrichJ <- wilcox.test(J ~ obese) #P-value=0.6319
+
+#B and F tests against obesity
+bacter <- phyla.table.rel.abund$Bacteroidetes
+firm <- phyla.table.rel.abund$Firmicutes
+BFratio <- bacter/firm
+
+goodrichBacter <- wilcox.test(bacter ~ obese) #P-value=0.7008
+goodrichFirm <- wilcox.test(firm ~ obese) #P-value=0.997
+goodrichBF <- wilcox.test(BFratio ~ obese) #P-value=0.7445
+
+###########################################################################
+############ NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+goodrich2 <- adonis(microbiome ~ obese, permutations=1000)
+goodrichPERM <- goodrich2$aov.tab
+#PERMANOVA=0.004995, pseudo-F=2.9308
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+GoodtotalN <- length(orderedHCat)
+GoodHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+GoodHighShannonGroup <- as.data.frame(table(test3[c(1:GoodHHighTotal), 2]))
+GoodLowShannonGroup <- as.data.frame(table(test3[c((GoodHHighTotal + 1):GoodtotalN), 2]))
+group1 <- c(GoodHighShannonGroup[2, 2], GoodHighShannonGroup[1, 2])
+group2 <- c(GoodLowShannonGroup[2, 2], GoodLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 47 and non-obese = 206
+#Group2 (Lower than median), obese = 56 and non-obese = 198
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+goodrichHEpi <- epi.2by2(r.test, method="cohort.count")
+goodrichHMassoc <- goodrichHEpi$massoc
+goodrichHRR <- goodrichHMassoc$RR.strata.score
+goodrichHRRsig <- goodrichHMassoc$chisq.strata
+## Risk Ratio = 1.19
+## CI = 0.84, 1.68
+## p-value = 0.332
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$Bacteroidetes
+Firm = phyla.table.rel.abund$Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+GoodBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+GoodHighBFGroup <- as.data.frame(table(test4[c(1:GoodBFHighTotal), 2]))
+GoodLowBFGroup <- as.data.frame(table(test4[c((GoodBFHighTotal + 1):GoodtotalN), 2]))
+group1 <- c(GoodHighBFGroup[2, 2], GoodHighBFGroup[1, 2])
+group2 <- c(GoodLowBFGroup[2, 2], GoodLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 52 and non-obese = 201
+#Group2 (Lower than median), obese = 51 and non-obese = 203
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+goodrichBFEpi <- epi.2by2(r.test, method="cohort.count")
+goodrichBFMassoc <- goodrichBFEpi$massoc
+goodrichBFRR <- goodrichBFMassoc$RR.strata.score
+goodrichBFRRsig <- goodrichBFMassoc$chisq.strata
+## Risk Ratio = 0.98
+## CI = 0.69, 1.38
+## p-value = 0.894
+
+###########################################################################
+############ Classification using AUCRF####################################
+###########################################################################
+
+#Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
+obese <- factor(metadata$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset <- Filter(function(x)(length(unique(x))>5), microbiome)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+set.seed(3)
+goodrichAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+# list of 8 Measures, AUCopt = 0.6767159
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+GoodrichZH <- scale(H)
+GoodrichZLogBF <- scale(log(BFratio))
+GoodrichBMI <- bmi
+
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+Goodrich <- c(goodrichBacter$p.value, goodrichFirm$p.value, 
+              goodrichBF$p.value, goodrichH$p.value, goodrichS$p.value, 
+              goodrichJ$p.value, goodrichPERM[1,6])
+
+overallPTable <- rbind(overallPTable, Goodrich)
+
+tpos <- c(tpos, GoodLowShannonGroup[2, 2])
+tneg <- c(tneg, GoodLowShannonGroup[1, 2])
+
+cpos <- c(cpos, GoodHighShannonGroup[2, 2])
+cneg <- c(cneg, GoodHighShannonGroup[1, 2])
+
+RR <- c(RR, goodrichHRR[1,1])
+
+low <- c(low, goodrichHRR[1,2])
+
+high <- c(high, goodrichHRR[1,3])
+
+GoodrichData <- as.data.frame(cbind(GoodrichZH, GoodrichZLogBF, GoodrichBMI))
+GoodrichData$Study <- "Goodrich"
+colnames(GoodrichData) <- c("ZH", "ZLogBF", "BMI", "Study")
+combinedData <- rbind(combinedData, GoodrichData)
+
+rm(GoodLowShannonGroup, GoodHighShannonGroup, goodrichHRR, goodrichBacter, 
+   goodrichFirm, goodrichBF, goodrichH, goodrichS, goodrichJ, 
+   goodrichPERM, goodrichHEpi, GoodrichZH, GoodrichZLogBF, 
+   GoodrichBMI, goodrich2, Ross, Goodrich)
+
+########### ESCOBAR ######################################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+setwd("C:/users/marc/Desktop/obesity2/columbian/")
+
+columbian.microb <- read.table("EscobarPhylotypeSub.shared", header=T)
+metadata <- read.csv("columbian_dataset.csv")
+
+#Organize the microbiome shared data
+rownames(columbian.microb) <- columbian.microb[, 2]
+columbian.microb <- columbian.microb[, -c(1:3)]
+
+#Organize the metadata
+rownames(metadata) <- metadata[, 5]
+
+#Get only data that we are interested in
+edit.metadata <- metadata[, -c(1:7, 9, 13:15, 16:52)]
+
+#Sort metadata into the same order as the microbiome data
+order1 <- rownames(columbian.microb)
+edit.metadata2 <- edit.metadata[order1, ]
+
+
+#Get alpha diversity of the samples
+H <- diversity(columbian.microb)
+S <- specnumber(columbian.microb)
+J <- H/log(S)
+alpha.diversity.shannon <- cbind(H,S,J)
+alpha.test <- as.data.frame(alpha.diversity.shannon)
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.table("taxonomyKey.txt")
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(columbian.microb)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- columbian.microb
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing)
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("p__", "p__Cyanobacteria", "p__Elusimicrobia", 
+                                           "p__Fusobacteria", "p__Lentisphaerae", 
+                                           "p__Spirochaetes", "p__Synergistetes", 
+                                           "p__Tenericutes", "p__TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4:5, 7:8, 10:13)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+
+#Create Obese Yes/No groups
+edit.metadata2$obese[edit.metadata2$description_s=="Adequate weight male stool sample" | edit.metadata2$description_s=="Overweight male stool sample" | edit.metadata2$description_s=="Adequate weight female stool sample" | edit.metadata2$description_s=="Overweight female stool sample"] <- "No"
+edit.metadata2$obese[edit.metadata2$description_s=="Obese male stool sample" | edit.metadata2$description_s=="Obese female stool sample"] <- "Yes"
+
+#Create BMI groups
+edit.metadata2$BMI.class[edit.metadata2$body_mass_index_s<=24] <- "Normal"
+edit.metadata2$BMI.class[edit.metadata2$body_mass_index_s>24 & edit.metadata2$body_mass_index_s<30] <- "Overweight"
+edit.metadata2$BMI.class[edit.metadata2$body_mass_index_s>=30 & edit.metadata2$body_mass_index_s<40] <- "Obese"
+edit.metadata2$BMI.class[edit.metadata2$body_mass_index_s>=40] <- "Extreme Obesity"
+
+#Create BMI groups2
+edit.metadata2$BMI.class2[edit.metadata2$body_mass_index_s<=24] <- "Normal"
+edit.metadata2$BMI.class2[edit.metadata2$body_mass_index_s>24 & edit.metadata2$body_mass_index_s<30] <- "Overweight"
+edit.metadata2$BMI.class2[edit.metadata2$body_mass_index_s>=30] <- "Obese"
+
+#Get paitent demographics data to be tested
+bmi <- edit.metadata2$body_mass_index_s
+obese <- factor(edit.metadata2$obese)
+
+######################################################################################## First Level Analysis & Alpha Diversity with BMI #############
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+escobarH <- wilcox.test(H ~ obese) #P-value=0.5588
+escobarS <- wilcox.test(S ~ obese) #P-value=0.3667
+escobarJ <- wilcox.test(J ~ obese) #P-value=0.4223
+
+#B and F tests against obesity
+bacter <- phyla.table.rel.abund$p__Bacteroidetes
+firm <- phyla.table.rel.abund$p__Firmicutes
+BFratio <- bacter/firm
+
+escobarBacter <- wilcox.test(bacter ~ obese) #P-value=0.02442
+escobarFirm <- wilcox.test(firm ~ obese) #P-value=0.09958
+escobarBF <- wilcox.test(BFratio ~ obese) #P-value=0.04392
+
+###########################################################################
+############ NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+escobar2 <- adonis(columbian.microb ~ obese, permutations=1000)
+escobarPERM <- escobar2$aov.tab
+#PERMANOVA=0.07892, pseudo-F=1.6925
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+EscototalN <- length(orderedHCat)
+EscoHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+EscoHighShannonGroup <- as.data.frame(table(test3[c(1:EscoHHighTotal), 2]))
+EscoLowShannonGroup <- as.data.frame(table(test3[c((EscoHHighTotal + 1):EscototalN), 2]))
+group1 <- c(EscoHighShannonGroup[2, 2], EscoHighShannonGroup[1, 2])
+group2 <- c(EscoLowShannonGroup[2, 2], EscoLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 4 and non-obese = 11
+#Group2 (Lower than median), obese = 6 and non-obese = 9
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group1", "group2")
+
+escobarHEpi <- epi.2by2(r.test, method="cohort.count")
+escobarHMassoc <- escobarHEpi$massoc
+escobarHRR <- escobarHMassoc$RR.strata.score
+escobarHRRsig <- escobarHMassoc$chisq.strata
+## Risk Ratio = 1.50
+## CI = 0.53, 4.26
+## p-value = 0.439
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$p__Bacteroidetes
+Firm = phyla.table.rel.abund$p__Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+EscoBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+EscoHighBFGroup <- as.data.frame(table(test4[c(1:EscoBFHighTotal), 2]))
+EscoLowBFGroup <- as.data.frame(table(test4[c((EscoBFHighTotal + 1):EscototalN), 2]))
+group1 <- c(EscoHighBFGroup[2, 2], EscoHighBFGroup[1, 2])
+group2 <- c(EscoLowBFGroup[2, 2], EscoLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 7 and non-obese = 8
+#Group2 (Lower than median), obese = 3 and non-obese = 12
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+escobarBFEpi <- epi.2by2(r.test, method="cohort.count")
+escobarBFMassoc <- escobarBFEpi$massoc
+escobarBFRR <- escobarBFMassoc$RR.strata.score
+escobarBFRRsig <- escobarBFMassoc$chisq.strata
+## Risk Ratio = 0.25
+## CI = 0.06, 0.99
+## p-value = 0.02
+
+###########################################################################
+############ Classification using AUCRF ###################################
+###########################################################################
+
+#Create Obese.num group
+edit.metadata2$obese.num[edit.metadata2$obese=="No"] <- 0
+edit.metadata2$obese.num[edit.metadata2$obese=="Yes"] <- 1
+obese <- factor(edit.metadata2$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset <- Filter(function(x)(length(unique(x))>5), columbian.microb)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+set.seed(3)
+escobarAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+# list of 3 Measures, AUCopt = 0.95
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+EscobarZH <- scale(H)
+EscobarZLogBF <- scale(log(BFratio))
+EscobarBMI <- bmi
+
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+Escobar <- c(escobarBacter$p.value, escobarFirm$p.value, 
+             escobarBF$p.value, escobarH$p.value, escobarS$p.value, 
+             escobarJ$p.value, escobarPERM[1,6])
+
+overallPTable <- rbind(overallPTable, Escobar)
+
+tpos <- c(tpos, EscoLowShannonGroup[2, 2])
+tneg <- c(tneg, EscoLowShannonGroup[1, 2])
+
+cpos <- c(cpos, EscoHighShannonGroup[2, 2])
+cneg <- c(cneg, EscoHighShannonGroup[1, 2])
+
+RR <- c(RR, escobarHRR[1,1])
+
+low <- c(low, escobarHRR[1,2])
+
+high <- c(high, escobarHRR[1,3])
+
+EscobarData <- as.data.frame(cbind(EscobarZH, EscobarZLogBF, EscobarBMI))
+EscobarData$Study <- "Escobar"
+colnames(EscobarData) <- c("ZH", "ZLogBF", "BMI", "Study")
+combinedData <- rbind(combinedData, EscobarData)
+
+rm(EscoLowShannonGroup, EscoHighShannonGroup, escobarHRR, escobarBacter, 
+   escobarFirm, escobarBF, escobarH, escobarS, escobarJ, 
+   escobarPERM, escobarHEpi, EscobarZH, EscobarZLogBF, 
+   EscobarBMI, escobar2, Escobar)
+
+
+######## ZUPANCIC #########################################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+
+setwd("C:/users/marc/Desktop/obesity2/Amish/updatedGOOD")
+
+#Read in and match metadata to microbiome data
+metadata <- read.csv("amish_obesity_table2.csv")
+metadata2 <- read.csv("amish.metadata.csv")
+test <- metadata[!duplicated(metadata$submitted_sample_id_s), ]
+rownames(test) <- test[, 4]
+test2 <- metadata2[!duplicated(metadata2$SUBJID), ]
+rownames(test2) <- test2[, 1]
+shared.data <- read.table("ZupancicPhylotypeSub.shared", header=T)
+rownames(shared.data) <- shared.data[, 2]
+shared.data <- shared.data[, -c(1:3)]
+keep  <- rownames(shared.data)
+
+test3 <- test[keep, ]
+good.metadata <- test3
+test4 <- test2[keep, ]
+good.metadata2 <- test4
+
+microbiome <- shared.data[keep, ]
+metadata <- cbind(good.metadata, good.metadata2)
+
+rm(good.metadata, shared.data, keep, test, test2, test3, test4, good.metadata2, metadata2)
+
+test <- metadata[!duplicated(metadata$submitted_subject_id_s), ]
+keep  <- rownames(test)
+metadata <- test
+microbiome <- microbiome[keep, ]
+
+rm(test, keep)
+
+metadata <- metadata[complete.cases(metadata), ]
+keep <- rownames(metadata)
+microbiome <- microbiome[keep, ]
+
+rm(keep)
+
+#generate alpha diversity measures with vegan
+library(vegan)
+H <- diversity(microbiome)
+S <- specnumber(microbiome)
+J <- H/log(S)
+select.alpha.diversity <- as.data.frame(cbind(H, S, J))
+s1.alpha.diversity <- as.data.frame(select.alpha.diversity)
+alpha.test <- s1.alpha.diversity
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(microbiome)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- microbiome
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing)
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("p__Elusimicrobia", 
+                                           "p__Fusobacteria", 
+                                           "p__Synergistetes")], 1, sum)
+phyla.table <- phyla.table[, -c(3, 5, 7)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:6)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+
+#Create BMI groups
+metadata$BMI.class[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class[metadata$BMI>=30 & metadata$BMI<40] <- "Obese"
+metadata$BMI.class[metadata$BMI>=40] <- "Extreme Obesity"
+
+
+#Create Obese Yes/No groups
+metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
+metadata$obese[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Yes"
+
+#Create BMI class 2 groups
+metadata$BMI.class2[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class2[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class2[metadata$BMI>=30] <- "Obese"
+
+#create groups to be used
+bmi <- metadata$BMI
+obese <- factor(metadata$obese)
+
+
+####################################################################################### First Level Analysis & Alpha Diversity with BMI #############
+###########################################################################
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+zupancicH <- wilcox.test(H ~ obese) #P-value=0.9207
+zupancicS <- wilcox.test(S ~ obese) #P-value=0.5007
+zupancicJ <- wilcox.test(J ~ obese) #P-value=0.4922
+
+#B and F tests against obesity
+bacter <- phyla.table.rel.abund$p__Bacteroidetes
+firm <- phyla.table.rel.abund$p__Firmicutes
+BFratio <- bacter/firm
+
+zupancicBacter <- wilcox.test(bacter ~ obese) #P-value=0.8712
+zupancicFirm <- wilcox.test(firm ~ obese) #P-value=0.5536
+zupancicBF <- wilcox.test(BFratio ~ obese) #P-value=0.9491
+
+####################################################################################### NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+zupancic2 <- adonis(microbiome ~ obese, permutations=1000)
+zupancicPERM <- zupancic2$aov.tab
+#PERMANOVA=0.8012, pseudo-F=0.48248
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+ZupatotalN <- length(orderedHCat)
+ZupaHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+ZupaHighShannonGroup <- as.data.frame(table(test3[c(1:ZupaHHighTotal), 2]))
+ZupaLowShannonGroup <- as.data.frame(table(test3[c((ZupaHHighTotal + 1):ZupatotalN), 2]))
+group1 <- c(ZupaHighShannonGroup[2, 2], ZupaHighShannonGroup[1, 2])
+group2 <- c(ZupaLowShannonGroup[2, 2], ZupaLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 31 and non-obese = 72
+#Group2 (Lower than median), obese = 47 and non-obese = 57
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+zupancicHEpi <- epi.2by2(r.test, method="cohort.count")
+zupancicHMassoc <- zupancicHEpi$massoc
+zupancicHRR <- zupancicHMassoc$RR.strata.score
+zupancicHRRsig <- zupancicHMassoc$chisq.strata
+## Risk Ratio = 1.09
+## CI = 0.75, 1.58
+## p-value = 0.658
+
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$p__Bacteroidetes
+Firm = phyla.table.rel.abund$p__Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+ZupaBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+ZupaHighBFGroup <- as.data.frame(table(test4[c(1:ZupaBFHighTotal), 2]))
+ZupaLowBFGroup <- as.data.frame(table(test4[c((ZupaBFHighTotal + 1):ZupatotalN), 2]))
+group1 <- c(ZupaHighBFGroup[2, 2], ZupaHighBFGroup[1, 2])
+group2 <- c(ZupaLowBFGroup[2, 2], ZupaLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 41 and non-obese = 62
+#Group2 (Lower than median), obese = 37 and non-obese = 67
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+zupancicBFEpi <- epi.2by2(r.test, method="cohort.count")
+zupancicBFMassoc <- zupancicBFEpi$massoc
+zupancicBFRR <- zupancicBFMassoc$RR.strata.score
+zupancicBFRRsig <- zupancicBFMassoc$chisq.strata
+## Risk Ratio = 0.97
+## CI = 0.67, 1.41
+## p-value = 0.883
+
+###########################################################################
+############ Classification using AUCRF ###################################
+###########################################################################
+
+#Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
+obese <- factor(metadata$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset <- Filter(function(x)(length(unique(x))>5), microbiome)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+set.seed(3)
+zupancicAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+zupAUC <- fit$`OOB-AUCopt`
+# list of 3 Measures, AUCopt = 0.5746806
+
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+ZupancicZH <- scale(H)
+ZupancicZLogBF <- scale(log(BFratio))
+ZupancicBMI <- bmi
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+Zupancic <- c(zupancicBacter$p.value, zupancicFirm$p.value, 
+              zupancicBF$p.value, zupancicH$p.value, zupancicS$p.value, 
+              zupancicJ$p.value, zupancicPERM[1,6])
+
+overallPTable <- rbind(overallPTable, Zupancic)
+
+tpos <- c(tpos, ZupaLowShannonGroup[2, 2])
+tneg <- c(tneg, ZupaLowShannonGroup[1, 2])
+
+cpos <- c(cpos, ZupaHighShannonGroup[2, 2])
+cneg <- c(cneg, ZupaHighShannonGroup[1, 2])
+
+RR <- c(RR, zupancicHRR[1,1])
+
+low <- c(low, zupancicHRR[1,2])
+
+high <- c(high, zupancicHRR[1,3])
+
+ZupancicData <- as.data.frame(cbind(ZupancicZH, ZupancicZLogBF, ZupancicBMI))
+ZupancicData$Study <- "Zupancic"
+colnames(ZupancicData) <- c("ZH", "ZLogBF", "BMI", "Study")
+combinedData <- rbind(combinedData, ZupancicData)
+
+rm(ZupaLowShannonGroup, ZupaHighShannonGroup, zupancicHRR, zupancicBacter, 
+   zupancicFirm, zupancicBF, zupancicH, zupancicS, zupancicJ, 
+   zupancicPERM, zupancicHEpi, ZupancicZH, ZupancicZLogBF, 
+   ZupancicBMI, zupancic2, Zupancic)
+
+
+############### HMP HMP HMP ##############################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+##Read in relevant data
+
+setwd("C:/users/marc/Desktop/obesity2/HMP.analysis")
+microbiome <- read.table("Stool.an.0.03.subsample.shared", header=T)
+meta.cat <- read.table("categorical.metadata", header=T)
+meta.cont <- read.table("continuous.metadata", header=T)
+
+#Only interested in first visit microbiome data
+#need to create microbiome data set for only that
+
+test <- microbiome[grep("\\.01\\.", microbiome$Group), ] #selecting by .01.
+
+microb.rownames <- gsub("([0-9]+).*", "\\1", test$Group) #extracting only numeric before first "."
+rownames(test) <- microb.rownames
+
+#Get rid of information not used in downstram analysis
+test <- test[, -c(1:3)]
+
+#Subset data to the microbiome total n
+select.meta.cat <- meta.cat[microb.rownames, ]
+select.meta.cont <- meta.cont[microb.rownames, ]
+
+#generate alpha diversity measures with vegan
+H <- diversity(test)
+S <- specnumber(test)
+J <- H/log(S)
+select.alpha.diversity <- as.data.frame(cbind(H, S, J))
+alpha.test <- select.alpha.diversity
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.csv("phyla.data.csv")
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(test)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- test
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing)
+
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Deinococcus-Thermus", "Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "Tenericutes", "TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4, 6, 7, 9, 10:12)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+phyla.table.rel.abund <- phyla.table.rel.abund[, -8]
+
+
+#Create Obese Yes/No groups
+select.meta.cat$obese[select.meta.cat$BMI_C=="normal" | select.meta.cat$BMI_C=="overweight"] <- "No"
+select.meta.cat$obese[select.meta.cat$BMI_C=="obese" | select.meta.cat$BMI_C=="extreme obesity"] <- "Yes"
+
+#Create BMI groups2
+select.meta.cat$BMI.class2[select.meta.cont$DTPBMI<=24] <- "Normal"
+select.meta.cat$BMI.class2[select.meta.cont$DTPBMI>24 & select.meta.cont$DTPBMI<30] <- "Overweight"
+select.meta.cat$BMI.class2[select.meta.cont$DTPBMI>=30] <- "Obese"
+
+#Get paitent demographics data to be tested
+bmi <- select.meta.cont$DTPBMI
+obese <- factor(select.meta.cat$obese)
+
+######################################################################################## First Level Analysis & Alpha Diversity with BMI #############
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+HMPH <- wilcox.test(H ~ obese) #P-value=0.5772
+HMPS <- wilcox.test(S ~ obese) #P-value=0.9654
+HMPJ <- wilcox.test(J ~ obese) #P-value=0.4667
+
+
+#B and F tests against obesity
+bacter <- phyla.table.rel.abund$Bacteroidetes
+firm <- phyla.table.rel.abund$Firmicutes
+BFratio <- bacter/firm
+
+HMPBacter <- wilcox.test(bacter ~ obese) #P-value=0.459
+HMPFirm <- wilcox.test(firm ~ obese) #P-value=0.7864
+HMPBF <- wilcox.test(BFratio ~ obese) #P-value=0.5858
+
+###########################################################################
+############ NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+HMP2 <- adonis(test ~ obese, permutations=1000)
+HMPPERM <- HMP2$aov.tab
+#PERMANOVA=0.8112, pseudo-F=0.7024
+
+
+######################################################################################## Relative Risk ###############################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+HMPtotalN <- length(orderedHCat)
+HMPHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+HMPHighShannonGroup <- as.data.frame(table(test3[c(1:HMPHHighTotal), 2]))
+HMPLowShannonGroup <- as.data.frame(table(test3[c((HMPHHighTotal + 1):HMPtotalN), 2]))
+group1 <- c(HMPHighShannonGroup[2, 2], HMPHighShannonGroup[1, 2])
+group2 <- c(HMPLowShannonGroup[2, 2], HMPLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 10 and non-obese = 118
+#Group2 (Lower than median), obese = 16 and non-obese = 112
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group1", "group2")
+
+HMPHEpi <- epi.2by2(r.test, method="cohort.count")
+HMPHMassoc <- HMPHEpi$massoc
+HMPHRR <- HMPHMassoc$RR.strata.score
+HMPHRRsig <- HMPHMassoc$chisq.strata
+## Risk Ratio = 1.60
+## CI = 0.75, 3.39
+## p-value = 0.214
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$Bacteroidetes
+Firm = phyla.table.rel.abund$Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+HMPBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+HMPHighBFGroup <- as.data.frame(table(test4[c(1:HMPBFHighTotal), 2]))
+HMPLowBFGroup <- as.data.frame(table(test4[c((HMPBFHighTotal + 1):HMPtotalN), 2]))
+group1 <- c(HMPHighBFGroup[2, 2], HMPHighBFGroup[1, 2])
+group2 <- c(HMPLowBFGroup[2, 2], HMPLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 13 and non-obese = 115
+#Group2 (Lower than median), obese = 13 and non-obese = 115
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+
+HMPBFEpi <- epi.2by2(r.test, method="cohort.count")
+HMPBFMassoc <- HMPBFEpi$massoc
+HMPBFRR <- HMPBFMassoc$RR.strata.score
+HMPBFRRsig <- HMPBFMassoc$chisq.strata
+## Risk Ratio = 1.00
+## CI = 0.48, 2.07
+## p-value = 1.00
+
+###########################################################################
+############ Classification using AUCRF ###################################
+###########################################################################
+
+#Create Obese.num group
+select.meta.cat$obese.num[select.meta.cat$obese=="No"] <- 0
+select.meta.cat$obese.num[select.meta.cat$obese=="Yes"] <- 1
+obese <- factor(select.meta.cat$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset <- Filter(function(x)(length(unique(x))>5), test)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+#set.seed(3)
+#HMPAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+# list of 6 Measures, AUCopt = 0.7031773
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+HMPZH <- scale(H)
+HMPZLogBF <- scale(log(BFratio))
+HMPBMI <- bmi
+
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+HMP <- c(HMPBacter$p.value, HMPFirm$p.value, 
+         HMPBF$p.value, HMPH$p.value, HMPS$p.value, 
+         HMPJ$p.value, HMPPERM[1,6])
+
+overallPTable <- rbind(overallPTable, HMP)
+
+tpos <- c(tpos, HMPLowShannonGroup[2, 2])
+tneg <- c(tneg, HMPLowShannonGroup[1, 2])
+
+cpos <- c(cpos, HMPHighShannonGroup[2, 2])
+cneg <- c(cneg, HMPHighShannonGroup[1, 2])
+
+RR <- c(RR, HMPHRR[1,1])
+
+low <- c(low, HMPHRR[1,2])
+
+high <- c(high, HMPHRR[1,3])
+
+HMPData <- as.data.frame(cbind(HMPZH, HMPZLogBF, HMPBMI))
+HMPData$Study <- "HMP"
+colnames(HMPData) <- c("ZH", "ZLogBF", "BMI", "Study")
+combinedData <- rbind(combinedData, HMPData)
+
+rm(HMPLowShannonGroup, HMPHighShannonGroup, HMPHRR, HMPBacter, 
+   HMPFirm, HMPBF, HMPH, HMPS, HMPJ, 
+   HMPPERM, HMPHEpi, HMPZH, HMPZLogBF, 
+   HMPBMI, HMP2, HMP)
+
+
+############## Wu Wu Wu ###################################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+
+setwd("C:/users/marc/Desktop/obesity2/COMBO/")
+
+microbiome <- read.table("WuPhylotypeSub.shared", header=T)
+rownames(microbiome) <- microbiome$Group
+microbiome <- microbiome[, -c(1:3)]
+seqData <- read.csv("COMBO_data_table.csv", header=T)
+seqData <- seqData[-1, ]
+rownames(seqData) <- seqData$Run_s
+metadata <- read.table("BMI_and_Counts.txt", header=T)
+metadata <- metadata[, c(1, 2)]
+
+#get seqData set in line with microbiome data
+namesToKeep <- rownames(microbiome)
+test <- seqData[namesToKeep, ]
+seqData <- test
+rm(test)
+
+#change all rownames to match sample IDs
+rownames(seqData) <- seqData$submitted_subject_id_s
+rownames(microbiome) <- rownames(seqData)
+rownames(metadata) <- metadata[, 1]
+
+#Match the metadata now with the microbiome data
+namesToKeep <- rownames(microbiome)
+test <- metadata[namesToKeep, ]
+metadata <- test
+rm(test)
+rm(seqData, keep, namesToKeep)
+
+#Get alpha diversity of the samples
+H <- diversity(microbiome)
+S <- specnumber(microbiome)
+J <- H/log(S)
+alpha.diversity.shannon <- cbind(H,S,J)
+alpha.test <- as.data.frame(alpha.diversity.shannon)
+
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phylogenetic.info <- phylogenetic.info[,-c(1)]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(microbiome)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- microbiome
+colnames(phyla.table) <- phyla.names
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing)
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("p__Cyanobacteria", 
+                                           "p__Fusobacteria", 
+                                           "p__Lentisphaerae", 
+                                           "p__Synergistetes", 
+                                           "p__Tenericutes", 
+                                           "p__TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(3, 5:6, 8:10)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:6)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(keep, phyla.names, phyla.total, phylogenetic.info, phyla.table, phyla.good)
+
+#Create BMI groups
+metadata$BMI.class[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class[metadata$BMI>=30 & metadata$BMI<40] <- "Obese"
+metadata$BMI.class[metadata$BMI>=40] <- "Extreme Obesity"
+
+#Create Obese Yes/No groups
+metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
+metadata$obese[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Yes"
+
+#Create a column with obese and extreme obese as single entity
+metadata$BMIclass2[metadata$BMI.class=="Normal"] <- "Normal"
+metadata$BMIclass2[metadata$BMI.class=="Overweight"] <- "Overweight"                     
+metadata$BMIclass2[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Obese"
+
+#Get paitent demographics to be tested
+bmi <- metadata$BMI
+obese <- factor(metadata$obese)
+
+###########################################################################
+######### First Level Analysis & Alpha Diversity with BMI #################
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+WuH <- wilcox.test(H ~ obese) #P-value=0.8462
+WuS <- wilcox.test(S ~ obese) #P-value=0.9447
+WuJ <- wilcox.test(J ~ obese) #P-value=0.6981
+
+#B and F tests against obesity
+bacter <- phyla.table.rel.abund$p__Bacteroidetes
+firm <- phyla.table.rel.abund$p__Firmicutes
+BFratio <- bacter/firm
+
+WuBacter <- wilcox.test(bacter ~ obese) #P-value=0.7395
+WuFirm <- wilcox.test(firm ~ obese) #P-value=0.8031
+WuBF <- wilcox.test(BFratio ~ obese) #P-value=0.9118
+
+###########################################################################
+############ NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+Wu2 <- adonis(microbiome ~ obese, permutations=1000)
+WuPERM <- Wu2$aov.tab
+#PERMANOVA=0.0.4735, pseudo-F=0.89514
+
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+WutotalN <- length(orderedHCat)
+WuHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+WuHighShannonGroup <- as.data.frame(table(test3[c(1:WuHHighTotal), 2]))
+WuLowShannonGroup <- as.data.frame(table(test3[c((WuHHighTotal + 1):WutotalN), 2]))
+group1 <- c(WuHighShannonGroup[2, 2], WuHighShannonGroup[1, 2])
+group2 <- c(WuLowShannonGroup[2, 2], WuLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 3 and non-obese = 26
+#Group2 (Lower than median), obese = 2 and non-obese = 27
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+WuHEpi <- epi.2by2(r.test, method="cohort.count")
+WuHMassoc <- WuHEpi$massoc
+WuHRR <- WuHMassoc$RR.strata.score
+WuHRRsig <- WuHMassoc$chisq.strata
+## Risk Ratio = 1.50
+## CI = 0.27, 8.32
+## p-value = 0.64
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$p__Bacteroidetes
+Firm = phyla.table.rel.abund$p__Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+WuBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+WuHighBFGroup <- as.data.frame(table(test4[c(1:WuBFHighTotal), 2]))
+WuLowBFGroup <- as.data.frame(table(test4[c((WuBFHighTotal + 1):WutotalN), 2]))
+group1 <- c(WuHighBFGroup[2, 2], WuHighBFGroup[1, 2])
+group2 <- c(WuLowBFGroup[2, 2], WuLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 3 and non-obese = 26
+#Group2 (Lower than median), obese = 2 and non-obese = 27
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+WuBFEpi <- epi.2by2(r.test, method="cohort.count")
+WuBFMassoc <- WuBFEpi$massoc
+WuBFRR <- WuBFMassoc$RR.strata.score
+WuBFRRsig <- WuBFMassoc$chisq.strata
+## Risk Ratio = 1.50
+## CI = 0.27, 8.32
+## p-value = 0.64
+
+###########################################################################
+############ Classification using AUCRF####################################
+###########################################################################
+
+#Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
+obese <- factor(metadata$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset <- Filter(function(x)(length(unique(x))>5), microbiome)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+set.seed(3)
+WuAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+# list of 15 Measures, AUCopt = 0.7075472
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+WuZH <- scale(H)
+WuZLogBF <- scale(log(BFratio))
+WuBMI <- bmi
+
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+Wu <- c(WuBacter$p.value, WuFirm$p.value, 
+        WuBF$p.value, WuH$p.value, WuS$p.value, 
+        WuJ$p.value, WuPERM[1,6])
+
+overallPTable <- rbind(overallPTable, Wu)
+
+tpos <- c(tpos, WuLowShannonGroup[2, 2])
+tneg <- c(tneg, WuLowShannonGroup[1, 2])
+
+cpos <- c(cpos, WuHighShannonGroup[2, 2])
+cneg <- c(cneg, WuHighShannonGroup[1, 2])
+
+RR <- c(RR, WuHRR[1,1])
+
+low <- c(low, WuHRR[1,2])
+
+high <- c(high, WuHRR[1,3])
+
+WuData <- as.data.frame(cbind(WuZH, WuZLogBF, WuBMI))
+WuData$Study <- "Wu"
+colnames(WuData) <- c("ZH", "ZLogBF", "BMI", "Study")
+combinedData <- rbind(combinedData, WuData)
+
+rm(WuLowShannonGroup, WuHighShannonGroup, WuHRR, WuBacter, 
+   WuFirm, WuBF, WuH, WuS, WuJ, 
+   WuPERM, WuHEpi, WuZH, WuZLogBF, 
+   WuBMI, Wu2, Wu)
+
+
+############ Aruguman ####################################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+setwd("C:/users/marc/Desktop/obesity2/MetaHit/")
+
+microb <- read.csv("finalized_metaHit_shared.csv")
+rownames(microb) <- microb[, 1]
+microb <- microb[,-1]
+
+metadata <- read.csv("MetaHit_metadata.csv")
+rownames(metadata) <- metadata[, 1]
+metadata <- metadata[, -1]
+
+phyla <- read.csv("phyla.csv")
+rownames(phyla) <- phyla[, 1]
+phyla <- phyla[, -1]
+
+# Generate Overall Relative Abundance - normalize to a value of 100
+# Needs to be done since not all measures have 100 bacteria from metaphlan2
+overall <- rowSums(microb)
+microb.norm <- (microb / overall) * 100
+
+phyla.table <- read.csv("phyla.csv", header = T)
+rownames(phyla.table) <- phyla.table[, 1]
+phyla.table <- phyla.table[, -1]
+phyla.table <- as.data.frame(t(phyla.table))
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:10)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(phyla.table, phyla.info)
+
+#Get alpha diversity of the samples
+H <- diversity(microb.norm)
+S <- specnumber(microb.norm)
+J <- H/log(S)
+alpha.diversity.shannon <- cbind(H,S,J)
+alpha.test <- as.data.frame(alpha.diversity.shannon)
+# Seems to look okay....
+
+#Create BMI groups
+metadata$BMI.class[metadata$BMI<=24] <- "Normal"
+metadata$BMI.class[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
+metadata$BMI.class[metadata$BMI>=30 & metadata$BMI<40] <- "Obese"
+metadata$BMI.class[metadata$BMI>=40] <- "Extreme Obesity"
+
+#Create Obese Yes/No groups
+metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
+metadata$obese[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Yes"
+
+
+#Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
+
+
+#Create a column with obese and extreme obese as single entity
+metadata$BMIclass2[metadata$BMI<=24] <- "Normal"
+metadata$BMIclass2[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"      
+metadata$BMIclass2[metadata$BMI>=30] <- "Obese"
+
+
+#Get paitent demographics to be tested
+bmi <- metadata$BMI
+obese <- factor(metadata$obese)
+
+####################################################################################### First Level Analysis & Alpha Diversity with BMI #############
+###########################################################################
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+ArumugamH <- wilcox.test(H ~ obese) #P-value=0.4296
+ArumugamS <- wilcox.test(S ~ obese) #P-value=0.9752
+ArumugamJ <- wilcox.test(J ~ obese) #P-value=0.3516
+
+#B and F tests against obesity
+bacter <- phyla.table.rel.abund$Bacteroidetes
+firm <- phyla.table.rel.abund$Firmicutes
+BFratio <- bacter/firm
+
+ArumugamBacter <- wilcox.test(bacter ~ obese) #P-value=0.2792
+ArumugamFirm <- wilcox.test(firm ~ obese) #P-value=0.2381
+ArumugamBF <- wilcox.test(BFratio ~ obese) #P-value=0.2562
+
+####################################################################################### NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+Arumugam2 <- adonis(microb.norm ~ obese, permutations=1000)
+ArumugamPERM <- Arumugam2$aov.tab
+#PERMANOVA=0.05495, pseudo-F=1.6047
+
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+ArutotalN <- length(orderedHCat)
+AruHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+AruHighShannonGroup <- as.data.frame(table(test3[c(1:AruHHighTotal), 2]))
+AruLowShannonGroup <- as.data.frame(table(test3[c((AruHHighTotal + 1):ArutotalN), 2]))
+group1 <- c(AruHighShannonGroup[2, 2], AruHighShannonGroup[1, 2])
+group2 <- c(AruLowShannonGroup[2, 2], AruLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 17 and non-obese = 25
+#Group2 (Lower than median), obese = 20 and non-obese = 23
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+ArumugamHEpi <- epi.2by2(r.test, method="cohort.count")
+ArumugamHMassoc <- ArumugamHEpi$massoc
+ArumugamHRR <- ArumugamHMassoc$RR.strata.score
+ArumugamHRRsig <- ArumugamHMassoc$chisq.strata
+## Risk Ratio = 1.15
+## CI = 0.71, 1.87
+## p-value = 0.575
+
+
+##Run the RR for B/F ratio
+Bacter = phyla.table.rel.abund$Bacteroidetes
+Firm = phyla.table.rel.abund$Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+AruBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+AruHighBFGroup <- as.data.frame(table(test4[c(1:AruBFHighTotal), 2]))
+AruLowBFGroup <- as.data.frame(table(test4[c((AruBFHighTotal + 1):ArutotalN), 2]))
+group1 <- c(AruHighBFGroup[2, 2], AruHighBFGroup[1, 2])
+group2 <- c(AruLowBFGroup[2, 2], AruLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 20 and non-obese = 22
+#Group2 (Lower than median), obese = 17 and non-obese = 26
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+ArumugamBFEpi <- epi.2by2(r.test, method="cohort.count")
+ArumugamBFMassoc <- ArumugamBFEpi$massoc
+ArumugamBFRR <- ArumugamBFMassoc$RR.strata.score
+ArumugamBFRRsig <- ArumugamBFMassoc$chisq.strata
+## Risk Ratio = 0.83
+## CI = 0.51, 1.35
+## p-value = 0.452
+
+###########################################################################
+############ Classification using AUCRF ###################################
+###########################################################################
+
+#Create Obese.num group
+metadata$obese.num[metadata$obese=="No"] <- 0
+metadata$obese.num[metadata$obese=="Yes"] <- 1
+obese <- factor(metadata$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+testset <- Filter(function(x)(length(unique(x))>5), microb.norm)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+#set.seed(3)
+#ArumugamAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+# list of 19 Measures, AUCopt = 0.7649212
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+ArumugamZH <- scale(H)
+ArumugamZLogBF <- scale(log(BFratio))
+ArumugamBMI <- bmi
+
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+Arumugam <- c(ArumugamBacter$p.value, ArumugamFirm$p.value, 
+        ArumugamBF$p.value, ArumugamH$p.value, ArumugamS$p.value, 
+        ArumugamJ$p.value, ArumugamPERM[1,6])
+
+overallPTable <- rbind(overallPTable, Arumugam)
+
+tpos <- c(tpos, AruLowShannonGroup[2, 2])
+tneg <- c(tneg, AruLowShannonGroup[1, 2])
+
+cpos <- c(cpos, AruHighShannonGroup[2, 2])
+cneg <- c(cneg, AruHighShannonGroup[1, 2])
+
+RR <- c(RR, ArumugamHRR[1,1])
+
+low <- c(low, ArumugamHRR[1,2])
+
+high <- c(high, ArumugamHRR[1,3])
+
+ArumugamData <- as.data.frame(cbind(ArumugamZH, ArumugamZLogBF, ArumugamBMI))
+ArumugamData$Study <- "Arumugam"
+colnames(ArumugamData) <- c("ZH", "ZLogBF", "BMI", "Study")
+combinedData <- rbind(combinedData, ArumugamData)
+
+rm(AruLowShannonGroup, AruHighShannonGroup, ArumugamHRR, ArumugamBacter, 
+   ArumugamFirm, ArumugamBF, ArumugamH, ArumugamS, ArumugamJ, 
+   ArumugamPERM, ArumugamHEpi, ArumugamZH, ArumugamZLogBF, 
+   ArumugamBMI, Arumugam2, Arumugam)
+
+
+
+########### Turnbaugh ####################################################
+
+
+###########################################################################
+############ Preparing Data Tables for Analysis ###########################
+###########################################################################
+
+setwd("C:/users/marc/Desktop/obesity2/turnbaugh.twins")
+shared.data <- read.table("test.unique.good.filter.unique.precluster.pick.pick.an.shared", header=T)
+rownames(shared.data) <- shared.data[, 2]
+shared.data <- shared.data[, -c(1:3)]
+
+subsample.data <- read.table("test.unique.good.filter.unique.precluster.pick.pick.an.0.03.subsample.shared", header=T)
+rownames(subsample.data) <- subsample.data[, 2]
+subsample.data <- subsample.data[, -c(1:3)]
+
+
+metadata <- read.csv("turnbaugh.metadata.csv")
+rownames(metadata) <- metadata[, 4]
+metadata <- metadata[, -4]
+
+keep1 <- which(metadata$Sample == 1) # n =146
+
+#use the first sampling
+#subset data for only the first sampling
+s1.metadata <- metadata[keep1, ]
+s1.subsample.data <- subsample.data[keep1, ]
+
+
+#generate alpha diversity measures with vegan
+H <- diversity(s1.subsample.data)
+S <- specnumber(s1.subsample.data)
+J <- H/log(S)
+select.alpha.diversity <- as.data.frame(cbind(H, S, J))
+s1.alpha.diversity <- as.data.frame(select.alpha.diversity)
+alpha.test <- s1.alpha.diversity
+
+#Generate phyla table data
+
+phyla.info <- read.csv("phyla.csv")
+phyla.table <- shared.data
+colnames(phyla.table) <- phyla.info[, 2]
+
+
+#add all the same columns up and then return the sum
+testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
+phyla.table <- as.data.frame(testing)
+rm(testing)
+
+#combine phyla that are not that abundant
+phyla.table$other <- apply(phyla.table[, c("Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(4:5, 7:9)]
+
+#Create a relative abundance table for phyla
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
+phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+s1.phyla.rel.abund <- phyla.table.rel.abund[rownames(shared.data), ]
+s1.phyla.rel.abund <- s1.phyla.rel.abund[keep1, ]
+
+#Create Obese Yes/No groups
+s1.metadata$obese[s1.metadata$BMI.category=="Lean" | s1.metadata$BMI.category=="Overweight"] <- "No"
+s1.metadata$obese[s1.metadata$BMI.category=="Obese"] <- "Yes"
+
+#Create Obese.num group
+s1.metadata$obese.num[s1.metadata$obese=="No"] <- 0
+s1.metadata$obese.num[s1.metadata$obese=="Yes"] <- 1
+
+#create groups to be used
+obese <- factor(s1.metadata$obese)
+bmi <- s1.metadata$BMI.category
+
+####################################################################################### First Level Analysis & Alpha Diversity with BMI #############
+###########################################################################
+###########################################################################
+
+##Test BMI versus alpha diversity and phyla
+
+turnbaughH <- wilcox.test(H ~ obese) #P-value=0.1162
+turnbaughS <- wilcox.test(S ~ obese) #P-value=0.05479
+turnbaughJ <- wilcox.test(J ~ obese) #P-value=0.1748
+
+#B and F tests against obesity
+bacter <- s1.phyla.rel.abund$Bacteroidetes
+firm <- s1.phyla.rel.abund$Firmicutes
+BFratio <- bacter/firm
+
+turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.3998
+turnbaughFirm <- wilcox.test(firm ~ obese) #P-value=0.2245
+turnbaughBF <- wilcox.test(BFratio ~ obese) #P-value=0.3354
+
+####################################################################################### NMDS and PERMANOVA Analysis###################################
+###########################################################################
+
+set.seed(3)
+turnbaugh2 <- adonis(s1.subsample.data ~ obese, permutations=1000)
+turnbaughPERM <- turnbaugh2$aov.tab
+#PERMANOVA=0.09491, pseudo-F=1.2114
+
+###########################################################################
+############ Relative Risk#################################################
+###########################################################################
+
+#Generate median values and put them into existing alpha.test dataframe
+#Shannon diversity
+
+alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
+
+##Shannon Diversity
+H.cat <- alpha.test$shannon.cat
+bmi.cat <- as.character(obese)
+test3 <- cbind(H.cat, bmi.cat)
+test3 <- test3[order(H.cat), ]
+orderedHCat <- test3[, 1]
+TurntotalN <- length(orderedHCat)
+TurnHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
+TurnHighShannonGroup <- as.data.frame(table(test3[c(1:TurnHHighTotal), 2]))
+TurnLowShannonGroup <- as.data.frame(table(test3[c((TurnHHighTotal + 1):TurntotalN), 2]))
+group1 <- c(TurnHighShannonGroup[2, 2], TurnHighShannonGroup[1, 2])
+group2 <- c(TurnLowShannonGroup[2, 2], TurnLowShannonGroup[1, 2])
+#Group1 (Higher than median), obese = 47 and non-obese = 26
+#Group2 (Lower than median), obese = 52 and non-obese = 21
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+turnbaughHEpi <- epi.2by2(r.test, method="cohort.count")
+turnbaughHMassoc <- turnbaughHEpi$massoc
+turnbaughHRR <- turnbaughHMassoc$RR.strata.score
+turnbaughHRRsig <- turnbaughHMassoc$chisq.strata
+## Risk Ratio = 1.11
+## CI = 0.88, 1.38
+## p-value = 0.376
+
+
+##Run the RR for B/F ratio
+Bacter = s1.phyla.rel.abund$Bacteroidetes
+Firm = s1.phyla.rel.abund$Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+
+BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
+
+BFRatio.cat <- BFRatio$BFRatio.cat
+test4 <- cbind(BFRatio.cat, obese)
+test4 <- test4[order(BFRatio.cat), ]
+orderedBFCat <- test4[, 1]
+TurnBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
+TurnHighBFGroup <- as.data.frame(table(test4[c(1:TurnBFHighTotal), 2]))
+TurnLowBFGroup <- as.data.frame(table(test4[c((TurnBFHighTotal + 1):TurntotalN), 2]))
+group1 <- c(TurnHighBFGroup[2, 2], TurnHighBFGroup[1, 2])
+group2 <- c(TurnLowBFGroup[2, 2], TurnLowBFGroup[1, 2])
+#Group1 (Higher than median), obese = 54 and non-obese = 19
+#Group2 (Lower than median), obese = 45 and non-obese = 28
+
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+turnbaughBFEpi <- epi.2by2(r.test, method="cohort.count")
+turnbaughBFMassoc <- turnbaughBFEpi$massoc
+turnbaughBFRR <- turnbaughBFMassoc$RR.strata.score
+turnbaughBFRRsig <- turnbaughBFMassoc$chisq.strata
+## Risk Ratio = 0.83
+## CI = 0.66, 1.05
+## p-value = 0.111
+
+###########################################################################
+############ Classification using AUCRF ###################################
+###########################################################################
+
+#Create Obese.num group
+#s1.metadata$obese.num[s1.metadata$obese=="No"] <- 0
+#s1.metadata$obese.num[s1.metadata$obese=="Yes"] <- 1
+#obese <- factor(s1.metadata$obese.num)
+
+#generate test set
+# get rid of those with 0 and only 4 other values
+#testset <- Filter(function(x)(length(unique(x))>5), s1.subsample.data)
+#testset <- cbind(obese, testset)
+#colnames(testset)[1] <- "obese"
+#testset <- cbind(testset, H, S, J, s1.phyla.rel.abund)
+
+#Try AUCRF with default measures provided in readme
+#set.seed(3)
+#TurnbaughAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+# list of 11 Measures, AUCopt = 0.7764883
+
+###########################################################################
+############ Z-score Data Preparation ###################################
+###########################################################################
+
+TurnbaughZH <- scale(H)
+TurnbaughZLogBF <- scale(log(BFratio))
+TurnbaughObese <- as.character(obese)
+TurnbaughBMICat <- as.character(bmi)
+
+
+###########################################################################
+############ Combining Data Together ######################################
+###########################################################################
+
+Turnbaugh <- c(turnbaughBacter$p.value, turnbaughFirm$p.value, 
+               turnbaughBF$p.value, turnbaughH$p.value, turnbaughS$p.value, 
+               turnbaughJ$p.value, turnbaughPERM[1,6])
+
+overallPTable <- rbind(overallPTable, Turnbaugh)
+
+tpos <- c(tpos, TurnLowShannonGroup[2, 2])
+tneg <- c(tneg, TurnLowShannonGroup[1, 2])
+
+cpos <- c(cpos, TurnHighShannonGroup[2, 2])
+cneg <- c(cneg, TurnHighShannonGroup[1, 2])
+
+RR <- c(RR, turnbaughHRR[1,1])
+
+low <- c(low, turnbaughHRR[1,2])
+
+high <- c(high, turnbaughHRR[1,3])
+
+TurnbaughData <- as.data.frame(cbind(TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, TurnbaughBMICat))
+TurnbaughData$Study <- "Turnbaugh"
+colnames(TurnbaughData) <- c("ZH", "ZLogBF", "Obese","BMICat", "Study")
+
+
+rm(TurnLowShannonGroup, TurnHighShannonGroup, turnbaughHRR, turnbaughBacter, 
+   turnbaughFirm, turnbaughBF, turnbaughH, turnbaughS, turnbaughJ, 
+   turnbaughPERM, turnbaughHEpi, TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, 
+   TurnbaughBMICat, turnbaugh2, Turnbaugh)
