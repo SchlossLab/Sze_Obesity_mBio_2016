@@ -3,6 +3,10 @@
 ## Marc Sze
 ## March 9, 2016
 
+library(vegan)
+library(epiR)
+library(AUCRF)
+
 ############# BAXTER ######################################################
 
 
@@ -202,26 +206,45 @@ BaxterBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- length(rownames(demographics))
+meanAge <- mean(demographics$Age)
+SDAge <- sd(demographics$Age)
+temporary <- table(demographics$Gender)
+males <- temporary[names(temporary) == "m"]
+females <- temporary[names(temporary) == "f"]
+temporary <- table(demographics$White)
+ancestry <- temporary[names(temporary) == 1] / sum(temporary)
+meanBMI <- mean(demographics$BMI)
+SDBMI <- sd(demographics$BMI)
+minBMI <- min(demographics$BMI)
+maxBMI <- max(demographics$BMI)
 
+# Get data for P-value table
 overallPTable <- as.data.frame(t(c(baxterBacter$p.value, baxterFirm$p.value, 
                                    baxterBF$p.value, baxterH$p.value, 
                                    baxterS$p.value, baxterJ$p.value, 
                                    baxterPERM[1,6])))
 colnames(overallPTable) <- c("Bacteroidetes", "Firmicutes", "BFRatio", "Shannon", "OTURich", "Evenness", "BrayC")
 
-tpos <- BaxLowShannonGroup[2, 2]
-tneg <- BaxLowShannonGroup[1, 2]
+# Get Data for Forest Plots
+tposH <- BaxLowShannonGroup[2, 2]
+tnegH <- BaxLowShannonGroup[1, 2]
+cposH <- BaxHighShannonGroup[2, 2]
+cnegH <- BaxHighShannonGroup[1, 2]
+RRH <- baxterHRR[1,1]
+lowH <- baxterHRR[1,2]
+highH <- baxterHRR[1,3]
 
-cpos <- BaxHighShannonGroup[2, 2]
-cneg <- BaxHighShannonGroup[1, 2]
+tposBF <- BaxLowBFGroup[2, 2]
+tnegBF <- BaxLowBFGroup[1, 2]
+cposBF <- BaxHighBFGroup[2, 2]
+cnegBF <- BaxHighBFGroup[1, 2]
+RRBF <- baxterBFRR[1,1]
+lowBF <- baxterBFRR[1,2]
+highBF <- baxterBFRR[1,3]
 
-RR <- baxterHRR[1,1]
-
-low <- baxterHRR[1,2]
-
-high <- baxterHRR[1,3]
-
-
+# Get data for the combined analysis with Zscores
 combinedData <- as.data.frame(cbind(BaxterZH, BaxterZLogBF, BaxterBMI))
 colnames(combinedData) <- c("ZH", "ZLogBF", "BMI")
 combinedData$Study <- "Baxter"
@@ -229,6 +252,8 @@ combinedData$Study <- "Baxter"
 rm(BaxLowShannonGroup, BaxHighShannonGroup, baxterHRR, baxterBacter, 
    baxterFirm, baxterBF, baxterH, baxterS, baxterJ, baxterPERM, baxterHEpi, 
    BaxterZH, BaxterZLogBF, BaxterBMI, baxter2)
+
+
 
 ################ ROSS #####################################################
 
@@ -440,21 +465,40 @@ RossBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(edit.metadata2)))
+meanAge <- c(meanAge, mean(edit.metadata2$age_at_visit))
+SDAge <- c(SDAge, sd(edit.metadata2$age_at_visit))
+temporary <- table(edit.metadata2$sex)
+males <- unname(c(males, temporary[names(temporary) == "M"]))
+females <- unname(c(females, temporary[names(temporary) == "F"]))
+#temporary <- table(demographics$White)
+ancestry <- unname(c(ancestry, 0))
+meanBMI <- c(meanBMI, mean(edit.metadata2$BMI))
+SDBMI <- c(SDBMI, sd(edit.metadata2$BMI))
+minBMI <- c(minBMI, min(edit.metadata2$BMI))
+maxBMI <- c(maxBMI, max(edit.metadata2$BMI))
+
 Ross <- c(rossBacter$p.value, rossFirm$p.value, rossBF$p.value, 
           rossH$p.value, rossS$p.value, rossJ$p.value, rossPERM[1,6])
 overallPTable <- rbind(overallPTable, Ross)
 
-tpos <- c(tpos, RossLowShannonGroup[2, 2])
-tneg <- c(tneg, RossLowShannonGroup[1, 2])
+tposH <- c(tposH, RossLowShannonGroup[2, 2])
+tnegH <- c(tnegH, RossLowShannonGroup[1, 2])
+cposH <- c(cposH, RossHighShannonGroup[2, 2])
+cnegH <- c(cnegH, RossHighShannonGroup[1, 2])
+RRH <- c(RRH, rossHRR[1,1])
+lowH <- c(lowH, rossHRR[1,2])
+highH <- c(highH, rossHRR[1,3])
 
-cpos <- c(cpos, RossHighShannonGroup[2, 2])
-cneg <- c(cneg, RossHighShannonGroup[1, 2])
 
-RR <- c(RR, rossHRR[1,1])
-
-low <- c(low, rossHRR[1,2])
-
-high <- c(high, rossHRR[1,3])
+tposBF <- c(tposBF, RossLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, RossLowBFGroup[1, 2])
+cposBF <- c(cposBF, RossHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, RossHighBFGroup[1, 2])
+RRBF <- c(RRBF, rossBFRR[1,1])
+lowBF <- c(lowBF, rossBFRR[1,2])
+highBF <- c(highBF, rossBFRR[1,3])
 
 RossData <- as.data.frame(cbind(RossZH, RossZLogBF, RossBMI))
 RossData$Study <- "Ross"
@@ -476,16 +520,17 @@ rm(RossLowShannonGroup, RossHighShannonGroup, rossHRR, rossBacter,
 setwd("C:/users/marc/Desktop/obesity2/twinsUK")
 
 #Read in and match metadata to microbiome data
-metadata <- read.csv("TwinsUKStudy_metadata.csv")
-rownames(metadata) <- metadata[, 1]
+metadata <- read.csv("TwinsUKStudy2.csv")
+rownames(metadata) <- metadata[, 7]
 shared.data <- read.table("combined.tx.1.subsample.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 microbiome <- shared.data[, -c(1:3)]
-keep  <- rownames(metadata)
+keep  <- which(metadata$body_mass_index_s != "<not provided>")
 
 microbiome<- microbiome[keep, ]
+metadata <- metadata[keep, ]
 
-rm(good.metadata, shared.data, keep)
+rm(shared.data, keep)
 
 
 #generate alpha diversity measures with vegan
@@ -520,10 +565,12 @@ phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 
 #Create BMI groups
-metadata$BMI.class[metadata$body_mass_index_s<=24] <- "Normal"
-metadata$BMI.class[metadata$body_mass_index_s>24 & metadata$body_mass_index_s<30] <- "Overweight"
-metadata$BMI.class[metadata$body_mass_index_s>=30 & metadata$body_mass_index_s<40] <- "Obese"
-metadata$BMI.class[metadata$body_mass_index_s>=40] <- "Extreme Obesity"
+metadata$BMI.class[as.numeric(as.character(metadata$body_mass_index_s))<=24] <- "Normal"
+metadata$BMI.class[as.numeric(as.character(metadata$body_mass_index_s))>24 & 
+                     as.numeric(as.character(metadata$body_mass_index_s))<30] <- "Overweight"
+metadata$BMI.class[as.numeric(as.character(metadata$body_mass_index_s))>=30 & 
+                     as.numeric(as.character(metadata$body_mass_index_s))<40] <- "Obese"
+metadata$BMI.class[as.numeric(as.character(metadata$body_mass_index_s))>=40] <- "Extreme Obesity"
 
 #Create Obese Yes/No groups
 metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
@@ -535,7 +582,7 @@ metadata$BMIclass2[metadata$BMI.class=="Overweight"] <- "Overweight"
 metadata$BMIclass2[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Obese"
 
 #Get paitent demographics to be tested
-bmi <- metadata$body_mass_index_s
+bmi <- as.numeric(as.character(metadata$body_mass_index_s))
 obese <- factor(metadata$obese)
 
 
@@ -671,23 +718,41 @@ GoodrichBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(metadata)))
+meanAge <- c(meanAge, mean(metadata$age_s))
+SDAge <- c(SDAge, sd(metadata$age_s))
+temporary <- table(metadata$sex_s)
+males <- unname(c(males, temporary[names(temporary) == 47]))
+females <- unname(c(females, temporary[names(temporary) == 48]))
+#temporary <- table(demographics$White)
+ancestry <- unname(c(ancestry, NA))
+meanBMI <- c(meanBMI, mean(as.numeric(as.character(metadata$body_mass_index_s))))
+SDBMI <- c(SDBMI, sd(as.numeric(as.character(metadata$body_mass_index_s))))
+minBMI <- c(minBMI, min(as.numeric(as.character(metadata$body_mass_index_s))))
+maxBMI <- c(maxBMI, max(as.numeric(as.character(metadata$body_mass_index_s))))
+
 Goodrich <- c(goodrichBacter$p.value, goodrichFirm$p.value, 
               goodrichBF$p.value, goodrichH$p.value, goodrichS$p.value, 
               goodrichJ$p.value, goodrichPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Goodrich)
 
-tpos <- c(tpos, GoodLowShannonGroup[2, 2])
-tneg <- c(tneg, GoodLowShannonGroup[1, 2])
+tposH <- c(tposH, GoodLowShannonGroup[2, 2])
+tnegH <- c(tnegH, GoodLowShannonGroup[1, 2])
+cposH <- c(cposH, GoodHighShannonGroup[2, 2])
+cnegH <- c(cnegH, GoodHighShannonGroup[1, 2])
+RRH <- c(RRH, goodrichHRR[1,1])
+lowH <- c(lowH, goodrichHRR[1,2])
+highH <- c(highH, goodrichHRR[1,3])
 
-cpos <- c(cpos, GoodHighShannonGroup[2, 2])
-cneg <- c(cneg, GoodHighShannonGroup[1, 2])
-
-RR <- c(RR, goodrichHRR[1,1])
-
-low <- c(low, goodrichHRR[1,2])
-
-high <- c(high, goodrichHRR[1,3])
+tposBF <- c(tposBF, GoodLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, GoodLowBFGroup[1, 2])
+cposBF <- c(cposBF, GoodHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, GoodHighBFGroup[1, 2])
+RRBF <- c(RRBF, goodrichBFRR[1,1])
+lowBF <- c(lowBF, goodrichBFRR[1,2])
+highBF <- c(highBF, goodrichBFRR[1,3])
 
 GoodrichData <- as.data.frame(cbind(GoodrichZH, GoodrichZLogBF, GoodrichBMI))
 GoodrichData$Study <- "Goodrich"
@@ -721,9 +786,15 @@ rownames(metadata) <- metadata[, 5]
 #Get only data that we are interested in
 edit.metadata <- metadata[, -c(1:7, 9, 13:15, 16:52)]
 
-#Sort metadata into the same order as the microbiome data
+#Sort metadata into the same order as the microbiome data and get sex information
 order1 <- rownames(columbian.microb)
 edit.metadata2 <- edit.metadata[order1, ]
+edit.metadata2$sex[edit.metadata2$description_s == "Adequate weight male stool sample" | 
+                     edit.metadata2$description_s == "Obese male stool sample" | 
+                     edit.metadata2$description_s == "Overweight male stool sample"] <- "M"
+edit.metadata2$sex[edit.metadata2$description_s == "Adequate weight female stool sample" | 
+                     edit.metadata2$description_s == "Obese female stool sample" | 
+                     edit.metadata2$description_s == "Overweight female stool sample"] <- "F"
 
 
 #Get alpha diversity of the samples
@@ -908,23 +979,42 @@ EscobarBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(edit.metadata2)))
+meanAge <- c(meanAge, mean(edit.metadata2$age_s))
+SDAge <- c(SDAge, sd(edit.metadata2$age_s))
+temporary <- table(edit.metadata2$sex)
+males <- unname(c(males, temporary[names(temporary) == "M"]))
+females <- unname(c(females, temporary[names(temporary) == "F"]))
+#temporary <- table(demographics$White)
+ancestry <- unname(c(ancestry, 0))
+meanBMI <- c(meanBMI, mean(edit.metadata2$body_mass_index_s))
+SDBMI <- c(SDBMI, sd(edit.metadata2$body_mass_index_s))
+minBMI <- c(minBMI, min(edit.metadata2$body_mass_index_s))
+maxBMI <- c(maxBMI, max(edit.metadata2$body_mass_index_s))
+
+
 Escobar <- c(escobarBacter$p.value, escobarFirm$p.value, 
              escobarBF$p.value, escobarH$p.value, escobarS$p.value, 
              escobarJ$p.value, escobarPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Escobar)
 
-tpos <- c(tpos, EscoLowShannonGroup[2, 2])
-tneg <- c(tneg, EscoLowShannonGroup[1, 2])
+tposH <- c(tposH, EscoLowShannonGroup[2, 2])
+tnegH <- c(tnegH, EscoLowShannonGroup[1, 2])
+cposH <- c(cposH, EscoHighShannonGroup[2, 2])
+cnegH <- c(cnegH, EscoHighShannonGroup[1, 2])
+RRH <- c(RRH, escobarHRR[1,1])
+lowH <- c(lowH, escobarHRR[1,2])
+highH <- c(highH, escobarHRR[1,3])
 
-cpos <- c(cpos, EscoHighShannonGroup[2, 2])
-cneg <- c(cneg, EscoHighShannonGroup[1, 2])
-
-RR <- c(RR, escobarHRR[1,1])
-
-low <- c(low, escobarHRR[1,2])
-
-high <- c(high, escobarHRR[1,3])
+tposBF <- c(tposBF, EscoLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, EscoLowBFGroup[1, 2])
+cposBF <- c(cposBF, EscoHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, EscoHighBFGroup[1, 2])
+RRBF <- c(RRBF, escobarBFRR[1,1])
+lowBF <- c(lowBF, escobarBFRR[1,2])
+highBF <- c(highBF, escobarBFRR[1,3])
 
 EscobarData <- as.data.frame(cbind(EscobarZH, EscobarZLogBF, EscobarBMI))
 EscobarData$Study <- "Escobar"
@@ -1154,7 +1244,7 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 zupancicAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-zupAUC <- fit$`OOB-AUCopt`
+#zupAUC <- fit$`OOB-AUCopt`
 # list of 3 Measures, AUCopt = 0.5746806
 
 
@@ -1170,23 +1260,41 @@ ZupancicBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(metadata)))
+meanAge <- c(meanAge, mean(as.numeric(as.character(metadata$AGE))))
+SDAge <- c(SDAge, sd(as.numeric(as.character(metadata$AGE))))
+temporary <- table(metadata$sex_s)
+males <- unname(c(males, temporary[names(temporary) == "male"]))
+females <- unname(c(females, temporary[names(temporary) == "female"]))
+#temporary <- table(demographics$White)
+ancestry <- unname(c(ancestry, 100))
+meanBMI <- c(meanBMI, mean(metadata$BMI))
+SDBMI <- c(SDBMI, sd(metadata$BMI))
+minBMI <- c(minBMI, min(metadata$BMI))
+maxBMI <- c(maxBMI, max(metadata$BMI))
+
 Zupancic <- c(zupancicBacter$p.value, zupancicFirm$p.value, 
               zupancicBF$p.value, zupancicH$p.value, zupancicS$p.value, 
               zupancicJ$p.value, zupancicPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Zupancic)
 
-tpos <- c(tpos, ZupaLowShannonGroup[2, 2])
-tneg <- c(tneg, ZupaLowShannonGroup[1, 2])
+tposH <- c(tposH, ZupaLowShannonGroup[2, 2])
+tnegH <- c(tnegH, ZupaLowShannonGroup[1, 2])
+cposH <- c(cposH, ZupaHighShannonGroup[2, 2])
+cnegH <- c(cnegH, ZupaHighShannonGroup[1, 2])
+RRH <- c(RRH, zupancicHRR[1,1])
+lowH <- c(lowH, zupancicHRR[1,2])
+highH <- c(highH, zupancicHRR[1,3])
 
-cpos <- c(cpos, ZupaHighShannonGroup[2, 2])
-cneg <- c(cneg, ZupaHighShannonGroup[1, 2])
-
-RR <- c(RR, zupancicHRR[1,1])
-
-low <- c(low, zupancicHRR[1,2])
-
-high <- c(high, zupancicHRR[1,3])
+tposBF <- c(tposBF, ZupaLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, ZupaLowBFGroup[1, 2])
+cposBF <- c(cposBF, ZupaHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, ZupaHighBFGroup[1, 2])
+RRBF <- c(RRBF, zupancicBFRR[1,1])
+lowBF <- c(lowBF, zupancicBFRR[1,2])
+highBF <- c(highBF, zupancicBFRR[1,3])
 
 ZupancicData <- as.data.frame(cbind(ZupancicZH, ZupancicZLogBF, ZupancicBMI))
 ZupancicData$Study <- "Zupancic"
@@ -1407,23 +1515,42 @@ HMPBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(select.meta.cat)))
+meanAge <- c(meanAge, mean(select.meta.cont$AGEENR))
+SDAge <- c(SDAge, sd(select.meta.cont$AGEENR))
+temporary <- table(select.meta.cat$GENDER_C)
+males <- unname(c(males, temporary[names(temporary) == "Male"]))
+females <- unname(c(females, temporary[names(temporary) == "Female"]))
+temporary <- table(select.meta.cat$WHITE_C)
+ancestry <- unname(c(ancestry, temporary[names(temporary) == "Yes"] / sum(temporary)))
+meanBMI <- c(meanBMI, mean(select.meta.cont$DTPBMI))
+SDBMI <- c(SDBMI, sd(select.meta.cont$DTPBMI))
+minBMI <- c(minBMI, min(select.meta.cont$DTPBMI))
+maxBMI <- c(maxBMI, max(select.meta.cont$DTPBMI))
+
 HMP <- c(HMPBacter$p.value, HMPFirm$p.value, 
          HMPBF$p.value, HMPH$p.value, HMPS$p.value, 
          HMPJ$p.value, HMPPERM[1,6])
 
 overallPTable <- rbind(overallPTable, HMP)
 
-tpos <- c(tpos, HMPLowShannonGroup[2, 2])
-tneg <- c(tneg, HMPLowShannonGroup[1, 2])
+tposH <- c(tposH, HMPLowShannonGroup[2, 2])
+tnegH <- c(tnegH, HMPLowShannonGroup[1, 2])
+cposH <- c(cposH, HMPHighShannonGroup[2, 2])
+cnegH <- c(cnegH, HMPHighShannonGroup[1, 2])
+RRH <- c(RRH, HMPHRR[1,1])
+lowH <- c(lowH, HMPHRR[1,2])
+highH <- c(highH, HMPHRR[1,3])
 
-cpos <- c(cpos, HMPHighShannonGroup[2, 2])
-cneg <- c(cneg, HMPHighShannonGroup[1, 2])
+tposBF <- c(tposBF, HMPLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, HMPLowBFGroup[1, 2])
+cposBF <- c(cposBF, HMPHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, HMPHighBFGroup[1, 2])
+RRBF <- c(RRBF, HMPBFRR[1,1])
+lowBF <- c(lowBF, HMPBFRR[1,2])
+highBF <- c(highBF, HMPBFRR[1,3])
 
-RR <- c(RR, HMPHRR[1,1])
-
-low <- c(low, HMPHRR[1,2])
-
-high <- c(high, HMPHRR[1,3])
 
 HMPData <- as.data.frame(cbind(HMPZH, HMPZLogBF, HMPBMI))
 HMPData$Study <- "HMP"
@@ -1452,8 +1579,7 @@ microbiome <- microbiome[, -c(1:3)]
 seqData <- read.csv("COMBO_data_table.csv", header=T)
 seqData <- seqData[-1, ]
 rownames(seqData) <- seqData$Run_s
-metadata <- read.table("BMI_and_Counts.txt", header=T)
-metadata <- metadata[, c(1, 2)]
+metadata <- read.table("bmi_info.txt", header=T)
 
 #get seqData set in line with microbiome data
 namesToKeep <- rownames(microbiome)
@@ -1464,14 +1590,14 @@ rm(test)
 #change all rownames to match sample IDs
 rownames(seqData) <- seqData$submitted_subject_id_s
 rownames(microbiome) <- rownames(seqData)
-rownames(metadata) <- metadata[, 1]
+
 
 #Match the metadata now with the microbiome data
 namesToKeep <- rownames(microbiome)
 test <- metadata[namesToKeep, ]
 metadata <- test
 rm(test)
-rm(seqData, keep, namesToKeep)
+rm(seqData, namesToKeep)
 
 #Get alpha diversity of the samples
 H <- diversity(microbiome)
@@ -1511,10 +1637,10 @@ phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 rm(keep, phyla.names, phyla.total, phylogenetic.info, phyla.table, phyla.good)
 
 #Create BMI groups
-metadata$BMI.class[metadata$BMI<=24] <- "Normal"
-metadata$BMI.class[metadata$BMI>24 & metadata$BMI<30] <- "Overweight"
-metadata$BMI.class[metadata$BMI>=30 & metadata$BMI<40] <- "Obese"
-metadata$BMI.class[metadata$BMI>=40] <- "Extreme Obesity"
+metadata$BMI.class[metadata$bmi<=24] <- "Normal"
+metadata$BMI.class[metadata$bmi>24 & metadata$bmi<30] <- "Overweight"
+metadata$BMI.class[metadata$bmi>=30 & metadata$bmi<40] <- "Obese"
+metadata$BMI.class[metadata$bmi>=40] <- "Extreme Obesity"
 
 #Create Obese Yes/No groups
 metadata$obese[metadata$BMI.class=="Normal" | metadata$BMI.class=="Overweight"] <- "No"
@@ -1526,7 +1652,7 @@ metadata$BMIclass2[metadata$BMI.class=="Overweight"] <- "Overweight"
 metadata$BMIclass2[metadata$BMI.class=="Obese" | metadata$BMI.class=="Extreme Obesity"] <- "Obese"
 
 #Get paitent demographics to be tested
-bmi <- metadata$BMI
+bmi <- metadata$bmi
 obese <- factor(metadata$obese)
 
 ###########################################################################
@@ -1661,23 +1787,41 @@ WuBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(metadata)))
+meanAge <- c(meanAge, mean(metadata$age))
+SDAge <- c(SDAge, sd(metadata$age))
+temporary <- table(metadata$sex1m2f)
+males <- unname(c(males, temporary[names(temporary) == 1]))
+females <- unname(c(females, temporary[names(temporary) == 2]))
+#temporary <- table(select.meta.cat$WHITE_C)
+ancestry <- unname(c(ancestry, NA))
+meanBMI <- c(meanBMI, mean(metadata$bmi))
+SDBMI <- c(SDBMI, sd(metadata$bmi))
+minBMI <- c(minBMI, min(metadata$bmi))
+maxBMI <- c(maxBMI, max(metadata$bmi))
+
 Wu <- c(WuBacter$p.value, WuFirm$p.value, 
         WuBF$p.value, WuH$p.value, WuS$p.value, 
         WuJ$p.value, WuPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Wu)
 
-tpos <- c(tpos, WuLowShannonGroup[2, 2])
-tneg <- c(tneg, WuLowShannonGroup[1, 2])
+tposH <- c(tposH, WuLowShannonGroup[2, 2])
+tnegH <- c(tnegH, WuLowShannonGroup[1, 2])
+cposH <- c(cposH, WuHighShannonGroup[2, 2])
+cnegH <- c(cnegH, WuHighShannonGroup[1, 2])
+RRH <- c(RRH, WuHRR[1,1])
+lowH <- c(lowH, WuHRR[1,2])
+highH <- c(highH, WuHRR[1,3])
 
-cpos <- c(cpos, WuHighShannonGroup[2, 2])
-cneg <- c(cneg, WuHighShannonGroup[1, 2])
-
-RR <- c(RR, WuHRR[1,1])
-
-low <- c(low, WuHRR[1,2])
-
-high <- c(high, WuHRR[1,3])
+tposBF <- c(tposBF, WuLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, WuLowBFGroup[1, 2])
+cposBF <- c(cposBF, WuHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, WuHighBFGroup[1, 2])
+RRBF <- c(RRBF, WuBFRR[1,1])
+lowBF <- c(lowBF, WuBFRR[1,2])
+highBF <- c(highBF, WuBFRR[1,3])
 
 WuData <- as.data.frame(cbind(WuZH, WuZLogBF, WuBMI))
 WuData$Study <- "Wu"
@@ -1892,23 +2036,41 @@ ArumugamBMI <- bmi
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(metadata)))
+meanAge <- c(meanAge, mean(metadata$Age, na.rm = TRUE))
+SDAge <- c(SDAge, sd(metadata$Age, na.rm = TRUE))
+temporary <- table(metadata$Sex)
+males <- unname(c(males, temporary[names(temporary) == "male"]))
+females <- unname(c(females, temporary[names(temporary) == "female"]))
+#temporary <- table(select.meta.cat$WHITE_C)
+ancestry <- unname(c(ancestry, NA))
+meanBMI <- c(meanBMI, mean(metadata$BMI))
+SDBMI <- c(SDBMI, sd(metadata$BMI))
+minBMI <- c(minBMI, min(metadata$BMI))
+maxBMI <- c(maxBMI, max(metadata$BMI))
+
 Arumugam <- c(ArumugamBacter$p.value, ArumugamFirm$p.value, 
         ArumugamBF$p.value, ArumugamH$p.value, ArumugamS$p.value, 
         ArumugamJ$p.value, ArumugamPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Arumugam)
 
-tpos <- c(tpos, AruLowShannonGroup[2, 2])
-tneg <- c(tneg, AruLowShannonGroup[1, 2])
+tposH <- c(tposH, AruLowShannonGroup[2, 2])
+tnegH <- c(tnegH, AruLowShannonGroup[1, 2])
+cposH <- c(cposH, AruHighShannonGroup[2, 2])
+cnegH <- c(cnegH, AruHighShannonGroup[1, 2])
+RRH <- c(RRH, ArumugamHRR[1,1])
+lowH <- c(lowH, ArumugamHRR[1,2])
+highH <- c(highH, ArumugamHRR[1,3])
 
-cpos <- c(cpos, AruHighShannonGroup[2, 2])
-cneg <- c(cneg, AruHighShannonGroup[1, 2])
-
-RR <- c(RR, ArumugamHRR[1,1])
-
-low <- c(low, ArumugamHRR[1,2])
-
-high <- c(high, ArumugamHRR[1,3])
+tposBF <- c(tposBF, AruLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, AruLowBFGroup[1, 2])
+cposBF <- c(cposBF, AruHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, AruHighBFGroup[1, 2])
+RRBF <- c(RRBF, ArumugamBFRR[1,1])
+lowBF <- c(lowBF, ArumugamBFRR[1,2])
+highBF <- c(highBF, ArumugamBFRR[1,3])
 
 ArumugamData <- as.data.frame(cbind(ArumugamZH, ArumugamZLogBF, ArumugamBMI))
 ArumugamData$Study <- "Arumugam"
@@ -2124,23 +2286,41 @@ TurnbaughBMICat <- as.character(bmi)
 ############ Combining Data Together ######################################
 ###########################################################################
 
+#Get data for demographics table
+totalN <- c(totalN, length(rownames(s1.metadata)))
+meanAge <- c(meanAge, "21-32")
+SDAge <- c(SDAge, NA)
+#temporary <- table(metadata$Sex)
+males <- unname(c(males, NA))
+females <- unname(c(females, NA))
+temporary <- table(s1.metadata$Ancestry)
+ancestry <- unname(c(ancestry, temporary[names(temporary) == "EA"] / sum(temporary)))
+meanBMI <- c(meanBMI, NA)
+SDBMI <- c(SDBMI, NA)
+minBMI <- c(minBMI, NA)
+maxBMI <- c(maxBMI, NA)
+
 Turnbaugh <- c(turnbaughBacter$p.value, turnbaughFirm$p.value, 
                turnbaughBF$p.value, turnbaughH$p.value, turnbaughS$p.value, 
                turnbaughJ$p.value, turnbaughPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Turnbaugh)
 
-tpos <- c(tpos, TurnLowShannonGroup[2, 2])
-tneg <- c(tneg, TurnLowShannonGroup[1, 2])
+tposH <- c(tposH, TurnLowShannonGroup[2, 2])
+tnegH <- c(tnegH, TurnLowShannonGroup[1, 2])
+cposH <- c(cposH, TurnHighShannonGroup[2, 2])
+cnegH <- c(cnegH, TurnHighShannonGroup[1, 2])
+RRH <- c(RRH, turnbaughHRR[1,1])
+lowH <- c(lowH, turnbaughHRR[1,2])
+highH <- c(highH, turnbaughHRR[1,3])
 
-cpos <- c(cpos, TurnHighShannonGroup[2, 2])
-cneg <- c(cneg, TurnHighShannonGroup[1, 2])
-
-RR <- c(RR, turnbaughHRR[1,1])
-
-low <- c(low, turnbaughHRR[1,2])
-
-high <- c(high, turnbaughHRR[1,3])
+tposBF <- c(tposBF, TurnLowBFGroup[2, 2])
+tnegBF <- c(tnegBF, TurnLowBFGroup[1, 2])
+cposBF <- c(cposBF, TurnHighBFGroup[2, 2])
+cnegBF <- c(cnegBF, TurnHighBFGroup[1, 2])
+RRBF <- c(RRBF, turnbaughBFRR[1,1])
+lowBF <- c(lowBF, turnbaughBFRR[1,2])
+highBF <- c(highBF, turnbaughBFRR[1,3])
 
 TurnbaughData <- as.data.frame(cbind(TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, TurnbaughBMICat))
 TurnbaughData$Study <- "Turnbaugh"
@@ -2151,3 +2331,37 @@ rm(TurnLowShannonGroup, TurnHighShannonGroup, turnbaughHRR, turnbaughBacter,
    turnbaughFirm, turnbaughBF, turnbaughH, turnbaughS, turnbaughJ, 
    turnbaughPERM, turnbaughHEpi, TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, 
    TurnbaughBMICat, turnbaugh2, Turnbaugh)
+
+
+####################################################################################
+############################ Output Tables #########################################
+####################################################################################
+
+setwd("C:/users/marc/Desktop")
+
+demographicsTable <- as.data.frame(cbind(totalN, meanAge, SDAge, males, females, 
+                                         ancestry, meanBMI, SDBMI, minBMI, maxBMI))
+demographicsTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
+                          "HMP", "Wu", "Arumugam", "Turnbaugh")
+write.csv(demographicsTable, "demographicsTable.csv")
+
+write.csv(combinedData, "combinedData.csv")
+write.csv(TurnbaughData, "TurnbaughData.csv")
+
+rownames(overallPTable) <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
+                             "HMP", "Wu", "Arumugam", "Turnbaugh")
+write.csv(overallPTable, "overallPTable.csv")
+
+ShannonRRTable <- as.data.frame(cbind(tposH, tnegH, cposH, cnegH, RRH, lowH, highH))
+ShannonRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
+                          "HMP", "Wu", "Arumugam", "Turnbaugh")
+write.csv(ShannonRRTable, "ShannonRRTable.csv")
+
+BFRatioRRTable <- as.data.frame(cbind(tposBF, tnegBF, cposBF, cnegBF, RRBF, lowBF, highBF))
+BFRatioRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
+                          "HMP", "Wu", "Arumugam", "Turnbaugh")
+write.csv(BFRatioRRTable, "BFRatioRRTable.csv")
+
+
+
+
