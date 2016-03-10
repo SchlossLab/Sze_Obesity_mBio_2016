@@ -2338,24 +2338,24 @@ demographicsTable <- as.data.frame(cbind(totalN, meanAge, SDAge, males, females,
                                          ancestry, meanBMI, SDBMI, minBMI, maxBMI))
 demographicsTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(demographicsTable, "demographicsTable.csv")
+write.csv(demographicsTable, "denovodemographicsTable.csv")
 
-write.csv(combinedData, "combinedData.csv")
-write.csv(TurnbaughData, "TurnbaughData.csv")
+write.csv(combinedData, "denovoCombinedData.csv")
+write.csv(TurnbaughData, "denovoTurnbaughData.csv")
 
 rownames(overallPTable) <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                              "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(overallPTable, "overallPTable.csv")
+write.csv(overallPTable, "denovoOverallPTable.csv")
 
 ShannonRRTable <- as.data.frame(cbind(tposH, tnegH, cposH, cnegH, RRH, lowH, highH))
 ShannonRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(ShannonRRTable, "ShannonRRTable.csv")
+write.csv(ShannonRRTable, "denovoShannonRRTable.csv")
 
 BFRatioRRTable <- as.data.frame(cbind(tposBF, tnegBF, cposBF, cnegBF, RRBF, lowBF, highBF))
 BFRatioRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(BFRatioRRTable, "BFRatioRRTable.csv")
+write.csv(BFRatioRRTable, "denovoBFRatioRRTable.csv")
 
 
 
