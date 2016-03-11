@@ -208,17 +208,17 @@ BaxterBMI <- bmi
 
 #Get data for demographics table
 totalN <- length(rownames(demographics))
-meanAge <- mean(demographics$Age)
-SDAge <- sd(demographics$Age)
+meanAge <- format(round(mean(demographics$Age), 2), nsmall = 2)
+SDAge <- format(round(sd(demographics$Age), 2), nsmall = 2)
 temporary <- table(demographics$Gender)
 males <- temporary[names(temporary) == "m"]
 females <- temporary[names(temporary) == "f"]
 temporary <- table(demographics$White)
-ancestry <- temporary[names(temporary) == 1] / sum(temporary)
-meanBMI <- mean(demographics$BMI)
-SDBMI <- sd(demographics$BMI)
-minBMI <- min(demographics$BMI)
-maxBMI <- max(demographics$BMI)
+ancestry <- format(round(temporary[names(temporary) == 1] / sum(temporary), 2), nsmall = 2)
+meanBMI <- format(round(mean(demographics$BMI), 2), nsmall = 2)
+SDBMI <- format(round(sd(demographics$BMI), 2), nsmall = 2)
+minBMI <- format(round(min(demographics$BMI), 2), nsmall = 2)
+maxBMI <- format(round(max(demographics$BMI), 2), nsmall = 2)
 
 # Get data for P-value table
 overallPTable <- as.data.frame(t(c(baxterBacter$p.value, baxterFirm$p.value, 
@@ -467,17 +467,23 @@ RossBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(edit.metadata2)))
-meanAge <- c(meanAge, mean(edit.metadata2$age_at_visit))
-SDAge <- c(SDAge, sd(edit.metadata2$age_at_visit))
+meanAge <- c(meanAge, 
+             format(round(
+               mean(edit.metadata2$age_at_visit), 2), nsmall = 2))
+             
+SDAge <- c(SDAge, 
+           format(round(
+             sd(edit.metadata2$age_at_visit), 2), nsmall = 2))
+
 temporary <- table(edit.metadata2$sex)
 males <- unname(c(males, temporary[names(temporary) == "M"]))
 females <- unname(c(females, temporary[names(temporary) == "F"]))
 #temporary <- table(demographics$White)
-ancestry <- unname(c(ancestry, 0))
-meanBMI <- c(meanBMI, mean(edit.metadata2$BMI))
-SDBMI <- c(SDBMI, sd(edit.metadata2$BMI))
-minBMI <- c(minBMI, min(edit.metadata2$BMI))
-maxBMI <- c(maxBMI, max(edit.metadata2$BMI))
+ancestry <- unname(c(ancestry, format(round(0, 2), nsmall = 2)))
+meanBMI <- c(meanBMI, format(round(mean(edit.metadata2$BMI), 2), nsmall = 2))
+SDBMI <- c(SDBMI, format(round(sd(edit.metadata2$BMI), 2), nsmall = 2))
+minBMI <- c(minBMI, format(round(min(edit.metadata2$BMI), 2), nsmall = 2))
+maxBMI <- c(maxBMI, format(round(max(edit.metadata2$BMI), 2), nsmall = 2))
 
 Ross <- c(rossBacter$p.value, rossFirm$p.value, rossBF$p.value, 
           rossH$p.value, rossS$p.value, rossJ$p.value, rossPERM[1,6])
@@ -720,17 +726,25 @@ GoodrichBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(metadata)))
-meanAge <- c(meanAge, mean(metadata$age_s))
+meanAge <- c(meanAge, format(round(mean(metadata$age_s), 2), nsmall = 2))
 SDAge <- c(SDAge, sd(metadata$age_s))
 temporary <- table(metadata$sex_s)
 males <- unname(c(males, temporary[names(temporary) == 47]))
 females <- unname(c(females, temporary[names(temporary) == 48]))
 #temporary <- table(demographics$White)
 ancestry <- unname(c(ancestry, NA))
-meanBMI <- c(meanBMI, mean(as.numeric(as.character(metadata$body_mass_index_s))))
-SDBMI <- c(SDBMI, sd(as.numeric(as.character(metadata$body_mass_index_s))))
-minBMI <- c(minBMI, min(as.numeric(as.character(metadata$body_mass_index_s))))
-maxBMI <- c(maxBMI, max(as.numeric(as.character(metadata$body_mass_index_s))))
+meanBMI <- c(meanBMI, 
+             format(round(
+               mean(as.numeric(as.character(metadata$body_mass_index_s))), 2), nsmall = 2))
+SDBMI <- c(SDBMI, 
+           format(round(
+             sd(as.numeric(as.character(metadata$body_mass_index_s))), 2), nsmall = 2))
+minBMI <- c(minBMI, 
+            format(round(
+              min(as.numeric(as.character(metadata$body_mass_index_s))), 2), nsmall = 2))
+maxBMI <- c(maxBMI, 
+            format(round(
+              max(as.numeric(as.character(metadata$body_mass_index_s))), 2), nsmall = 2))
 
 Goodrich <- c(goodrichBacter$p.value, goodrichFirm$p.value, 
               goodrichBF$p.value, goodrichH$p.value, goodrichS$p.value, 
@@ -982,17 +996,25 @@ EscobarBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(edit.metadata2)))
-meanAge <- c(meanAge, mean(edit.metadata2$age_s))
-SDAge <- c(SDAge, sd(edit.metadata2$age_s))
+meanAge <- c(meanAge, format(round(mean(edit.metadata2$age_s), 2), nsmall = 2))
+SDAge <- c(SDAge, 
+           format(round(sd(edit.metadata2$age_s), 2), nsmall = 2))
 temporary <- table(edit.metadata2$sex)
 males <- unname(c(males, temporary[names(temporary) == "M"]))
 females <- unname(c(females, temporary[names(temporary) == "F"]))
 #temporary <- table(demographics$White)
-ancestry <- unname(c(ancestry, 0))
-meanBMI <- c(meanBMI, mean(edit.metadata2$body_mass_index_s))
-SDBMI <- c(SDBMI, sd(edit.metadata2$body_mass_index_s))
-minBMI <- c(minBMI, min(edit.metadata2$body_mass_index_s))
-maxBMI <- c(maxBMI, max(edit.metadata2$body_mass_index_s))
+ancestry <- unname(c(ancestry, format(round(0, 2), nsmall = 2)))
+meanBMI <- c(meanBMI, 
+             format(round(mean(edit.metadata2$body_mass_index_s), 2), nsmall = 2))
+SDBMI <- c(SDBMI, 
+           format(round(
+             sd(edit.metadata2$body_mass_index_s), 2), nsmall = 2))
+minBMI <- c(minBMI, 
+            format(round(
+              min(edit.metadata2$body_mass_index_s), 2), nsmall = 2))
+maxBMI <- c(maxBMI, 
+            format(round(
+              max(edit.metadata2$body_mass_index_s), 2), nsmall = 2))
 
 
 Escobar <- c(escobarBacter$p.value, escobarFirm$p.value, 
@@ -1261,17 +1283,25 @@ ZupancicBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(metadata)))
-meanAge <- c(meanAge, mean(as.numeric(as.character(metadata$AGE))))
-SDAge <- c(SDAge, sd(as.numeric(as.character(metadata$AGE))))
+meanAge <- c(meanAge, 
+             format(round(
+               mean(as.numeric(as.character(metadata$AGE))), 2), nsmall = 2))
+SDAge <- c(SDAge, 
+           format(round(
+             sd(as.numeric(as.character(metadata$AGE))), 2), nsmall = 2))
 temporary <- table(metadata$sex_s)
 males <- unname(c(males, temporary[names(temporary) == "male"]))
 females <- unname(c(females, temporary[names(temporary) == "female"]))
 #temporary <- table(demographics$White)
-ancestry <- unname(c(ancestry, 100))
-meanBMI <- c(meanBMI, mean(metadata$BMI))
-SDBMI <- c(SDBMI, sd(metadata$BMI))
-minBMI <- c(minBMI, min(metadata$BMI))
-maxBMI <- c(maxBMI, max(metadata$BMI))
+ancestry <- unname(c(ancestry, format(round(100, 2), nsmall = 2)))
+meanBMI <- c(meanBMI, 
+             format(round(mean(metadata$BMI), 2), nsmall = 2))
+SDBMI <- c(SDBMI, 
+           format(round(sd(metadata$BMI), 2), nsmall = 2))
+minBMI <- c(minBMI, 
+            format(round(min(metadata$BMI), 2), nsmall = 2))
+maxBMI <- c(maxBMI, 
+            format(round(max(metadata$BMI), 2), nsmall = 2))
 
 Zupancic <- c(zupancicBacter$p.value, zupancicFirm$p.value, 
               zupancicBF$p.value, zupancicH$p.value, zupancicS$p.value, 
@@ -1516,17 +1546,23 @@ HMPBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(select.meta.cat)))
-meanAge <- c(meanAge, mean(select.meta.cont$AGEENR))
-SDAge <- c(SDAge, sd(select.meta.cont$AGEENR))
+meanAge <- c(meanAge, 
+             format(round(mean(select.meta.cont$AGEENR), 2), nsmall = 2))
+SDAge <- c(SDAge, 
+           format(round(sd(select.meta.cont$AGEENR), 2), nsmall = 2))
 temporary <- table(select.meta.cat$GENDER_C)
 males <- unname(c(males, temporary[names(temporary) == "Male"]))
 females <- unname(c(females, temporary[names(temporary) == "Female"]))
 temporary <- table(select.meta.cat$WHITE_C)
 ancestry <- unname(c(ancestry, temporary[names(temporary) == "Yes"] / sum(temporary)))
-meanBMI <- c(meanBMI, mean(select.meta.cont$DTPBMI))
-SDBMI <- c(SDBMI, sd(select.meta.cont$DTPBMI))
-minBMI <- c(minBMI, min(select.meta.cont$DTPBMI))
-maxBMI <- c(maxBMI, max(select.meta.cont$DTPBMI))
+meanBMI <- c(meanBMI, 
+             format(round(mean(select.meta.cont$DTPBMI), 2), nsmall = 2))
+SDBMI <- c(SDBMI, 
+           format(round(sd(select.meta.cont$DTPBMI), 2), nsmall = 2))
+minBMI <- c(minBMI, 
+            format(round(min(select.meta.cont$DTPBMI), 2), nsmall = 2))
+maxBMI <- c(maxBMI, 
+            format(round(max(select.meta.cont$DTPBMI), 2), nsmall = 2))
 
 HMP <- c(HMPBacter$p.value, HMPFirm$p.value, 
          HMPBF$p.value, HMPH$p.value, HMPS$p.value, 
@@ -1784,17 +1820,17 @@ WuBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(metadata)))
-meanAge <- c(meanAge, mean(metadata$age))
-SDAge <- c(SDAge, sd(metadata$age))
+meanAge <- c(meanAge, format(round(mean(metadata$age), 2), nsmall = 2))
+SDAge <- c(SDAge, format(round(sd(metadata$age), 2), nsmall = 2))
 temporary <- table(metadata$sex1m2f)
 males <- unname(c(males, temporary[names(temporary) == 1]))
 females <- unname(c(females, temporary[names(temporary) == 2]))
 #temporary <- table(select.meta.cat$WHITE_C)
 ancestry <- unname(c(ancestry, NA))
-meanBMI <- c(meanBMI, mean(metadata$bmi))
-SDBMI <- c(SDBMI, sd(metadata$bmi))
-minBMI <- c(minBMI, min(metadata$bmi))
-maxBMI <- c(maxBMI, max(metadata$bmi))
+meanBMI <- c(meanBMI, format(round(mean(metadata$bmi), 2), nsmall = 2))
+SDBMI <- c(SDBMI, format(round(sd(metadata$bmi), 2), nsmall = 2))
+minBMI <- c(minBMI, format(round(min(metadata$bmi), 2), nsmall = 2))
+maxBMI <- c(maxBMI, format(round(max(metadata$bmi), 2), nsmall = 2))
 
 Wu <- c(WuBacter$p.value, WuFirm$p.value, 
         WuBF$p.value, WuH$p.value, WuS$p.value, 
@@ -2033,17 +2069,25 @@ ArumugamBMI <- bmi
 
 #Get data for demographics table
 totalN <- c(totalN, length(rownames(metadata)))
-meanAge <- c(meanAge, mean(metadata$Age, na.rm = TRUE))
-SDAge <- c(SDAge, sd(metadata$Age, na.rm = TRUE))
+meanAge <- c(meanAge, 
+             format(round(
+               mean(metadata$Age, na.rm = TRUE), 2), nsmall = 2))
+SDAge <- c(SDAge, 
+           format(round(
+             sd(metadata$Age, na.rm = TRUE), 2), nsmall = 2))
 temporary <- table(metadata$Sex)
 males <- unname(c(males, temporary[names(temporary) == "male"]))
 females <- unname(c(females, temporary[names(temporary) == "female"]))
 #temporary <- table(select.meta.cat$WHITE_C)
 ancestry <- unname(c(ancestry, NA))
-meanBMI <- c(meanBMI, mean(metadata$BMI))
-SDBMI <- c(SDBMI, sd(metadata$BMI))
-minBMI <- c(minBMI, min(metadata$BMI))
-maxBMI <- c(maxBMI, max(metadata$BMI))
+meanBMI <- c(meanBMI, 
+             format(round(mean(metadata$BMI), 2), nsmall = 2))
+SDBMI <- c(SDBMI, 
+           format(round(sd(metadata$BMI), 2), nsmall = 2))
+minBMI <- c(minBMI, 
+            format(round(min(metadata$BMI), 2), nsmall = 2))
+maxBMI <- c(maxBMI, 
+            format(round(max(metadata$BMI), 2), nsmall = 2))
 
 Arumugam <- c(ArumugamBacter$p.value, ArumugamFirm$p.value, 
         ArumugamBF$p.value, ArumugamH$p.value, ArumugamS$p.value, 
@@ -2071,6 +2115,17 @@ ArumugamData <- as.data.frame(cbind(ArumugamZH, ArumugamZLogBF, ArumugamBMI))
 ArumugamData$Study <- "Arumugam"
 colnames(ArumugamData) <- c("ZH", "ZLogBF", "BMI", "Study")
 combinedData <- rbind(combinedData, ArumugamData)
+
+#Create BMI groups
+combinedData$BMICat[combinedData$BMI<=24] <- "Normal"
+combinedData$BMICat[combinedData$BMI>24 & 
+                         combinedData$BMI<30] <- "Overweight"
+combinedData$BMICat[combinedData$BMI>=30] <- "Obese"
+
+#Create Obese Yes/No groups
+combinedData$Obese[combinedData$BMICat=="Normal" | 
+                     combinedData$BMICat=="Overweight"] <- "No"
+combinedData$Obese[combinedData$BMICat=="Obese"] <- "Yes"
 
 rm(AruLowShannonGroup, AruHighShannonGroup, ArumugamHRR, ArumugamBacter, 
    ArumugamFirm, ArumugamBF, ArumugamH, ArumugamS, ArumugamJ, 
@@ -2289,7 +2344,9 @@ SDAge <- c(SDAge, NA)
 males <- unname(c(males, NA))
 females <- unname(c(females, NA))
 temporary <- table(s1.metadata$Ancestry)
-ancestry <- unname(c(ancestry, temporary[names(temporary) == "EA"] / sum(temporary)))
+ancestry <- unname(c(ancestry, 
+                     format(round(
+                       temporary[names(temporary) == "EA"] / sum(temporary), 2), nsmall = 2)))
 meanBMI <- c(meanBMI, NA)
 SDBMI <- c(SDBMI, NA)
 minBMI <- c(minBMI, NA)
@@ -2317,9 +2374,10 @@ RRBF <- c(RRBF, turnbaughBFRR[1,1])
 lowBF <- c(lowBF, turnbaughBFRR[1,2])
 highBF <- c(highBF, turnbaughBFRR[1,3])
 
-TurnbaughData <- as.data.frame(cbind(TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, TurnbaughBMICat))
+TurnbaughData <- as.data.frame(cbind(TurnbaughZH, TurnbaughZLogBF))
 TurnbaughData$Study <- "Turnbaugh"
-colnames(TurnbaughData) <- c("ZH", "ZLogBF", "Obese","BMICat", "Study")
+TurnbaughData <- as.data.frame(cbind(TurnbaughData, TurnbaughObese, TurnbaughBMICat))
+colnames(TurnbaughData) <- c("ZH", "ZLogBF", "Study", "BMICat", "Obese")
 
 
 rm(TurnLowShannonGroup, TurnHighShannonGroup, turnbaughHRR, turnbaughBacter, 
@@ -2340,7 +2398,9 @@ demographicsTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic"
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
 write.csv(demographicsTable, "denovodemographicsTable.csv")
 
+
 write.csv(combinedData, "denovoCombinedData.csv")
+
 write.csv(TurnbaughData, "denovoTurnbaughData.csv")
 
 rownames(overallPTable) <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 

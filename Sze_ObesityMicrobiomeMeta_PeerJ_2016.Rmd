@@ -32,7 +32,28 @@ Phone: 734-936-2951
 **Running Title:** microbiome and Obesity
 <br>
 
+```{r Loading_data_tables, echo=FALSE, message=FALSE, warning=FALSE}
 
+setwd("C:/users/marc/Desktop")
+demographics <- read.csv("denovodemographicsTable.csv")
+OverallPValue <- read.csv("denovoOverallPTable.csv")
+ShannonRRTable <- read.csv("denovoShannonRRTable.csv")
+BFRatioRRTable <- read.csv("denovoBFRatioRRTable.csv")
+ZScoreCombinedData <- read.csv("denovoCombinedData.csv")
+ZScoreTurnbaughData <- read.csv("denovoTurnbaughData.csv")
+
+```
+
+```{r install_needed_packages, echo=FALSE, message=FALSE, warning=FALSE}
+deps = c("knitr","vegan","epiR","AUCRF","meta","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra");
+for (dep in deps){
+  if (dep %in% installed.packages()[,"Package"] == FALSE){
+    install.packages(as.character(dep), quiet=TRUE);
+  }
+  library(dep, verbose=FALSE, character.only=TRUE)
+}
+
+```
 
 
 
@@ -63,7 +84,7 @@ We followed the Preferred Reporting Items for Systematic Reviews and Meta-Analys
 
 
 ***Sequence Analysis Pipeline***
-All sequence data were publicly available and were downloaded from the NCBI Sequence Read Archive, the European Nucleotide Archive, or the investigators' personal website. The nine studies used 454 [@turnbaugh_core_2009; @zupancic_analysis_2012; @ross_16s_2015; @escobar_gut_2014; @wu_linking_2011; @Huttenhower2012] or Illumina sequencing [@goodrich_human_2014; @arumugam_enterotypes_2011; Baxter]. All of these studies used amplification-based 16S rRNA gene sequencing except for one, which used metagenomic shotgun sequencing [@arumugam_enterotypes_2011]. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@Huttenhower2012], and V4 [@goodrich_human_2014] regions. For those studies where multiple regions were sequenced,  we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009; @Huttenhower2012]. We processed the 16S rRNA gene sequence data as described in the original studies. The taxonomic data from the metagenomic shotgun sequence data were obtained using Metaphlan2 [@truong_metaphlan2_2015]. A detailed and reproducible description of how the data were processed can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/.
+All sequence data were publicly available and were downloaded from the NCBI Sequence Read Archive, the European Nucleotide Archive, or the investigators' personal website (https://gordonlab.wustl.edu/TurnbaughSE\_10\_09/STM\_2009.html). The nine studies used 454 [@turnbaugh_core_2009; @zupancic_analysis_2012; @ross_16s_2015; @escobar_gut_2014; @wu_linking_2011; @Huttenhower2012] or Illumina sequencing [@goodrich_human_2014; @arumugam_enterotypes_2011; Baxter]. All of these studies used amplification-based 16S rRNA gene sequencing except for one, which used metagenomic shotgun sequencing [@arumugam_enterotypes_2011]. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@Huttenhower2012], and V4 [@goodrich_human_2014] regions. For those studies where multiple regions were sequenced,  we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009; @Huttenhower2012]. We processed the 16S rRNA gene sequence data as described in the original studies. The taxonomic data from the metagenomic shotgun sequence data were obtained using Metaphlan2 [@truong_metaphlan2_2015]. A detailed and reproducible description of how the data were processed can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/.
 
 
 ***Data Analysis***
@@ -129,16 +150,6 @@ Despite the many problems that could add more noise to the measurements used, th
 
 The authors would like to thank Nielson Baxter for his help and suggestions during the sequence analysis portion. We would also like to thank Shawn Whitefield for her help with making sure the manuscript adhered to the guidelines set out for a meta-analysis. Finally, we would like to thank Rick Bushman, Hongzhe Li, and Pixu Shi in agreeing to release and helping to get a hold of the subject specific metadata from the Wu et al study.
 
-```{r install_needed_packages, echo=FALSE, message=FALSE, warning=FALSE}
-deps = c("knitr","vegan","epiR","AUCRF","meta","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra");
-for (dep in deps){
-  if (dep %in% installed.packages()[,"Package"] == FALSE){
-    install.packages(as.character(dep), quiet=TRUE);
-  }
-  library(dep, verbose=FALSE, character.only=TRUE)
-}
-
-```
 
 
 \newpage
@@ -148,9 +159,9 @@ for (dep in deps){
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
 ```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", "HMP", "Wu", "Arumugam", "Turnbaugh*")
+Study <- as.character(demographics$Study)
 
-Age <- c("54.3 +/- 9.9", "57.0 +/- 11.2", "61.5 +/- 8.9", "38.1 +/- 11.1", "46.7 +/- 13.1", "26.1 +/- 5.0", "26.4 +/- 9.4", "56.5 +/- 7.7", "21 - 32")
+Age <- as.character(demographics$meanAge)
 
 Sex <- c("111|61", "48|15", "505|2", "14|16", "112|87", "127|129", "31|27", "45|40", "Not Available")
 
@@ -811,7 +822,7 @@ GoodrichBMI <- bmi
 
 setwd("C:/users/marc/Desktop/obesity2/columbian/")
 
-columbian.microb <- read.table("columbian.0.03.subsample.shared", header=T)
+columbian.microb <- read.table("EscobarPhylotypeSub.shared", header=T)
 metadata <- read.csv("columbian_dataset.csv")
 
 #Organize the microbiome shared data
@@ -839,7 +850,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("phyla.data.csv")
+phylogenetic.info <- read.table("taxonomyKey.txt")
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
