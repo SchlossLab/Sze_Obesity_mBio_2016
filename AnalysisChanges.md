@@ -4,32 +4,50 @@
 	* use Pat's Installation
 	* Install locally without sudo
 	* Ask administrators of axiom to install
-
-* Need to make sure that barcodes are provided with every sample
-	* Already know that Ross is not 
-		* Means I need to know how Qiime organizes data to modify manually
 	
-* Need to run Ross, Goodrich, Escobar, Zupancic, and Wu 
-	* Closed reference approach
+**For this I have decided to look at using Anaconda and then using this to install qiime**
+
+So what did I do?
+
+```bash
+# Download the respective Anaconda Python 2.7 package for Linux
+# Put into home directory in axiom
+
+bash Anaconda2-2.5.0-Linux-x86_64.sh
+
+```
+From here I created a few alias' for a number of commands in my .bash_profile.
+The first was to alias python2.7, second I aliased conda
+Second I added anaconda2 to my PATH just to be on the safe side.
+
+Next I followed instructions laid out by Jorge-C:
+
+```bash
+conda create -n qiime190rc2 python pip numpy matplotlib IPython future natsort scipy pandas scikit-bio gdata
+```
+I had to move into the qiime190rc2 bin directory to run the next command for me it was:
+/home/marcsze/bin/anaconda2/envs/qiime190rc2/bin
+
+```bash
+source activate qiime190rc2
+pip install https://github.com/biocore/qiime/archive/1.9.0-rc2.tar.gz
+```
+To make sure that this installed okay I ran a test as recommended by the Qiime website
+
+```bash
+print_qiime_config.py -t
+```
+The result returned *Ran 9 tests in 0.029s OK*.  This works regardless of the directory I am in so it seems to have worked.
+
+The version that I have is missing a few dependencies (not sure if I need them though)
+The following are what is missing: h5py, sortmerna, sumaclust
+
+## Things to do...
+
+* Decided Not to use Qiime
+
+* Need to reorganize repository so that everything runs automatically
+
+* Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
-* Need to run Goodrich through de novo approach with mothur
 
-* Need to run Baxter through Qiime closed reference approach
-
-* Analyze all data sets with standardized R analysis pipeline for things we are investigating
-	
-
-
-
-
-## List of relevent subsamplings used
-
-Baxter - nothing
-Ross - switch to close-reference based approach with greengenes, subsample = 1000
-Goodrich - nothing
-Escobar - switch to close-reference based approach with greengenes, subsample = 5192
-Zupancic - switch to close-reference based approach with greengenes, subsample = 1000
-HMP - nothing
-Wu - switch to close-reference based approach with greengenes, subsample = 1000
-Arumugam - nothing
-Turnbaugh - switch to furtheset neighbor algroithm and then OTU analysis , subsample = 1000
