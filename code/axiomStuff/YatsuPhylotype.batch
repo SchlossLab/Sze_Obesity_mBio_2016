@@ -1,6 +1,0 @@
-classify.seqs(fasta=combined.unique.unique.fasta, template=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80)
-remove.lineage(fasta=current, name=combined.unique.names, group=combined.groups, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
-phylotype(taxonomy=current, name=combined.unique.names, label=1)
-make.shared(list=current, group=combined.groups, label=1)
-classify.otu(list=current, name=current, taxonomy=current, label=1)
-count.groups()

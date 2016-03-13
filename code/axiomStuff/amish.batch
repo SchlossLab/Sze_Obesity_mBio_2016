@@ -1,8 +1,0 @@
-summary.seqs(fasta=combined.fasta, processors=8)
-unique.seqs(fasta=current)
-summary.seqs(fasta=current, name=current)
-count.seqs(name=current, group=combined.groups)
-summary.seqs(fasta=current, count=current)
-summary.seqs(fasta=current, count=current)
-align.seqs(fasta=current, reference=silva.bacteria.fasta, flip=t)
-summary.seqs(fasta=current, count=current)

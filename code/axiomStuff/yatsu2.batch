@@ -1,5 +1,0 @@
-count.seqs(name=combined.unique.names, group=combined.groups)
-pre.cluster(fasta=combined.unique.unique.fasta, count=current)
-classify.seqs(fasta=current, count=current, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80)
-remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
-

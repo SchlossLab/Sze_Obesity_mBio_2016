@@ -1,3 +1,0 @@
-sub.sample(fasta=combined.unique.pick.abund.fasta, count=combined.pick.abund.count_table, size=5000000)
-count.groups(count=current)
-summary.seqs(fasta=current, count=current)

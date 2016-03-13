@@ -1,6 +1,0 @@
-classify.seqs(fasta=combined.unique.good.filter.unique.precluster.pick.fasta, count=combined.unique.good.filter.unique.precluster.denovo.uchime.pick.count_table, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80, processors=8)
-remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15)
-make.shared(list=current, count=current, label=0.03)
-classify.otu(list=current, count=current, taxonomy=current, label=0.03)
-count.groups()

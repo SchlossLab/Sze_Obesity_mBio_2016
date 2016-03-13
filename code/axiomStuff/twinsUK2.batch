@@ -1,1 +1,0 @@
-split.abund(fasta=combined.unique.pick.fasta, count=combined.pick.count_table, cutoff=1)

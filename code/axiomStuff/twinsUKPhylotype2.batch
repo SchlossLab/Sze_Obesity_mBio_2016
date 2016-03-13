@@ -1,1 +1,0 @@
-classify.otu(list=combined.unique.pds.wang.pick.tx.list, count=combined.pick.count_table, taxonomy=combined.unique.pds.wang.pick.taxonomy, label=1)

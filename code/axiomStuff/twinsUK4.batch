@@ -1,2 +1,0 @@
-summary.seqs(fasta=combined.unique.pick.abund.fasta, count=combined.pick.abund.count_table, processors=8)
-count.groups(count=current)

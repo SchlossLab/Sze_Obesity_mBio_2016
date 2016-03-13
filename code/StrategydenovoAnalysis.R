@@ -15,11 +15,10 @@ library(AUCRF)
 ###########################################################################
 
 # Reading in the necessary Data
-setwd("C:/Users/marc/Desktop/obesity2/data1")
-demographics <- read.csv("demographics.v2.csv")
-microbiome <- read.csv("data1.subsample.otus.csv")
-phylogenetic.info <- read.csv("data1.summary.taxonomy.csv")
-taxonomy <- read.csv("data1.taxonomy.csv")
+demographics <- read.csv("data/process/Baxter/demographics.v2.csv")
+microbiome <- read.csv("data/process/Baxter/data1.subsample.otus.csv")
+phylogenetic.info <- read.csv("data/process/Baxter/data1.summary.taxonomy.csv")
+taxonomy <- read.csv("data/process/Baxter/data1.taxonomy.csv")
 
 # Minor modifications and Rownames adustments of data tables
 rownames(demographics) <- demographics[,1]
@@ -262,14 +261,12 @@ rm(BaxLowShannonGroup, BaxHighShannonGroup, baxterHRR, baxterBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-setwd("C:/users/marc/Desktop/obesity2/hispanic/GoodAnalysis")
-
-hispanic.microb <- read.table("RossGoodSub.shared", header=T)
+hispanic.microb <- read.table("data/process/Ross/RossGoodSub.shared", header=T)
 rownames(hispanic.microb) <- hispanic.microb[, 2]
 hispanic.microb <- hispanic.microb[, -c(1:3)]
 
-metadata <- read.csv("s40168-015-0072-y-s1.csv")
-sample.match <- read.csv("Hispanic_dataset.csv")
+metadata <- read.csv("data/process/Ross/s40168-015-0072-y-s1.csv")
+sample.match <- read.csv("data/process/Ross/Hispanic_dataset.csv")
 
 #Create a microbiome data table with sample names from metadata
 test <- cbind(as.character(sample.match$Run_s), as.character(sample.match$Library_Name_s))
@@ -298,7 +295,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
+phylogenetic.info <- read.table("data/process/Ross/taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -527,12 +524,10 @@ rm(RossLowShannonGroup, RossHighShannonGroup, rossHRR, rossBacter,
 ###########################################################################
 
 
-setwd("C:/users/marc/Desktop/obesity2/twinsUK")
-
 #Read in and match metadata to microbiome data
-metadata <- read.csv("TwinsUKStudy2.csv")
+metadata <- read.csv("data/process/Goodrich/TwinsUKStudy2.csv")
 rownames(metadata) <- metadata[, 7]
-shared.data <- read.table("combined.tx.1.subsample.shared", header=T)
+shared.data <- read.table("data/process/Goodrich/combined.tx.1.subsample.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 microbiome <- shared.data[, -c(1:3)]
 keep  <- which(metadata$body_mass_index_s != "<not provided>")
@@ -553,7 +548,7 @@ alpha.test <- alpha.diversity
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.table("phyla.txt", header=T)
+phylogenetic.info <- read.table("data/process/Goodrich/phyla.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -789,10 +784,8 @@ rm(GoodLowShannonGroup, GoodHighShannonGroup, goodrichHRR, goodrichBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-setwd("C:/users/marc/Desktop/obesity2/columbian/GoodAnalysis")
-
-columbian.microb <- read.table("EscobarGoodSub.shared", header=T)
-metadata <- read.csv("columbian_dataset.csv")
+columbian.microb <- read.table("data/process/Escobar/EscobarGoodSub.shared", header=T)
+metadata <- read.csv("data/process/Escobar/columbian_dataset.csv")
 
 #Organize the microbiome shared data
 rownames(columbian.microb) <- columbian.microb[, 2]
@@ -825,7 +818,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
+phylogenetic.info <- read.table("data/process/Escobar/taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -1062,17 +1055,14 @@ rm(EscoLowShannonGroup, EscoHighShannonGroup, escobarHRR, escobarBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-
-setwd("C:/users/marc/Desktop/obesity2/Amish/updatedGOOD")
-
 #Read in and match metadata to microbiome data
-metadata <- read.csv("amish_obesity_table2.csv")
-metadata2 <- read.csv("amish.metadata.csv")
+metadata <- read.csv("data/process/Zupancic/amish_obesity_table2.csv")
+metadata2 <- read.csv("data/process/Zupancic/amish.metadata.csv")
 test <- metadata[!duplicated(metadata$submitted_sample_id_s), ]
 rownames(test) <- test[, 4]
 test2 <- metadata2[!duplicated(metadata2$SUBJID), ]
 rownames(test2) <- test2[, 1]
-shared.data <- read.table("combined.0.03.subsample.shared", header=T)
+shared.data <- read.table("data/process/Zupancic/combined.0.03.subsample.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 shared.data <- shared.data[, -c(1:3)]
 keep  <- rownames(shared.data)
@@ -1112,7 +1102,7 @@ alpha.test <- s1.alpha.diversity
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("phyla.data.csv")
+phylogenetic.info <- read.csv("data/process/Zupancic/phyla.data.csv")
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -1349,11 +1339,9 @@ rm(ZupaLowShannonGroup, ZupaHighShannonGroup, zupancicHRR, zupancicBacter,
 ###########################################################################
 
 ##Read in relevant data
-
-setwd("C:/users/marc/Desktop/obesity2/HMP.analysis")
-microbiome <- read.table("Stool.an.0.03.subsample.shared", header=T)
-meta.cat <- read.table("categorical.metadata", header=T)
-meta.cont <- read.table("continuous.metadata", header=T)
+microbiome <- read.table("data/process/HMP/Stool.an.0.03.subsample.shared", header=T)
+meta.cat <- read.table("data/process/HMP/categorical.metadata", header=T)
+meta.cont <- read.table("data/process/HMP/continuous.metadata", header=T)
 
 #Only interested in first visit microbiome data
 #need to create microbiome data set for only that
@@ -1380,7 +1368,7 @@ alpha.test <- select.alpha.diversity
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("phyla.data.csv")
+phylogenetic.info <- read.csv("data/process/HMP/phyla.data.csv")
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -1610,13 +1598,10 @@ rm(HMPLowShannonGroup, HMPHighShannonGroup, HMPHRR, HMPBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-
-setwd("C:/users/marc/Desktop/obesity2/COMBO/GoodAnalysis")
-
-microbiome <- read.table("WuGoodSub.shared", header=T)
+microbiome <- read.table("data/process/Wu/WuGoodSub.shared", header=T)
 rownames(microbiome) <- microbiome$Group
 microbiome <- microbiome[, -c(1:3)]
-metadata <- read.table("bmi_info.txt", header=T)
+metadata <- read.table("data/process/Wu/bmi_info.txt", header=T)
 
 #Match the metadata now with the microbiome data
 namesToKeep <- rownames(microbiome)
@@ -1635,7 +1620,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
+phylogenetic.info <- read.table("data/process/Wu/taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -1863,17 +1848,15 @@ rm(WuLowShannonGroup, WuHighShannonGroup, WuHRR, WuBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-setwd("C:/users/marc/Desktop/obesity2/MetaHit/")
-
-microb <- read.csv("finalized_metaHit_shared.csv")
+microb <- read.csv("data/process/Arumugam/finalized_metaHit_shared.csv")
 rownames(microb) <- microb[, 1]
 microb <- microb[,-1]
 
-metadata <- read.csv("MetaHit_metadata.csv")
+metadata <- read.csv("data/process/Arumugam/MetaHit_metadata.csv")
 rownames(metadata) <- metadata[, 1]
 metadata <- metadata[, -1]
 
-phyla <- read.csv("phyla.csv")
+phyla <- read.csv("data/process/Arumugam/phyla.csv")
 rownames(phyla) <- phyla[, 1]
 phyla <- phyla[, -1]
 
@@ -1882,7 +1865,7 @@ phyla <- phyla[, -1]
 overall <- rowSums(microb)
 microb.norm <- (microb / overall) * 100
 
-phyla.table <- read.csv("phyla.csv", header = T)
+phyla.table <- read.csv("data/process/Arumugam/phyla.csv", header = T)
 rownames(phyla.table) <- phyla.table[, 1]
 phyla.table <- phyla.table[, -1]
 phyla.table <- as.data.frame(t(phyla.table))
@@ -2132,17 +2115,16 @@ rm(AruLowShannonGroup, AruHighShannonGroup, ArumugamHRR, ArumugamBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-setwd("C:/users/marc/Desktop/obesity2/turnbaugh.twins")
-shared.data <- read.table("test.unique.good.filter.unique.precluster.pick.pick.an.shared", header=T)
+shared.data <- read.table("data/process/Turnbaugh/test.unique.good.filter.unique.precluster.pick.pick.an.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 shared.data <- shared.data[, -c(1:3)]
 
-subsample.data <- read.table("test.unique.good.filter.unique.precluster.pick.pick.an.0.03.subsample.shared", header=T)
+subsample.data <- read.table("data/process/Turnbaugh/test.unique.good.filter.unique.precluster.pick.pick.an.0.03.subsample.shared", header=T)
 rownames(subsample.data) <- subsample.data[, 2]
 subsample.data <- subsample.data[, -c(1:3)]
 
 
-metadata <- read.csv("turnbaugh.metadata.csv")
+metadata <- read.csv("data/process/Turnbaugh/turnbaugh.metadata.csv")
 rownames(metadata) <- metadata[, 4]
 metadata <- metadata[, -4]
 
@@ -2164,7 +2146,7 @@ alpha.test <- s1.alpha.diversity
 
 #Generate phyla table data
 
-phyla.info <- read.csv("phyla.csv")
+phyla.info <- read.csv("data/process/Turnbaugh/phyla.csv")
 phyla.table <- shared.data
 colnames(phyla.table) <- phyla.info[, 2]
 
@@ -2381,8 +2363,6 @@ rm(TurnLowShannonGroup, TurnHighShannonGroup, turnbaughHRR, turnbaughBacter,
 ############################ Output Tables #########################################
 ####################################################################################
 
-setwd("C:/users/marc/Desktop")
-
 demographicsTable <- as.data.frame(cbind(totalN, meanAge, SDAge, males, females, 
                                          ancestry, meanBMI, SDBMI, minBMI, maxBMI))
 demographicsTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
@@ -2390,23 +2370,23 @@ demographicsTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic"
 write.csv(demographicsTable, "denovodemographicsTable.csv")
 
 
-write.csv(combinedData, "denovoCombinedData.csv")
+write.csv(combinedData, "results/tables/denovoCombinedData.csv")
 
-write.csv(TurnbaughData, "denovoTurnbaughData.csv")
+write.csv(TurnbaughData, "results/tables/denovoTurnbaughData.csv")
 
 rownames(overallPTable) <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                              "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(overallPTable, "denovoOverallPTable.csv")
+write.csv(overallPTable, "results/tables/denovoOverallPTable.csv")
 
 ShannonRRTable <- as.data.frame(cbind(tposH, tnegH, cposH, cnegH, RRH, lowH, highH))
 ShannonRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(ShannonRRTable, "denovoShannonRRTable.csv")
+write.csv(ShannonRRTable, "results/tables/denovoShannonRRTable.csv")
 
 BFRatioRRTable <- as.data.frame(cbind(tposBF, tnegBF, cposBF, cnegBF, RRBF, lowBF, highBF))
 BFRatioRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(BFRatioRRTable, "denovoBFRatioRRTable.csv")
+write.csv(BFRatioRRTable, "results/tables/denovoBFRatioRRTable.csv")
 
 
 
