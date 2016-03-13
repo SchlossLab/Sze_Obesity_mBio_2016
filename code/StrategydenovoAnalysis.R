@@ -1606,26 +1606,12 @@ rm(HMPLowShannonGroup, HMPHighShannonGroup, HMPHRR, HMPBacter,
 ###########################################################################
 
 
-setwd("C:/users/marc/Desktop/obesity2/COMBO/")
+setwd("C:/users/marc/Desktop/obesity2/COMBO/GoodAnalysis")
 
-microbiome <- read.table("combined.good.subsample.shared", header=T)
+microbiome <- read.table("WuGoodSub.shared", header=T)
 rownames(microbiome) <- microbiome$Group
 microbiome <- microbiome[, -c(1:3)]
-seqData <- read.csv("COMBO_data_table.csv", header=T)
-seqData <- seqData[-1, ]
-rownames(seqData) <- seqData$Run_s
 metadata <- read.table("bmi_info.txt", header=T)
-
-#get seqData set in line with microbiome data
-namesToKeep <- rownames(microbiome)
-test <- seqData[namesToKeep, ]
-seqData <- test
-rm(test)
-
-#change all rownames to match sample IDs
-rownames(seqData) <- seqData$submitted_subject_id_s
-rownames(microbiome) <- rownames(seqData)
-
 
 #Match the metadata now with the microbiome data
 namesToKeep <- rownames(microbiome)
@@ -1644,7 +1630,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.table("combined.good.phyla.txt", header=T)
+phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -1692,18 +1678,18 @@ obese <- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-WuH <- wilcox.test(H ~ obese) #P-value=0.8898
-WuS <- wilcox.test(S ~ obese) #P-value=0.6878
-WuJ <- wilcox.test(J ~ obese) #P-value=0.5986
+WuH <- wilcox.test(H ~ obese) #P-value=0.9089
+WuS <- wilcox.test(S ~ obese) #P-value=0.2798
+WuJ <- wilcox.test(J ~ obese) #P-value=0.3804
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-WuBacter <- wilcox.test(bacter ~ obese) #P-value=0.8246
-WuFirm <- wilcox.test(firm ~ obese) #P-value=0.8031
-WuBF <- wilcox.test(BFratio ~ obese) #P-value=0.8898
+WuBacter <- wilcox.test(bacter ~ obese) #P-value=0.7124
+WuFirm <- wilcox.test(firm ~ obese) #P-value=0.7506
+WuBF <- wilcox.test(BFratio ~ obese) #P-value=0.9899
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -1712,7 +1698,7 @@ WuBF <- wilcox.test(BFratio ~ obese) #P-value=0.8898
 set.seed(3)
 Wu2 <- adonis(microbiome ~ obese, permutations=1000)
 WuPERM <- Wu2$aov.tab
-#PERMANOVA=0.8921, pseudo-F=0.66065
+#PERMANOVA=0.5335, pseudo-F=0.92196
 
 
 ###########################################################################
@@ -1748,9 +1734,9 @@ WuHEpi <- epi.2by2(r.test, method="cohort.count")
 WuHMassoc <- WuHEpi$massoc
 WuHRR <- WuHMassoc$RR.strata.score
 WuHRRsig <- WuHMassoc$chisq.strata
-## Risk Ratio = 0.67
-## CI = 0.12, 3.70
-## p-value = 0.64
+## Risk Ratio = 0.65
+## CI = 0.12, 3.61
+## p-value = 0.615
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
@@ -1780,9 +1766,9 @@ WuBFEpi <- epi.2by2(r.test, method="cohort.count")
 WuBFMassoc <- WuBFEpi$massoc
 WuBFRR <- WuBFMassoc$RR.strata.score
 WuBFRRsig <- WuBFMassoc$chisq.strata
-## Risk Ratio = 0.67
-## CI = 0.12, 3.70
-## p-value = 0.64
+## Risk Ratio = 1.45
+## CI = 0.26, 8.11
+## p-value = 0.668
 
 ###########################################################################
 ############ Classification using AUCRF####################################
@@ -1803,7 +1789,7 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 WuAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-# list of 15 Measures, AUCopt = 0.7075472
+# list of 15 Measures, AUCopt = 0.8965517
 
 ###########################################################################
 ############ Z-score Data Preparation ###################################
