@@ -4,7 +4,6 @@
 
 
 data/*/*
-!data/process/*
 !README.md
 
 *.qsub*
