@@ -789,9 +789,9 @@ rm(GoodLowShannonGroup, GoodHighShannonGroup, goodrichHRR, goodrichBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-setwd("C:/users/marc/Desktop/obesity2/columbian/")
+setwd("C:/users/marc/Desktop/obesity2/columbian/GoodAnalysis")
 
-columbian.microb <- read.table("columbian.0.03.subsample.shared", header=T)
+columbian.microb <- read.table("EscobarGoodSub.shared", header=T)
 metadata <- read.csv("columbian_dataset.csv")
 
 #Organize the microbiome shared data
@@ -825,7 +825,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("phyla.data.csv")
+phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -842,8 +842,9 @@ rm(testing)
 phyla.table$other <- apply(phyla.table[, c("Fusobacteria", 
                                            "Lentisphaerae", 
                                            "Spirochaetes", 
-                                           "Synergistetes", "TM7")], 1, sum)
-phyla.table <- phyla.table[, -c(4:5, 7:9)]
+                                           "Synergistetes", "TM7", 
+                                           "Acidobacteria", "Deinococcus")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4, 6:7, 9:11)]
 
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
@@ -874,8 +875,8 @@ obese <- factor(edit.metadata2$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-escobarH <- wilcox.test(H ~ obese) #P-value=0.914
-escobarS <- wilcox.test(S ~ obese) #P-value=0.2526
+escobarH <- wilcox.test(H ~ obese) #P-value=0.9483
+escobarS <- wilcox.test(S ~ obese) #P-value=0.2307
 escobarJ <- wilcox.test(J ~ obese) #P-value=0.6187
 
 #B and F tests against obesity
@@ -883,9 +884,9 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-escobarBacter <- wilcox.test(bacter ~ obese) #P-value=0.03925
-escobarFirm <- wilcox.test(firm ~ obese) #P-value=0.1686
-escobarBF <- wilcox.test(BFratio ~ obese) #P-value=0.06069
+escobarBacter <- wilcox.test(bacter ~ obese) #P-value=0.05563
+escobarFirm <- wilcox.test(firm ~ obese) #P-value=0.1307
+escobarBF <- wilcox.test(BFratio ~ obese) #P-value=0.08221
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -894,7 +895,7 @@ escobarBF <- wilcox.test(BFratio ~ obese) #P-value=0.06069
 set.seed(3)
 escobar2 <- adonis(columbian.microb ~ obese, permutations=1000)
 escobarPERM <- escobar2$aov.tab
-#PERMANOVA=0.08891, pseudo-F=1.3797
+#PERMANOVA=0.07393, pseudo-F=1.3756
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -928,9 +929,9 @@ escobarHEpi <- epi.2by2(r.test, method="cohort.count")
 escobarHMassoc <- escobarHEpi$massoc
 escobarHRR <- escobarHMassoc$RR.strata.score
 escobarHRRsig <- escobarHMassoc$chisq.strata
-## Risk Ratio = 1.50
-## CI = 0.53, 4.26
-## p-value = 0.439
+## Risk Ratio = 1.00
+## CI = 0.36, 2.75
+## p-value = 1.00
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
@@ -983,7 +984,7 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 escobarAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-# list of 3 Measures, AUCopt = 0.95
+# list of 15 Measures, AUCopt = 0.925
 
 ###########################################################################
 ############ Z-score Data Preparation ###################################
