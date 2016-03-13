@@ -187,23 +187,23 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 ##### Figures:
 
 
-![Figure 1](Sze_ObesityMicrobiomeMeta_PeerJ_2016_files/figure-html/PrismaFlowGraph.png)\
+![Figure 1](results/figures/PrismaFlowGraph.png)\
 
 
 **Figure 1: PRISMA Flow Diagram of Total Records Searched.**  This was adapted from:  Moher D, Liberati A, Tetzlaff J, Altman DG, The PRISMA Group (2009). Preferred Reporting Items for Systematic Reviews and Meta-Analyses: The PRISMA Statement. PLoS Med 6(7): e1000097. doi:10.1371/journal.pmed1000097.
 
 
-![](Sze_ObesityMicrobiomeMeta_PeerJ_2016_files/figure-html/Figure_2-1.png)\
+![](results/figures/Figure_2-1.png)\
 
 **Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.17 for the low diversity group (P-value = 0.0266).
 
 
-![](Sze_ObesityMicrobiomeMeta_PeerJ_2016_files/figure-html/Figure_3-1.png)\
+![](results/figures/Figure_3-1.png)\
 
 **Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.90 for the low diversity group (P-value = 0.13).
 
 
-![](Sze_ObesityMicrobiomeMeta_PeerJ_2016_files/figure-html/Figure_4-1.png)\
+![](results/figures/Figure_4-1.png)\
 
 **Figure 4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
@@ -212,7 +212,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 
 
-![](Sze_ObesityMicrobiomeMeta_PeerJ_2016_files/figure-html/Figure_5-1.png)\
+![](results/figures/Figure_5-1.png)\
 
 
 **Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n=1081) and obese groups (n=435) (P-value = 0.00649). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.0133) but no difference between lean and obese group (P-value = 0.103). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n=1081) and obese (n=435) group based on B/F ratio (P-value = 0.634). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.713).

@@ -34,13 +34,12 @@ Phone: 734-936-2951
 
 ```{r Loading_data_tables, echo=FALSE, message=FALSE, warning=FALSE}
 
-setwd("C:/users/marc/Desktop")
-demographics <- read.csv("denovodemographicsTable.csv")
-OverallPValue <- read.csv("denovoOverallPTable.csv")
-ShannonRRTable <- read.csv("denovoShannonRRTable.csv")
-BFRatioRRTable <- read.csv("denovoBFRatioRRTable.csv")
-ZScoreCombinedData <- read.csv("denovoCombinedData.csv")
-ZScoreTurnbaughData <- read.csv("denovoTurnbaughData.csv")
+demographics <- read.csv("results/tables/denovodemographicsTable.csv")
+OverallPValue <- read.csv("results/tables/denovoOverallPTable.csv")
+ShannonRRTable <- read.csv("results/tables/denovoShannonRRTable.csv")
+BFRatioRRTable <- read.csv("results/tables/denovoBFRatioRRTable.csv")
+ZScoreCombinedData <- read.csv("results/tables/denovoCombinedData.csv")
+ZScoreTurnbaughData <- read.csv("results/tables/denovoTurnbaughData.csv")
 
 ```
 
@@ -244,13 +243,13 @@ kable(table3, format = "markdown", align = 'c', padding = 2)
 ##### Figures:
 
 
-![Figure 1](Sze_ObesityMicrobiomeMeta_PeerJ_2016_files/figure-html/PrismaFlowGraph.png)\
+![Figure 1](results/figures/PrismaFlowGraph.png)\
 
 
 **Figure 1: PRISMA Flow Diagram of Total Records Searched.**  This was adapted from:  Moher D, Liberati A, Tetzlaff J, Altman DG, The PRISMA Group (2009). Preferred Reporting Items for Systematic Reviews and Meta-Analyses: The PRISMA Statement. PLoS Med 6(7): e1000097. doi:10.1371/journal.pmed1000097.
 
 
-```{r Figure_2, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Figure_2, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
 
 StudyNo <- as.numeric(ShannonRRTable$X)
 Study <- as.character(ShannonRRTable$Study)
@@ -290,7 +289,7 @@ text(-6.5, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 **Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.17 for the low diversity group (P-value = `r signif(RRSDPvalue$QMp, 3)`).
 
 
-```{r Figure_3, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Figure_3, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
 
 StudyNo <- as.numeric(BFRatioRRTable$X)
 Study <- as.character(BFRatioRRTable$Study)
@@ -329,7 +328,7 @@ text(-6.0, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 **Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.90 for the low diversity group (P-value = `r signif(RRBFPvalue$QMp, 3)`).
 
 
-```{r Figure_4, echo=FALSE}
+```{r Figure_4, echo=FALSE, fig.path="results/figures/"}
 par(mfrow=c(1,2))
 funnel(res, main="A")
 funnel(res2, main="B")
@@ -393,7 +392,7 @@ combZLogBFTukeyFinal <- combZLogBFTukey$BMI.class
 
 
 
-```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
 # Section A
 p1 <- ggplot(group.data.test, aes(obese, ZH))
 p2 <- p1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
