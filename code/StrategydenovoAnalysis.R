@@ -262,9 +262,9 @@ rm(BaxLowShannonGroup, BaxHighShannonGroup, baxterHRR, baxterBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-setwd("C:/users/marc/Desktop/obesity2/hispanic/")
+setwd("C:/users/marc/Desktop/obesity2/hispanic/GoodAnalysis")
 
-hispanic.microb <- read.table("hispanic.subsample.shared", header=T)
+hispanic.microb <- read.table("RossGoodSub.shared", header=T)
 rownames(hispanic.microb) <- hispanic.microb[, 2]
 hispanic.microb <- hispanic.microb[, -c(1:3)]
 
@@ -298,7 +298,7 @@ alpha.test <- as.data.frame(alpha.diversity.shannon)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("phyla.data.csv")
+phylogenetic.info <- read.table("taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -312,7 +312,11 @@ testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
 rm(testing)
 #combine phyla that are not that abundant
-phyla.table$other <- apply(phyla.table[, c("Deinococcus-Thermus", "Elusimicrobia", "Fusobacteria", "Lentisphaerae", "Synergistetes", "TM7")], 1, sum)
+phyla.table$other <- apply(phyla.table[, c("Deinococcus", 
+                                           "Elusimicrobia", 
+                                           "Fusobacteria", 
+                                           "Lentisphaerae", 
+                                           "Synergistetes", "TM7")], 1, sum)
 phyla.table <- phyla.table[, -c(3:4, 6:7, 9:10)]
 
 #Create a relative abundance table for phyla
@@ -343,18 +347,18 @@ obese <- factor(edit.metadata2$obese)
 ######################################################################################## First Level Analysis & Alpha Diversity with BMI #############
 ###########################################################################
 
-rossH <- wilcox.test(H ~ obese) #P-value=0.3456
-rossS <- wilcox.test(S ~ obese) #P-value=0.2886
-rossJ <- wilcox.test(J ~ obese) #P-value=0.3385
+rossH <- wilcox.test(H ~ obese) #P-value=0.2848
+rossS <- wilcox.test(S ~ obese) #P-value=0.2492
+rossJ <- wilcox.test(J ~ obese) #P-value=0.3826
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-rossBacter <- wilcox.test(bacter ~ obese) #P-value=0.2243
-rossFirm <- wilcox.test(firm ~ obese) #P-value=0.2189
-rossBF <- wilcox.test(BFratio ~ obese) #P-value=0.1676
+rossBacter <- wilcox.test(bacter ~ obese) #P-value=0.2036
+rossFirm <- wilcox.test(firm ~ obese) #P-value=0.3799
+rossBF <- wilcox.test(BFratio ~ obese) #P-value=0.2207
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -363,7 +367,7 @@ rossBF <- wilcox.test(BFratio ~ obese) #P-value=0.1676
 set.seed(3)
 ross2 <- adonis(his.microb.edit ~ obese, permutations=1000)
 rossPERM <- ross2$aov.tab
-#PERMANOVA=0.7153, pseudo-F=0.73249
+#PERMANOVA=0.8232, pseudo-F=0.6725
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -397,9 +401,9 @@ rossHEpi <- epi.2by2(r.test, method="cohort.count")
 rossHMassoc <- rossHEpi$massoc
 rossHRR <- rossHMassoc$RR.strata.score
 rossHRRsig <- rossHMassoc$chisq.strata
-## Risk Ratio = 1.08
-## CI = 0.72, 1.61
-## p-value = 0.719
+## Risk Ratio = 1.20
+## CI = 0.80, 1.80
+## p-value = 0.382
 
 
 ##Run the RR for B/F ratio
@@ -428,9 +432,9 @@ rossBFEpi <- epi.2by2(r.test, method="cohort.count")
 rossBFMassoc <- rossBFEpi$massoc
 rossBFRR <- rossBFMassoc$RR.strata.score
 rossBFRRsig <- rossBFMassoc$chisq.strata
-## Risk Ratio = 0.70
-## CI = 0.47, 1.07
-## p-value = 0.089
+## Risk Ratio = 0.87
+## CI = 0.58, 1.30
+## p-value = 0.503
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -451,7 +455,7 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 rossAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-# list of 5 Measures, AUCopt = 0.810049
+# list of 8 Measures, AUCopt = 0.7410526
 
 ###########################################################################
 ############ Z-score Data Preparation ###################################
