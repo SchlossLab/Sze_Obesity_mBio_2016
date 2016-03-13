@@ -1298,7 +1298,7 @@ temporary <- table(metadata$sex_s)
 males <- unname(c(males, temporary[names(temporary) == "male"]))
 females <- unname(c(females, temporary[names(temporary) == "female"]))
 #temporary <- table(demographics$White)
-ancestry <- unname(c(ancestry, format(round(100, 2), nsmall = 2)))
+ancestry <- unname(c(ancestry, format(round(1, 2), nsmall = 2)))
 meanBMI <- c(meanBMI, 
              format(round(mean(metadata$BMI), 2), nsmall = 2))
 SDBMI <- c(SDBMI, 
@@ -2368,7 +2368,7 @@ highBF <- c(highBF, turnbaughBFRR[1,3])
 TurnbaughData <- as.data.frame(cbind(TurnbaughZH, TurnbaughZLogBF))
 TurnbaughData$Study <- "Turnbaugh"
 TurnbaughData <- as.data.frame(cbind(TurnbaughData, TurnbaughObese, TurnbaughBMICat))
-colnames(TurnbaughData) <- c("ZH", "ZLogBF", "Study", "BMICat", "Obese")
+colnames(TurnbaughData) <- c("ZH", "ZLogBF", "Study", "Obese", "BMICat")
 
 
 rm(TurnLowShannonGroup, TurnHighShannonGroup, turnbaughHRR, turnbaughBacter, 
