@@ -44,9 +44,16 @@ The following are what is missing: h5py, sortmerna, sumaclust
 
 ## Things to do...
 
-* Decided Not to use Qiime
+* Decided not to use Qiime
+	* Done
 
 * Need to reorganize repository so that everything runs automatically
+	* Done
+	
+* Need to update processing so all 454 done in the exact same way
+	* TwinsUK working though, Need to update Turnbaugh
+	
+* Need to remove MetaHit data and update the respective Figures
 
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
