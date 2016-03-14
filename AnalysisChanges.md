@@ -58,6 +58,18 @@ The following are what is missing: h5py, sortmerna, sumaclust
 	
 * Need to update manuscript and .R file so that all calculations are made automatically
 
+* Need to add Power calculation to the overall dataset for Mann-Whitney Rank Sum
+	* Use R package samplesize
+		* n.wilcox.ord(power=, alpha=, t=, p=c(x, y), q=c(x, y))
+			* Ralph Scherer (maintainer)
+			* Based on Zhao YD, Rahardja D, Qu YongMing. Sample size calculation for the 
+			Wilcoxon-Mann-Whitney test adjusting for ties. Statistics in Medicine 2008; 27:462-468
+	* Use R custom script to get power
+		* Website can be found [here](http://r.789695.n4.nabble.com/How-to-compute-the-power-of-a-wilcoxon-test-td3815616.html)
+			* pval <- replicate(1000, wilcox.test(rnorm(366,.0032,.012), rnorm(366,.00042,.0016))$p.value)
+			* summary(pval) 
+			* sum(pval < .05) (e.g. 979 would mean a power of 97.9%)
+
 
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
