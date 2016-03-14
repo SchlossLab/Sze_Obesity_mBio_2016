@@ -54,6 +54,10 @@ The following are what is missing: h5py, sortmerna, sumaclust
 	* TwinsUK working though, Need to update Turnbaugh
 	
 * Need to remove MetaHit data and update the respective Figures
+	* Done
+	
+* Need to update manuscript and .R file so that all calculations are made automatically
+
 
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
