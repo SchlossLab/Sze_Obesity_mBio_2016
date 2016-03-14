@@ -1,9 +1,10 @@
 .Rproj.user
 .Rhistory
 .RData
-
+.Rproj
 
 data/*/*
+!data/process/
 !README.md
 
 *.qsub*
