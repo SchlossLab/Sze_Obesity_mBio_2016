@@ -187,15 +187,104 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 testset <- cbind(obese, testset)
 
 #Try AUCRF with default measures provided in readme
-#set.seed(3)
-#baxterAUCfit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+set.seed(3)
+baxterAUCfit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+baxAUC <- baxterAUCfit$`OOB-AUCopt`
+baxKopt <- baxterAUCfit$Kopt
+
+
+###########################################################################
+########## Similar Classification OTUs Data Table Prep ####################
+###########################################################################
+
+Clostridiales <- microbiome$Otu00479
+Lachnospiraceae <- microbiome$Otu00036
+Ruminococcaceae <- microbiome$Otu00320
+
+##Run the RR for Clostridiales
+test <- as.data.frame(Clostridiales)
+test <- within(test, {Clostridiales.cat = ifelse(Clostridiales <= median(Clostridiales), "less", "higher")})
+
+test4 <- cbind(test, obese)
+test4 <- test4[order(Clostridiales.cat), ]
+orderedtestCat <- test4[, 2]
+BaxtestHighTotal <- length(orderedtestCat[
+  orderedClostridialesCat=="higher"])
+BaxHightestGroup <- as.data.frame(
+  table(test4[c(1:BaxtestHighTotal), 3]))
+BaxLowtestGroup <- as.data.frame(
+  table(test4[c((BaxtestHighTotal + 1):BaxtotalN), 3]))
+
+group1 <- c(BaxHightestGroup[2, 2], BaxHightestGroup[1, 2])
+group2 <- c(BaxLowtestGroup[2, 2], BaxLowtestGroup[1, 2])
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+baxterClostEpi <- epi.2by2(r.test, method="cohort.count")
+baxterClostMassoc <- baxterBFEpi$massoc
+baxterClostsRR <- baxterBFMassoc$RR.strata.score
+baxterClostRRsig <- baxterBFMassoc$chisq.strata
+
+
+##Run the RR for Lachnospiraceae
+test <- as.data.frame(Lachnospiraceae)
+test <- within(test, {Lachnospiraceae.cat = ifelse(Lachnospiraceae <= median(Lachnospiraceae), "less", "higher")})
+
+test4 <- cbind(test, obese)
+test4 <- test4[order(test[, 2]), ]
+orderedtestCat <- test4[, 2]
+BaxtestHighTotal <- length(orderedtestCat[
+  orderedClostridialesCat=="higher"])
+BaxHightestGroup <- as.data.frame(
+  table(test4[c(1:BaxtestHighTotal), 3]))
+BaxLowtestGroup <- as.data.frame(
+  table(test4[c((BaxtestHighTotal + 1):BaxtotalN), 3]))
+
+group1 <- c(BaxHightestGroup[2, 2], BaxHightestGroup[1, 2])
+group2 <- c(BaxLowtestGroup[2, 2], BaxLowtestGroup[1, 2])
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+baxterLachnoEpi <- epi.2by2(r.test, method="cohort.count")
+baxterLachnoMassoc <- baxterBFEpi$massoc
+baxterLachnoRR <- baxterBFMassoc$RR.strata.score
+baxterLachnoRRsig <- baxterBFMassoc$chisq.strata
+
+
+##Run the RR for Lachnospiraceae
+test <- as.data.frame(Ruminococcaceae)
+test <- within(test, {Ruminococcaceae.cat = ifelse(Ruminococcaceae <= median(Ruminococcaceae), "less", "higher")})
+
+test4 <- cbind(test, obese)
+test4 <- test4[order(test[, 2]), ]
+orderedtestCat <- test4[, 2]
+BaxtestHighTotal <- length(orderedtestCat[
+  orderedClostridialesCat=="higher"])
+BaxHightestGroup <- as.data.frame(
+  table(test4[c(1:BaxtestHighTotal), 3]))
+BaxLowtestGroup <- as.data.frame(
+  table(test4[c((BaxtestHighTotal + 1):BaxtotalN), 3]))
+
+group1 <- c(BaxHightestGroup[2, 2], BaxHightestGroup[1, 2])
+group2 <- c(BaxLowtestGroup[2, 2], BaxLowtestGroup[1, 2])
+r.test <- rbind(group2, group1)
+colnames(r.test) <- c("Obese", "Not.Obese")
+rownames(r.test) <- c("group2", "group1")
+
+baxterRuminEpi <- epi.2by2(r.test, method="cohort.count")
+baxterRuminMassoc <- baxterBFEpi$massoc
+baxterRuminRR <- baxterBFMassoc$RR.strata.score
+baxterRuminRRsig <- baxterBFMassoc$chisq.strata
+
 
 ###########################################################################
 ############ Z-score Data Preparation ###################################
 ###########################################################################
 
 BaxterZH <- scale(H)
-BaxterZLogBF <- scale(log(BFratio))
+BaxterZLogBF <- scale(log(BFratio + 1))
 BaxterBMI <- bmi
 
 ###########################################################################
@@ -223,6 +312,9 @@ overallPTable <- as.data.frame(t(c(baxterBacter$p.value, baxterFirm$p.value,
                                    baxterPERM[1,6])))
 colnames(overallPTable) <- c("Bacteroidetes", "Firmicutes", "BFRatio", "Shannon", "OTURich", "Evenness", "BrayC")
 
+OOBAUCAll <- format(round(baxAUC, 2), nsmall = 2)
+KoptAll <- format(round(baxKopt, 2), nsmall = 2)
+
 # Get Data for Forest Plots
 tposH <- BaxLowShannonGroup[2, 2]
 tnegH <- BaxLowShannonGroup[1, 2]
@@ -245,9 +337,21 @@ combinedData <- as.data.frame(cbind(BaxterZH, BaxterZLogBF, BaxterBMI))
 colnames(combinedData) <- c("ZH", "ZLogBF", "BMI")
 combinedData$Study <- "Baxter"
 
+# Get data for power simulation
+keep <- which(demographics$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- (sum(PvalSim < 0.05)) / 10
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- (sum(PvalSim < 0.05)) / 10
+
 rm(BaxLowShannonGroup, BaxHighShannonGroup, baxterHRR, baxterBacter, 
    baxterFirm, baxterBF, baxterH, baxterS, baxterJ, baxterPERM, baxterHEpi, 
-   BaxterZH, BaxterZLogBF, BaxterBMI, baxter2)
+   BaxterZH, BaxterZLogBF, BaxterBMI, baxter2, keep, PvalSim)
 
 
 
@@ -453,6 +557,8 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 rossAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+rossAUC <- rossAUCFit$`OOB-AUCopt`
+rossKopt <- rossAUCFit$Kopt
 # list of 8 Measures, AUCopt = 0.7410526
 
 ###########################################################################
@@ -460,7 +566,7 @@ rossAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 ###########################################################################
 
 RossZH <- scale(H)
-RossZLogBF <- scale(log(BFratio))
+RossZLogBF <- scale(log(BFratio + 1))
 RossBMI <- bmi
 
 ###########################################################################
@@ -491,6 +597,12 @@ Ross <- c(rossBacter$p.value, rossFirm$p.value, rossBF$p.value,
           rossH$p.value, rossS$p.value, rossJ$p.value, rossPERM[1,6])
 overallPTable <- rbind(overallPTable, Ross)
 
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(rossAUC, 2), nsmall = 2))
+
+KoptAll <- c(KoptAll, 
+             format(round(rossKopt, 2), nsmall = 2))
+
 tposH <- c(tposH, RossLowShannonGroup[2, 2])
 tnegH <- c(tnegH, RossLowShannonGroup[1, 2])
 cposH <- c(cposH, RossHighShannonGroup[2, 2])
@@ -513,9 +625,21 @@ RossData$Study <- "Ross"
 colnames(RossData) <- c("ZH", "ZLogBF", "BMI", "Study")
 combinedData <- rbind(combinedData, RossData)
 
+# Get data for power simulation
+keep <- which(edit.metadata2$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
+
 rm(RossLowShannonGroup, RossHighShannonGroup, rossHRR, rossBacter, 
    rossFirm, rossBF, rossH, rossS, rossJ, rossPERM, rossHEpi, 
-   RossZH, RossZLogBF, RossBMI, ross2)
+   RossZH, RossZLogBF, RossBMI, ross2, keep, PvalSim)
 
 ############## GOODRICH ##################################################
 
@@ -528,7 +652,7 @@ rm(RossLowShannonGroup, RossHighShannonGroup, rossHRR, rossBacter,
 #Read in and match metadata to microbiome data
 metadata <- read.csv("data/process/Goodrich/TwinsUKStudy2.csv")
 rownames(metadata) <- metadata[, 7]
-shared.data <- read.table("data/process/Goodrich/combined.tx.1.subsample.shared", header=T)
+shared.data <- read.table("data/process/Goodrich/GoodrichGoodSub.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 microbiome <- shared.data[, -c(1:3)]
 keep  <- which(metadata$body_mass_index_s != "<not provided>")
@@ -550,7 +674,7 @@ rm(alpha.diversity)
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.table("data/process/Goodrich/phyla.txt", header=T)
+phylogenetic.info <- read.table("data/process/Goodrich/taxonomyKey.txt", header=T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -566,8 +690,14 @@ testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
 rm(testing)
 #combine phyla that are not that abundant
-phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Chloroflexi", "Deferribacteres", "Elusimicrobia", "Fusobacteria", "Gemmatimonadetes", "Lentisphaerae", "OD1", "Planctomycetes", "Spirochaetes", "SR1", "Synergistetes", "Tenericutes")], 1, sum)
-phyla.table <- phyla.table[, -c(1, 4:6, 8:12, 14:17)]
+phyla.table$other <- apply(phyla.table[, c("Acidobacteria", 
+                                           "Elusimicrobia", 
+                                           "Fusobacteria", 
+                                           "Lentisphaerae", 
+                                           "Spirochaetes", "SR1", 
+                                           "Synergistetes", 
+                                           "Tenericutes", "TM7")], 1, sum)
+phyla.table <- phyla.table[, -c(1, 4, 6:7, 9:13)]
 
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
@@ -603,18 +733,18 @@ obese <- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-goodrichH <- wilcox.test(H ~ obese) #P-value=0.6671
-goodrichS <- wilcox.test(S ~ obese) #P-value=0.9073
-goodrichJ <- wilcox.test(J ~ obese) #P-value=0.6319
+goodrichH <- wilcox.test(H ~ obese) #P-value=0.614
+goodrichS <- wilcox.test(S ~ obese) #P-value=0.3244
+goodrichJ <- wilcox.test(J ~ obese) #P-value=0.8362
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-goodrichBacter <- wilcox.test(bacter ~ obese) #P-value=0.7008
-goodrichFirm <- wilcox.test(firm ~ obese) #P-value=0.997
-goodrichBF <- wilcox.test(BFratio ~ obese) #P-value=0.7445
+goodrichBacter <- wilcox.test(bacter ~ obese) #P-value=0.4353
+goodrichFirm <- wilcox.test(firm ~ obese) #P-value=0.2896
+goodrichBF <- wilcox.test(BFratio ~ obese) #P-value=0.2702
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -623,7 +753,7 @@ goodrichBF <- wilcox.test(BFratio ~ obese) #P-value=0.7445
 set.seed(3)
 goodrich2 <- adonis(microbiome ~ obese, permutations=1000)
 goodrichPERM <- goodrich2$aov.tab
-#PERMANOVA=0.004995, pseudo-F=2.9308
+#PERMANOVA=0.3257, pseudo-F=1.0833
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -658,9 +788,9 @@ goodrichHEpi <- epi.2by2(r.test, method="cohort.count")
 goodrichHMassoc <- goodrichHEpi$massoc
 goodrichHRR <- goodrichHMassoc$RR.strata.score
 goodrichHRRsig <- goodrichHMassoc$chisq.strata
-## Risk Ratio = 1.19
-## CI = 0.84, 1.68
-## p-value = 0.332
+## Risk Ratio = 0.84
+## CI = 0.59, 1.18
+## p-value = 0.31
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
@@ -690,9 +820,9 @@ goodrichBFEpi <- epi.2by2(r.test, method="cohort.count")
 goodrichBFMassoc <- goodrichBFEpi$massoc
 goodrichBFRR <- goodrichBFMassoc$RR.strata.score
 goodrichBFRRsig <- goodrichBFMassoc$chisq.strata
-## Risk Ratio = 0.98
-## CI = 0.69, 1.38
-## p-value = 0.894
+## Risk Ratio = 1.06
+## CI = 0.75, 1.49
+## p-value = 0.758
 
 ###########################################################################
 ############ Classification using AUCRF####################################
@@ -713,14 +843,16 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 goodrichAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-# list of 8 Measures, AUCopt = 0.6767159
+goodAUC <- goodrichAUCFit$`OOB-AUCopt`
+goodKopt <- goodrichAUCFit$Kopt
+# list of 41 Measures, AUCopt = 0.7662693
 
 ###########################################################################
 ############ Z-score Data Preparation ###################################
 ###########################################################################
 
 GoodrichZH <- scale(H)
-GoodrichZLogBF <- scale(log(BFratio))
+GoodrichZLogBF <- scale(log(BFratio + 1))
 GoodrichBMI <- bmi
 
 
@@ -756,6 +888,11 @@ Goodrich <- c(goodrichBacter$p.value, goodrichFirm$p.value,
 
 overallPTable <- rbind(overallPTable, Goodrich)
 
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(goodAUC, 2), nsmall = 2))
+KoptAll <- c(KoptAll, 
+             format(round(goodKopt, 2), nsmall = 2))
+
 tposH <- c(tposH, GoodLowShannonGroup[2, 2])
 tnegH <- c(tnegH, GoodLowShannonGroup[1, 2])
 cposH <- c(cposH, GoodHighShannonGroup[2, 2])
@@ -777,10 +914,23 @@ GoodrichData$Study <- "Goodrich"
 colnames(GoodrichData) <- c("ZH", "ZLogBF", "BMI", "Study")
 combinedData <- rbind(combinedData, GoodrichData)
 
+# Get data for power simulation
+keep <- which(metadata$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
+
 rm(GoodLowShannonGroup, GoodHighShannonGroup, goodrichHRR, goodrichBacter, 
    goodrichFirm, goodrichBF, goodrichH, goodrichS, goodrichJ, 
    goodrichPERM, goodrichHEpi, GoodrichZH, GoodrichZLogBF, 
-   GoodrichBMI, goodrich2, Ross, Goodrich)
+   GoodrichBMI, goodrich2, Ross, Goodrich, keep, PvalSim)
+
 
 ########### ESCOBAR ######################################################
 
@@ -986,6 +1136,8 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 escobarAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+escoAUC <- escobarAUCFit$`OOB-AUCopt`
+escoKopt <- escobarAUCFit$Kopt
 # list of 15 Measures, AUCopt = 0.925
 
 ###########################################################################
@@ -993,7 +1145,7 @@ escobarAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 ###########################################################################
 
 EscobarZH <- scale(H)
-EscobarZLogBF <- scale(log(BFratio))
+EscobarZLogBF <- scale(log(BFratio + 1))
 EscobarBMI <- bmi
 
 
@@ -1030,6 +1182,11 @@ Escobar <- c(escobarBacter$p.value, escobarFirm$p.value,
 
 overallPTable <- rbind(overallPTable, Escobar)
 
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(escoAUC, 2), nsmall = 2))
+KoptAll <- c(KoptAll, 
+             format(round(escoKopt, 2), nsmall = 2))
+
 tposH <- c(tposH, EscoLowShannonGroup[2, 2])
 tnegH <- c(tnegH, EscoLowShannonGroup[1, 2])
 cposH <- c(cposH, EscoHighShannonGroup[2, 2])
@@ -1051,10 +1208,22 @@ EscobarData$Study <- "Escobar"
 colnames(EscobarData) <- c("ZH", "ZLogBF", "BMI", "Study")
 combinedData <- rbind(combinedData, EscobarData)
 
+# Get data for power simulation
+keep <- which(edit.metadata2$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
+
 rm(EscoLowShannonGroup, EscoHighShannonGroup, escobarHRR, escobarBacter, 
    escobarFirm, escobarBF, escobarH, escobarS, escobarJ, 
    escobarPERM, escobarHEpi, EscobarZH, EscobarZLogBF, 
-   EscobarBMI, escobar2, Escobar)
+   EscobarBMI, escobar2, Escobar, keep, PvalSim)
 
 
 ######## ZUPANCIC #########################################################
@@ -1274,7 +1443,8 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 zupancicAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
-#zupAUC <- fit$`OOB-AUCopt`
+zupAUC <- zupancicAUCFit$`OOB-AUCopt`
+zupKopt <- zupancicAUCFit$Kopt
 # list of 42 Measures, AUCopt = 0.7310296
 
 
@@ -1283,7 +1453,7 @@ zupancicAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 ###########################################################################
 
 ZupancicZH <- scale(H)
-ZupancicZLogBF <- scale(log(BFratio))
+ZupancicZLogBF <- scale(log(BFratio + 1))
 ZupancicBMI <- bmi
 
 ###########################################################################
@@ -1318,6 +1488,12 @@ Zupancic <- c(zupancicBacter$p.value, zupancicFirm$p.value,
 
 overallPTable <- rbind(overallPTable, Zupancic)
 
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(zupAUC, 2), nsmall = 2))
+
+KoptAll <- c(KoptAll, 
+               format(round(zupKopt, 2), nsmall = 2))
+
 tposH <- c(tposH, ZupaLowShannonGroup[2, 2])
 tnegH <- c(tnegH, ZupaLowShannonGroup[1, 2])
 cposH <- c(cposH, ZupaHighShannonGroup[2, 2])
@@ -1339,10 +1515,22 @@ ZupancicData$Study <- "Zupancic"
 colnames(ZupancicData) <- c("ZH", "ZLogBF", "BMI", "Study")
 combinedData <- rbind(combinedData, ZupancicData)
 
+# Get data for power simulation
+keep <- which(metadata$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
+
 rm(ZupaLowShannonGroup, ZupaHighShannonGroup, zupancicHRR, zupancicBacter, 
    zupancicFirm, zupancicBF, zupancicH, zupancicS, zupancicJ, 
    zupancicPERM, zupancicHEpi, ZupancicZH, ZupancicZLogBF, 
-   ZupancicBMI, zupancic2, Zupancic)
+   ZupancicBMI, zupancic2, Zupancic, keep, PvalSim)
 
 
 ############### HMP HMP HMP ##############################################
@@ -1537,8 +1725,10 @@ colnames(testset)[1] <- "obese"
 testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 
 #Try AUCRF with default measures provided in readme
-#set.seed(3)
-#HMPAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+set.seed(3)
+HMPAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+HMPAUC <- HMPAUCFit$`OOB-AUCopt`
+HMPKopt <- HMPAUCFit$Kopt
 # list of 6 Measures, AUCopt = 0.7031773
 
 ###########################################################################
@@ -1546,7 +1736,7 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 ###########################################################################
 
 HMPZH <- scale(H)
-HMPZLogBF <- scale(log(BFratio))
+HMPZLogBF <- scale(log(BFratio + 1))
 HMPBMI <- bmi
 
 
@@ -1580,6 +1770,12 @@ HMP <- c(HMPBacter$p.value, HMPFirm$p.value,
 
 overallPTable <- rbind(overallPTable, HMP)
 
+
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(HMPAUC, 2), nsmall = 2))
+KoptAll <- c(KoptAll, 
+             format(round(HMPKopt, 2), nsmall = 2))
+
 tposH <- c(tposH, HMPLowShannonGroup[2, 2])
 tnegH <- c(tnegH, HMPLowShannonGroup[1, 2])
 cposH <- c(cposH, HMPHighShannonGroup[2, 2])
@@ -1602,10 +1798,22 @@ HMPData$Study <- "HMP"
 colnames(HMPData) <- c("ZH", "ZLogBF", "BMI", "Study")
 combinedData <- rbind(combinedData, HMPData)
 
+# Get data for power simulation
+keep <- which(select.meta.cat$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
+
 rm(HMPLowShannonGroup, HMPHighShannonGroup, HMPHRR, HMPBacter, 
    HMPFirm, HMPBF, HMPH, HMPS, HMPJ, 
    HMPPERM, HMPHEpi, HMPZH, HMPZLogBF, 
-   HMPBMI, HMP2, HMP)
+   HMPBMI, HMP2, HMP, keep, PvalSim)
 
 
 ############## Wu Wu Wu ###################################################
@@ -1799,6 +2007,8 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 #Try AUCRF with default measures provided in readme
 set.seed(3)
 WuAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+WuAUC <- WuAUCFit$`OOB-AUCopt`
+WuKopt <- WuAUCFit$Kopt
 # list of 15 Measures, AUCopt = 0.8965517
 
 ###########################################################################
@@ -1806,7 +2016,7 @@ WuAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 ###########################################################################
 
 WuZH <- scale(H)
-WuZLogBF <- scale(log(BFratio))
+WuZLogBF <- scale(log(BFratio + 1))
 WuBMI <- bmi
 
 
@@ -1833,6 +2043,11 @@ Wu <- c(WuBacter$p.value, WuFirm$p.value,
         WuJ$p.value, WuPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Wu)
+
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(WuAUC, 2), nsmall = 2))
+KoptAll <- c(KoptAll, 
+             format(round(WuKopt, 2), nsmall = 2))
 
 tposH <- c(tposH, WuLowShannonGroup[2, 2])
 tnegH <- c(tnegH, WuLowShannonGroup[1, 2])
@@ -1866,10 +2081,22 @@ combinedData$Obese[combinedData$BMICat=="Normal" |
                      combinedData$BMICat=="Overweight"] <- "No"
 combinedData$Obese[combinedData$BMICat=="Obese"] <- "Yes"
 
+# Get data for power simulation
+keep <- which(metadata$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
+
 rm(WuLowShannonGroup, WuHighShannonGroup, WuHRR, WuBacter, 
    WuFirm, WuBF, WuH, WuS, WuJ, 
    WuPERM, WuHEpi, WuZH, WuZLogBF, 
-   WuBMI, Wu2, Wu)
+   WuBMI, Wu2, Wu, keep, PvalSim)
 
 
 
@@ -2048,20 +2275,22 @@ turnbaughBFRRsig <- turnbaughBFMassoc$chisq.strata
 ###########################################################################
 
 #Create Obese.num group
-#s1.metadata$obese.num[s1.metadata$obese=="No"] <- 0
-#s1.metadata$obese.num[s1.metadata$obese=="Yes"] <- 1
-#obese <- factor(s1.metadata$obese.num)
+s1.metadata$obese.num[s1.metadata$obese=="No"] <- 0
+s1.metadata$obese.num[s1.metadata$obese=="Yes"] <- 1
+obese <- factor(s1.metadata$obese.num)
 
 #generate test set
 # get rid of those with 0 and only 4 other values
-#testset <- Filter(function(x)(length(unique(x))>5), s1.subsample.data)
-#testset <- cbind(obese, testset)
-#colnames(testset)[1] <- "obese"
-#testset <- cbind(testset, H, S, J, s1.phyla.rel.abund)
+testset <- Filter(function(x)(length(unique(x))>5), s1.subsample.data)
+testset <- cbind(obese, testset)
+colnames(testset)[1] <- "obese"
+testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 
 #Try AUCRF with default measures provided in readme
-#set.seed(3)
-#TurnbaughAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+set.seed(3)
+TurnbaughAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
+TurnAUC <- TurnbaughAUCFit$`OOB-AUCopt`
+TurnKopt <- TurnbaughAUCFit$Kopt
 # list of 11 Measures, AUCopt = 0.7764883
 
 ###########################################################################
@@ -2069,8 +2298,8 @@ turnbaughBFRRsig <- turnbaughBFMassoc$chisq.strata
 ###########################################################################
 
 TurnbaughZH <- scale(H)
-TurnbaughZLogBF <- scale(log(BFratio))
-TurnbaughObese <- as.character(obese)
+TurnbaughZLogBF <- scale(log(BFratio + 1))
+TurnbaughObese <- as.character(s1.metadata$obese)
 TurnbaughBMICat <- as.character(bmi)
 
 
@@ -2100,6 +2329,11 @@ Turnbaugh <- c(turnbaughBacter$p.value, turnbaughFirm$p.value,
 
 overallPTable <- rbind(overallPTable, Turnbaugh)
 
+OOBAUCAll <- c(OOBAUCAll, 
+               format(round(TurnAUC, 2), nsmall = 2))
+KoptAll <- c(KoptAll, 
+             format(round(TurnKopt, 2), nsmall = 2))
+
 tposH <- c(tposH, TurnLowShannonGroup[2, 2])
 tnegH <- c(tnegH, TurnLowShannonGroup[1, 2])
 cposH <- c(cposH, TurnHighShannonGroup[2, 2])
@@ -2121,11 +2355,22 @@ TurnbaughData$Study <- "Turnbaugh"
 TurnbaughData <- as.data.frame(cbind(TurnbaughData, TurnbaughObese, TurnbaughBMICat))
 colnames(TurnbaughData) <- c("ZH", "ZLogBF", "Study", "Obese", "BMICat")
 
+# Get data for power simulation
+keep <- which(s1.metadata$obese == "Yes")
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(H[keep]), mean(H[keep]), sd(H[keep])), 
+  rnorm(length(H[-keep]), mean(H[-keep]), sd(H[-keep])))$p.value)
+StudyPowerH <- c(StudyPowerH, (sum(PvalSim < 0.05)) / 10)
+PvalSim <- replicate(1000, wilcox.test(
+  rnorm(length(BFratio[keep]), mean(BFratio[keep]), sd(BFratio[keep])), 
+  rnorm(length(BFratio[-keep]), mean(BFratio[-keep]), 
+        sd(BFratio[-keep])))$p.value)
+StudyPowerBF <- c(StudyPowerBF, (sum(PvalSim < 0.05)) / 10)
 
 rm(TurnLowShannonGroup, TurnHighShannonGroup, turnbaughHRR, turnbaughBacter, 
    turnbaughFirm, turnbaughBF, turnbaughH, turnbaughS, turnbaughJ, 
    turnbaughPERM, turnbaughHEpi, TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, 
-   TurnbaughBMICat, turnbaugh2, Turnbaugh)
+   TurnbaughBMICat, turnbaugh2, Turnbaugh, keep, PvalSim)
 
 
 ####################################################################################
@@ -2157,6 +2402,13 @@ BFRatioRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic",
                           "HMP", "Wu", "Turnbaugh")
 write.csv(BFRatioRRTable, "results/tables/denovoBFRatioRRTable.csv")
 
+AUCRFDataTable <- as.data.frame(cbind(OOBAUCAll, KoptAll))
+AUCRFDataTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
+                          "HMP", "Wu", "Turnbaugh")
+write.csv(AUCRFDataTable, "results/tables/denovoAUCRFDataTable.csv")
 
-
+PowerTable <- as.data.frame(cbind(StudyPowerH, StudyPowerBF))
+PowerTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
+                          "HMP", "Wu", "Turnbaugh")
+write.csv(PowerTable, "results/tables/denovoPowerTable.csv")
 
