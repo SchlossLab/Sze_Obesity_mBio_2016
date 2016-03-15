@@ -51,7 +51,7 @@ The following are what is missing: h5py, sortmerna, sumaclust
 	* Done
 	
 * Need to update processing so all 454 done in the exact same way
-	* TwinsUK working though, Need to update Turnbaugh
+	* Need to update Turnbaugh
 	
 * Need to remove MetaHit data and update the respective Figures
 	* Done
@@ -70,6 +70,10 @@ The following are what is missing: h5py, sortmerna, sumaclust
 			* summary(pval) 
 			* sum(pval < .05) (e.g. 979 would mean a power of 97.9%)
 	* Use R package pwr
+	
+	* Currently done but only have power calculation, no sample size values.
+	
+* Probably want to add a seperate R file for the analysis of specific common OTUs
 	
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
