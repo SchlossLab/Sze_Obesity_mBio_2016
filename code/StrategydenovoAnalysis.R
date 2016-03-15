@@ -18,7 +18,6 @@ library(AUCRF)
 demographics <- read.csv("data/process/Baxter/demographics.v2.csv")
 microbiome <- read.csv("data/process/Baxter/data1.subsample.otus.csv")
 phylogenetic.info <- read.csv("data/process/Baxter/data1.summary.taxonomy.csv")
-taxonomy <- read.csv("data/process/Baxter/data1.taxonomy.csv")
 
 # Minor modifications and Rownames adustments of data tables
 rownames(demographics) <- demographics[,1]
@@ -38,7 +37,7 @@ phyla.table <- phyla.table[,-1]
 phyla.table <- as.data.frame(t(phyla.table))
 colnames(phyla.table) <- phyla.names
 rownames(phyla.table) <- rownames(demographics)
-
+rm(phyla, phyla.names, phylogenetic.info)
 
 #Add phyla together that are not very abundant and delete them from the table
 phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Deferribacteres", "Deinococcus-Thermus", "Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "Tenericutes", "Cyanobacteria_Chloroplast", "TM7")], 1, sum)
@@ -48,6 +47,7 @@ phyla.table <- phyla.table[, -c(1, 4:7, 9:11, 13, 15)]
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 phyla.table.rel.abund <- phyla.table.rel.abund[, -8]
+rm(phyla.total, phyla.table)
 
 #Generate Alpha Diversity Measures and alpha diversity table
 H <- diversity(microbiome)
@@ -56,10 +56,6 @@ J <- H/log(S)
 alpha.diversity.shannon <- cbind(H,S,J)
 alpha.test <- as.data.frame(alpha.diversity.shannon)
 
-#Create age quartiles
-
-demographics$age.quartile <- with(demographics, cut(Age, breaks=quantile(Age, probs=seq(0,1, by=0.25)), include.lowest=TRUE))
-
 #Create Obese Yes/No groups
 demographics$obese[demographics$BMI.classification=="Normal" | demographics$BMI.classification=="Overweight"] <- "No"
 demographics$obese[demographics$BMI.classification=="Obese" | demographics$BMI.classification=="Extreme Obesity"] <- "Yes"
@@ -67,11 +63,6 @@ demographics$obese[demographics$BMI.classification=="Obese" | demographics$BMI.c
 #Create Obese.num groups
 demographics$obese.num[demographics$obese=="No"] <- 0
 demographics$obese.num[demographics$obese=="Yes"] <- 1
-obese <- factor(demographics$obese.num)
-
-######################################################################################## 
-########## First Level Analysis & Alpha Diversity with BMI #############
-###########################################################################
 
 #Create a column with obese and extreme obese as single entity
 demographics$BMIclass2[demographics$BMI.classification=="Normal"] <- "Normal"
@@ -79,9 +70,15 @@ demographics$BMIclass2[demographics$BMI.classification=="Overweight"] <- "Overwe
 demographics$BMIclass2[demographics$BMI.classification=="Obese" | demographics$BMI.classification=="Extreme Obesity"] <- "Obese"
 
 
-##Test BMI versus alpha diversity and phyla
-
 bmi <- demographics$BMI
+obese <- factor(demographics$obese.num)
+
+######################################################################################## 
+########## First Level Analysis & Alpha Diversity with BMI #############
+###########################################################################
+
+
+##Test BMI versus alpha diversity and phyla
 
 baxterH <- wilcox.test(H ~ obese) #P-value=0.065
 baxterS <- wilcox.test(S ~ obese) #P-value=0.03923
@@ -284,6 +281,7 @@ edit.metadata <- edit.metadata[, -1]
 #Create a metadata file in the order of the microbiome data
 order1 <- rownames(his.microb.edit)
 edit.metadata2 <- edit.metadata[order1, ]
+rm (sample.match, edit.metadata)
 
 #Get alpha diversity of the samples
 H <- diversity(his.microb.edit)
@@ -304,6 +302,8 @@ phyla.good <- phylogenetic.info[keep, ]
 phyla.names <- as.character(phyla.good[,2])
 phyla.table <- his.microb.edit
 colnames(phyla.table) <- phyla.names
+rm(phylogenetic.info, phyla.names, phyla.good)
+
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
@@ -319,6 +319,7 @@ phyla.table <- phyla.table[, -c(3:4, 6:7, 9:10)]
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(phyla.total, phyla.table)
 
 #Create BMI groups
 edit.metadata2$BMI.class[edit.metadata2$BMI<=24] <- "Normal"
@@ -544,6 +545,7 @@ S <- specnumber(microbiome)
 J <- H/log(S)
 alpha.diversity <- as.data.frame(cbind(H, S, J))
 alpha.test <- alpha.diversity
+rm(alpha.diversity)
 
 #Get phyla information
 #Edited out non phyla information first with sed in linux
@@ -557,6 +559,8 @@ phyla.good <- phylogenetic.info[keep, ]
 phyla.names <- as.character(phyla.good[,2])
 phyla.table <- microbiome
 colnames(phyla.table) <- phyla.names
+rm(phyla.good, phyla.names, phylogenetic.info)
+
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
@@ -568,6 +572,7 @@ phyla.table <- phyla.table[, -c(1, 4:6, 8:12, 14:17)]
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(phyla.total, phyla.table)
 
 #Create BMI groups
 metadata$BMI.class[as.numeric(as.character(metadata$body_mass_index_s))<=24] <- "Normal"
@@ -807,6 +812,7 @@ edit.metadata2$sex[edit.metadata2$description_s == "Adequate weight female stool
                      edit.metadata2$description_s == "Obese female stool sample" | 
                      edit.metadata2$description_s == "Overweight female stool sample"] <- "F"
 
+rm(edit.metadata)
 
 #Get alpha diversity of the samples
 H <- diversity(columbian.microb)
@@ -814,6 +820,7 @@ S <- specnumber(columbian.microb)
 J <- H/log(S)
 alpha.diversity.shannon <- cbind(H,S,J)
 alpha.test <- as.data.frame(alpha.diversity.shannon)
+rm(alpha.diversity.shannon)
 
 #Get phyla information
 #Edited out non phyla information first with sed in linux
@@ -827,6 +834,8 @@ phyla.good <- phylogenetic.info[keep, ]
 phyla.names <- as.character(phyla.good[,2])
 phyla.table <- columbian.microb
 colnames(phyla.table) <- phyla.names
+rm(phylogenetic.info, phyla.good, phyla.names)
+
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
@@ -842,7 +851,7 @@ phyla.table <- phyla.table[, -c(1, 4, 6:7, 9:11)]
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
-
+rm(phyla.table, phyla.total)
 
 #Create Obese Yes/No groups
 edit.metadata2$obese[edit.metadata2$description_s=="Adequate weight male stool sample" | edit.metadata2$description_s=="Overweight male stool sample" | edit.metadata2$description_s=="Adequate weight female stool sample" | edit.metadata2$description_s=="Overweight female stool sample"] <- "No"
@@ -1062,7 +1071,7 @@ test <- metadata[!duplicated(metadata$submitted_sample_id_s), ]
 rownames(test) <- test[, 4]
 test2 <- metadata2[!duplicated(metadata2$SUBJID), ]
 rownames(test2) <- test2[, 1]
-shared.data <- read.table("data/process/Zupancic/combined.0.03.subsample.shared", header=T)
+shared.data <- read.table("data/process/Zupancic/ZupancicGoodSub.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 shared.data <- shared.data[, -c(1:3)]
 keep  <- rownames(shared.data)
@@ -1091,18 +1100,18 @@ microbiome <- microbiome[keep, ]
 rm(keep)
 
 #generate alpha diversity measures with vegan
-library(vegan)
 H <- diversity(microbiome)
 S <- specnumber(microbiome)
 J <- H/log(S)
 select.alpha.diversity <- as.data.frame(cbind(H, S, J))
 s1.alpha.diversity <- as.data.frame(select.alpha.diversity)
 alpha.test <- s1.alpha.diversity
+rm(s1.alpha.diversity, select.alpha.diversity)
 
 #Get phyla information
 #Edited out non phyla information first with sed in linux
 #combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("data/process/Zupancic/phyla.data.csv")
+phylogenetic.info <- read.table("data/process/Zupancic/taxonomyKey.txt", header = T)
 rownames(phylogenetic.info) <- phylogenetic.info[,1]
 phylogenetic.info <- phylogenetic.info[,-c(1)]
 phyla.names <- as.character(phylogenetic.info$Taxonomy)
@@ -1114,14 +1123,19 @@ colnames(phyla.table) <- phyla.names
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
-rm(testing)
+rm(testing, keep, phylogenetic.info, phyla.good, phyla.names)
 #combine phyla that are not that abundant
-phyla.table$other <- apply(phyla.table[, c("Fusobacteria", "Spirochaetes")], 1, sum)
-phyla.table <- phyla.table[, -c(4, 6)]
+phyla.table$other <- apply(phyla.table[, c("Fusobacteria", 
+                                           "Spirochaetes", 
+                                           "Elusimicrobia", 
+                                           "Lentisphaerae", 
+                                           "Synergistetes")], 1, sum)
+phyla.table <- phyla.table[, -c(3, 5:6, 8:9)]
 
 #Create a relative abundance table for phyla
-phyla.total <- apply(phyla.table[, c(1:6)], 1, sum)
+phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
+rm(phyla.table, phyla.total)
 
 #Create BMI groups
 metadata$BMI.class[metadata$BMI<=24] <- "Normal"
@@ -1150,18 +1164,18 @@ obese <- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-zupancicH <- wilcox.test(H ~ obese) #P-value=0.176
-zupancicS <- wilcox.test(S ~ obese) #P-value=0.0774
-zupancicJ <- wilcox.test(J ~ obese) #P-value=0.2701
+zupancicH <- wilcox.test(H ~ obese) #P-value=0.3108
+zupancicS <- wilcox.test(S ~ obese) #P-value=0.161
+zupancicJ <- wilcox.test(J ~ obese) #P-value=0.4407
 
 #B and F tests against obesity
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-zupancicBacter <- wilcox.test(bacter ~ obese) #P-value=0.7867
-zupancicFirm <- wilcox.test(firm ~ obese) #P-value=0.3952
-zupancicBF <- wilcox.test(BFratio ~ obese) #P-value=0.6569
+zupancicBacter <- wilcox.test(bacter ~ obese) #P-value=0.5674
+zupancicFirm <- wilcox.test(firm ~ obese) #P-value=0.6016
+zupancicBF <- wilcox.test(BFratio ~ obese) #P-value=0.5919
 
 ####################################################################################### NMDS and PERMANOVA Analysis###################################
 ###########################################################################
@@ -1169,7 +1183,7 @@ zupancicBF <- wilcox.test(BFratio ~ obese) #P-value=0.6569
 set.seed(3)
 zupancic2 <- adonis(microbiome ~ obese, permutations=1000)
 zupancicPERM <- zupancic2$aov.tab
-#PERMANOVA=0.5724, pseudo-F=0.9597
+#PERMANOVA=0.1788, pseudo-F=1.1332
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -1204,9 +1218,9 @@ zupancicHEpi <- epi.2by2(r.test, method="cohort.count")
 zupancicHMassoc <- zupancicHEpi$massoc
 zupancicHRR <- zupancicHMassoc$RR.strata.score
 zupancicHRRsig <- zupancicHMassoc$chisq.strata
-## Risk Ratio = 1.45
-## CI = 0.99, 2.13
-## p-value = 0.055
+## Risk Ratio = 1.37
+## CI = 0.93, 2.00
+## p-value = 0.104
 
 
 ##Run the RR for B/F ratio
@@ -1261,7 +1275,7 @@ testset <- cbind(testset, H, S, J, phyla.table.rel.abund)
 set.seed(3)
 zupancicAUCFit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 #zupAUC <- fit$`OOB-AUCopt`
-# list of 3 Measures, AUCopt = 0.5746806
+# list of 42 Measures, AUCopt = 0.7310296
 
 
 ###########################################################################
@@ -1364,6 +1378,7 @@ S <- specnumber(test)
 J <- H/log(S)
 select.alpha.diversity <- as.data.frame(cbind(H, S, J))
 alpha.test <- select.alpha.diversity
+rm(select.alpha.diversity)
 
 #Get phyla information
 #Edited out non phyla information first with sed in linux
@@ -1377,6 +1392,8 @@ phyla.good <- phylogenetic.info[keep, ]
 phyla.names <- as.character(phyla.good[,2])
 phyla.table <- test
 colnames(phyla.table) <- phyla.names
+rm(phylogenetic.info, phyla.names, phyla.good)
+
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
@@ -1390,7 +1407,7 @@ phyla.table <- phyla.table[, -c(1, 4, 6, 7, 9, 10:12)]
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
 phyla.table.rel.abund <- phyla.table.rel.abund[, -8]
-
+rm(phyla.total, phyla.table)
 
 #Create Obese Yes/No groups
 select.meta.cat$obese[select.meta.cat$BMI_C=="normal" | select.meta.cat$BMI_C=="overweight"] <- "No"
@@ -1608,7 +1625,7 @@ namesToKeep <- rownames(microbiome)
 test <- metadata[namesToKeep, ]
 metadata <- test
 rm(test)
-rm(seqData, namesToKeep)
+rm(namesToKeep)
 
 #Get alpha diversity of the samples
 H <- diversity(microbiome)
@@ -1616,6 +1633,7 @@ S <- specnumber(microbiome)
 J <- H/log(S)
 alpha.diversity.shannon <- cbind(H,S,J)
 alpha.test <- as.data.frame(alpha.diversity.shannon)
+rm(alpha.diversity.shannon)
 
 #Get phyla information
 #Edited out non phyla information first with sed in linux
@@ -1629,6 +1647,8 @@ phyla.good <- phylogenetic.info[keep, ]
 phyla.names <- as.character(phyla.good[,2])
 phyla.table <- microbiome
 colnames(phyla.table) <- phyla.names
+rm(phylogenetic.info, phyla.names, phyla.good)
+
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
@@ -1641,7 +1661,7 @@ phyla.table <- phyla.table[, -c(4, 6:7)]
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:6)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
-rm(keep, phyla.names, phyla.total, phylogenetic.info, phyla.table, phyla.good)
+rm(keep, phyla.table, phyla.total)
 
 #Create BMI groups
 metadata$BMI.class[metadata$bmi<=24] <- "Normal"
@@ -1873,7 +1893,7 @@ phyla.table <- as.data.frame(t(phyla.table))
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:10)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
-rm(phyla.table, phyla.info)
+rm(phyla.table, phyla.total, overall)
 
 #Get alpha diversity of the samples
 H <- diversity(microb.norm)
@@ -1881,6 +1901,8 @@ S <- specnumber(microb.norm)
 J <- H/log(S)
 alpha.diversity.shannon <- cbind(H,S,J)
 alpha.test <- as.data.frame(alpha.diversity.shannon)
+rm(alpha.diversity.shannon)
+
 # Seems to look okay....
 
 #Create BMI groups
@@ -2115,11 +2137,7 @@ rm(AruLowShannonGroup, AruHighShannonGroup, ArumugamHRR, ArumugamBacter,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-shared.data <- read.table("data/process/Turnbaugh/test.unique.good.filter.unique.precluster.pick.pick.an.shared", header=T)
-rownames(shared.data) <- shared.data[, 2]
-shared.data <- shared.data[, -c(1:3)]
-
-subsample.data <- read.table("data/process/Turnbaugh/test.unique.good.filter.unique.precluster.pick.pick.an.0.03.subsample.shared", header=T)
+subsample.data <- read.table("data/process/Turnbaugh/TurnbaughSub.shared", header=T)
 rownames(subsample.data) <- subsample.data[, 2]
 subsample.data <- subsample.data[, -c(1:3)]
 
@@ -2143,28 +2161,36 @@ J <- H/log(S)
 select.alpha.diversity <- as.data.frame(cbind(H, S, J))
 s1.alpha.diversity <- as.data.frame(select.alpha.diversity)
 alpha.test <- s1.alpha.diversity
+rm(s1.alpha.diversity, select.alpha.diversity)
 
-#Generate phyla table data
-
-phyla.info <- read.csv("data/process/Turnbaugh/phyla.csv")
-phyla.table <- shared.data
-colnames(phyla.table) <- phyla.info[, 2]
-
+#Get phyla information
+#Edited out non phyla information first with sed in linux
+#combined new labels with previous taxonomy file with excel
+phylogenetic.info <- read.csv("data/process/Turnbaugh/phyla.csv")
+rownames(phylogenetic.info) <- phylogenetic.info[,1]
+phyla.names <- as.character(phylogenetic.info$Taxonomy)
+keep <- colnames(s1.subsample.data)
+phyla.good <- phylogenetic.info[keep, ]
+phyla.names <- as.character(phyla.good[,2])
+phyla.table <- s1.subsample.data
+colnames(phyla.table) <- phyla.names
+rm(phylogenetic.info, phyla.names, phyla.good)
 
 #add all the same columns up and then return the sum
 testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
 phyla.table <- as.data.frame(testing)
 rm(testing)
-
 #combine phyla that are not that abundant
-phyla.table$other <- apply(phyla.table[, c("Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "TM7")], 1, sum)
+phyla.table$other <- apply(phyla.table[, c("Fusobacteria", 
+                                           "Synergistetes", "TM7", 
+                                           "Lentisphaerae", 
+                                           "Spirochaetes")], 1, sum)
 phyla.table <- phyla.table[, -c(4:5, 7:9)]
 
 #Create a relative abundance table for phyla
 phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
 phyla.table.rel.abund <- (phyla.table/phyla.total)*100
-s1.phyla.rel.abund <- phyla.table.rel.abund[rownames(shared.data), ]
-s1.phyla.rel.abund <- s1.phyla.rel.abund[keep1, ]
+rm(keep, phyla.table, phyla.total, metadata, subsample.data)
 
 #Create Obese Yes/No groups
 s1.metadata$obese[s1.metadata$BMI.category=="Lean" | s1.metadata$BMI.category=="Overweight"] <- "No"
@@ -2189,13 +2215,13 @@ turnbaughS <- wilcox.test(S ~ obese) #P-value=0.05479
 turnbaughJ <- wilcox.test(J ~ obese) #P-value=0.1748
 
 #B and F tests against obesity
-bacter <- s1.phyla.rel.abund$Bacteroidetes
-firm <- s1.phyla.rel.abund$Firmicutes
+bacter <- phyla.table.rel.abund$Bacteroidetes
+firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 
-turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.3998
-turnbaughFirm <- wilcox.test(firm ~ obese) #P-value=0.2245
-turnbaughBF <- wilcox.test(BFratio ~ obese) #P-value=0.3354
+turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.8048
+turnbaughFirm <- wilcox.test(firm ~ obese) #P-value=0.8587
+turnbaughBF <- wilcox.test(BFratio ~ obese) #P-value=0.7886
 
 ####################################################################################### NMDS and PERMANOVA Analysis###################################
 ###########################################################################
@@ -2243,8 +2269,8 @@ turnbaughHRRsig <- turnbaughHMassoc$chisq.strata
 
 
 ##Run the RR for B/F ratio
-Bacter = s1.phyla.rel.abund$Bacteroidetes
-Firm = s1.phyla.rel.abund$Firmicutes
+Bacter = phyla.table.rel.abund$Bacteroidetes
+Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
 
@@ -2367,7 +2393,7 @@ demographicsTable <- as.data.frame(cbind(totalN, meanAge, SDAge, males, females,
                                          ancestry, meanBMI, SDBMI, minBMI, maxBMI))
 demographicsTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Arumugam", "Turnbaugh")
-write.csv(demographicsTable, "denovodemographicsTable.csv")
+write.csv(demographicsTable, "results/tables/denovodemographicsTable.csv")
 
 
 write.csv(combinedData, "results/tables/denovoCombinedData.csv")
