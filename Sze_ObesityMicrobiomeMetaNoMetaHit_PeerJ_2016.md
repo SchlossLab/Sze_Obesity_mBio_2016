@@ -36,7 +36,7 @@ Phone: 734-936-2951
 
 **Methods:** To identify datasets that we included in the meta analysis we followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines we winnowed an initial set of 196 studies that tested the microbiome-obesity association hypothesis down to 8 studies that fit our criteria. We applied three analysis pipelines to the data from each study. First, we tested the association between community structure and diversity and the Bacteroides to Firmicutes ratio (B/F) with the subjects' body mass index (BMI) treated as a continuous or categorical value. We also used the random forest machine learning algorithm to identify community features that would allow us to to predict whether a person was obese. Second, we pooled the relative risk (RR) ratio of being obese based on characteristics of the microbiome for each study and tested for an association between RR and community diversity and B/F. Finally, we normalized the community diversity and B/F values within each dataset and pooled the data to test for an association with obesity.
 
-**Results:** When we considered each dataset in isolation, there were no significant differences (P > 0.05) in B/F between non-obese and obese individuals. Only one diversity measure (OTU richness (N=1)) was significantly different between non-obese and obese individuals (P<0.05). With individual studies, random forest was effective at identifying features within the datasets for differentiating between non-obese and obese individuals (mean AUC: 0.77; s.d.=0.10). In seven of the studies an OTU related to the Ruminococcaceae family was important in classification; however, the direction of the association varied between studies. When we pooled the results across studies, there was a significant difference in RR of obesity based on Shannon diversity (RR = 1.16, CI = 1.01-1.34, P-value = 0.04) but not B/F ratio (RR = 0.98, CI = 0.85-1.13, P-value = 0.81). Finally, when we normalized the Shannon diversity data and pooled studies there was a significant difference between non-obese and obese individuals (difference in mean z-score = 0.14; P = 0.02). Similar to RR there was no significant difference in the normalized B/F ratio between non-obese and obese individuals (difference in mean z-score = 0.01; P = 0.82).
+**Results:** When we considered each dataset in isolation, there were no significant differences (P > 0.05) in B/F between non-obese and obese individuals. Only one diversity measure (OTU richness (N=1)) was significantly different between non-obese and obese individuals (P<0.05). With individual studies, random forest was effective at identifying features within the datasets for differentiating between non-obese and obese individuals (mean AUC: 0.79; s.d.=0.08). In 7/8 of the studies an OTU related to the Ruminococcaceae family was important in classification; however, the direction of the association varied between studies. When we pooled the results across studies, there was a significant difference in RR of obesity based on Shannon diversity (RR = 1.16, CI = 1.01-1.34, P-value = 0.04) but not B/F ratio (RR = 0.98, CI = 0.85-1.13, P-value = 0.81). Finally, when we normalized the Shannon diversity data and pooled studies there was a significant difference between non-obese and obese individuals (difference in mean z-score = 0.10; P = 0.10). Similar to RR there was no significant difference in the normalized B/F ratio between non-obese and obese individuals (difference in mean z-score = 0.03; P = 0.63).
 
 **Conclusion:** We show that by pooling the results of many individual studies we can test the generalizability of the microbiome. Our meta-analysis supports the  hypothesis that there is a difference between non-obese and obese individuals in Shannon diversity and B/F ratio, but that the effect sizes are small.
 
@@ -170,13 +170,27 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 |:-----------:|:---------------:|:------------:|:-----------:|:-------------------:|:--------------:|:----------:|:-------------:|
 |   Baxter    |      0.207      |    0.590     |    0.190    |        0.065        |     0.039      |   0.125    |     0.064     |
 |    Ross     |      0.204      |    0.380     |    0.221    |        0.285        |     0.249      |   0.383    |     0.823     |
-|  Goodrich   |      0.681      |    0.508     |    0.464    |        0.789        |     0.303      |   0.993    |     0.430     |
+|  Goodrich   |      0.435      |    0.290     |    0.270    |        0.614        |     0.324      |   0.836    |     0.326     |
 |   Escobar   |      0.056      |    0.131     |    0.082    |        0.948        |     0.231      |   0.619    |     0.074     |
 |  Zupancic   |      0.567      |    0.602     |    0.592    |        0.311        |     0.161      |   0.441    |     0.179     |
 |     HMP     |      0.459      |    0.786     |    0.586    |        0.577        |     0.965      |   0.467    |     0.811     |
 |     Wu      |      0.712      |    0.751     |    0.990    |        0.909        |     0.280      |   0.380    |     0.533     |
 |  Turnbaugh  |      0.805      |    0.859     |    0.789    |        0.116        |     0.055      |   0.175    |     0.095     |
 
+
+**Table 4. Summary of Power Calculations for each Individual for Shannon Diversity and B/F ratio for Non-obese versus Obese**
+
+
+|    Study    |  Shannon Diversity Power (%)  |  B/F Ratio Power (%)  |
+|:-----------:|:-----------------------------:|:---------------------:|
+|   Baxter    |             62.1              |          9.2          |
+|    Ross     |             23.2              |         13.3          |
+|  Goodrich   |             12.7              |         19.6          |
+|   Escobar   |              4.9              |          9.6          |
+|  Zupancic   |              6.7              |          5.1          |
+|     HMP     |             10.2              |          2.5          |
+|     Wu      |              0.7              |          0.6          |
+|  Turnbaugh  |             40.7              |          7.6          |
 
 
 
@@ -192,12 +206,12 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 ![](results/figures/Figure_2-1.png)\
 
-**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.16 for the low diversity group (P-value = 0.0412).
+**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.16 for the low diversity group (P-value = 0.161).
 
 
 ![](results/figures/Figure_3-1.png)\
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.811).
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.882).
 
 
 ![](results/figures/Figure_4-1.png)\
@@ -212,7 +226,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 ![](results/figures/Figure_5-1.png)\
 
 
-**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n=1081) and obese groups (n=435) (P-value = 0.0222). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.0295) but no difference between lean and obese group (P-value = 0.266). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n=1081) and obese (n=435) group based on B/F ratio (P-value = 0.821). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 563, 435, 518 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.548).
+**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.0972). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.16) but no difference between lean and obese group (P-value = 0.512). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.627). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.564).
 
 
 
