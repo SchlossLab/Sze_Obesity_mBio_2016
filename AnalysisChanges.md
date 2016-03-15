@@ -69,8 +69,8 @@ The following are what is missing: h5py, sortmerna, sumaclust
 			* pval <- replicate(1000, wilcox.test(rnorm(366,.0032,.012), rnorm(366,.00042,.0016))$p.value)
 			* summary(pval) 
 			* sum(pval < .05) (e.g. 979 would mean a power of 97.9%)
-
-
+	* Use R package pwr
+	
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
 
