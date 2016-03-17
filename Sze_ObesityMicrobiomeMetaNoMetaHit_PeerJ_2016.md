@@ -53,11 +53,13 @@ One critique of these re-analysis studies is that they did not aggregate the res
 
 ## Methods
 ***Literature Review and Study Inclusion***
-We followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines to identify studies to include in our meta-analysis [@moher_preferred_2010]. A detailed description of our selection process and the exact search terms are provided in the Supplement [Figure 1]. Briefly, we searched PubMed for original research studies that involved studying obesity and the human microbiome. The initial search yielded 187 studies. We identified nine additional studies that were not designed to explicitly test for an association between the microbiome and obesity. We then manually curated the 196 studies to select those studies that included BMI and sequence data. This yielded 10 eligible studies. An additional study was removed from our analysis because no individuals in the study had a BMI over 30. Among the final 9 studies, 3 were from identified from our PubMed search [@turnbaugh_core_2009; @zupancic_analysis_2012; @escobar_gut_2014], 5 were originally identified from the 9 studies that did not explicitly investigate obesity but included BMI data [@ross_16s_2015; @arumugam_enterotypes_2011; @goodrich_human_2014; @wu_linking_2011; @Huttenhower2012], and one dataset was used (Baxter) because at the time of our analysis it was unpublished and enabled us to mitigate against publication biases associated with the bacterial microbiome and obesity. The nine studies are summarized in Tables 1 and 2.
+We followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines to identify studies to include in our meta-analysis [@moher_preferred_2010]. A detailed description of our selection process and the exact search terms are provided in the Supplement [Figure 1]. Briefly, we searched PubMed for original research studies that involved studying obesity and the human microbiome. The initial search yielded 187 studies. We identified nine additional studies that were not designed to explicitly test for an association between the microbiome and obesity. We then manually curated the 196 studies to select those studies that included BMI and sequence data. This yielded 10 eligible studies. An additional study was removed from our analysis because no individuals in the study had a BMI over 30. Among the final 9 studies, 3 were from identified from our PubMed search [@turnbaugh_core_2009; @zupancic_analysis_2012; @escobar_gut_2014], 5 were originally identified from the 9 studies that did not explicitly investigate obesity but included BMI data [@ross_16s_2015; @goodrich_human_2014; @wu_linking_2011; @human_microbiome_project_consortium_structure_2012], and one dataset was used (Baxter) because at the time of our analysis it was unpublished and enabled us to mitigate against publication biases associated with the bacterial microbiome and obesity. The nine studies are summarized in Tables 1 and 2.
 
 
 ***Sequence Analysis Pipeline***
-All sequence data were publicly available and were downloaded from the NCBI Sequence Read Archive, the European Nucleotide Archive, or the investigators' personal website (https://gordonlab.wustl.edu/TurnbaughSE\_10\_09/STM\_2009.html). The nine studies used 454 [@turnbaugh_core_2009; @zupancic_analysis_2012; @ross_16s_2015; @escobar_gut_2014; @wu_linking_2011; @Huttenhower2012] or Illumina sequencing [@goodrich_human_2014; @arumugam_enterotypes_2011; Baxter]. All of these studies used amplification-based 16S rRNA gene sequencing except for one, which used metagenomic shotgun sequencing [@arumugam_enterotypes_2011]. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@Huttenhower2012], and V4 [@goodrich_human_2014] regions. For those studies where multiple regions were sequenced,  we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009; @Huttenhower2012]. We processed the 16S rRNA gene sequence data as described in the original studies. The taxonomic data from the metagenomic shotgun sequence data were obtained using Metaphlan2 [@truong_metaphlan2_2015]. A detailed and reproducible description of how the data were processed can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/.
+All sequence data were publicly available and were downloaded from the NCBI Sequence Read Archive, the European Nucleotide Archive, or the investigators' personal website (https://gordonlab.wustl.edu/TurnbaughSE\_10\_09/STM\_2009.html). The nine studies used 454 [@turnbaugh_core_2009; @zupancic_analysis_2012; @ross_16s_2015; @escobar_gut_2014; @wu_linking_2011;   
+@human_microbiome_project_consortium_structure_2012] or Illumina sequencing [@goodrich_human_2014; Baxter]. All of these studies used amplification-based 16S rRNA gene sequencing. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@human_microbiome_project_consortium_structure_2012], and V4 [@goodrich_human_2014] regions. For those studies where multiple regions were sequenced,  we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009; 
+@human_microbiome_project_consortium_structure_2012]. We processed the 16S rRNA gene sequence data as described in the original studies. The taxonomic data from the metagenomic shotgun sequence data were obtained using Metaphlan2 [@truong_metaphlan2_2015]. A detailed and reproducible description of how the data were processed can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/.
 
 
 ***Data Analysis***
@@ -73,7 +75,7 @@ In the third strategy, we normalized the diversity and B/F data within each stud
 ***Separate Analysis***
 We used the categorical variable of obese or non-obese to analyze each data set separately for significant correlations to Bacteroidetes, Firmicutes, Bacteroidetes/Firmicute (B/F) ratio, Shannon diversity, OTU richness, evenness, and the Bray-Curtis distance matrix which was a similar approach taken by two previous reviews [@walters_meta-analyses_2014; @finucane_taxonomic_2014]. Using a P-value cutoff for significance as less than 0.05 we found a total of 1 significant result for Shannon diversity, 2 significant results for OTU richness, and 1 signficant result for the Bray-Curtis distance matrix. There were no significant results for Bacteroidetes, Firmicutes, or the B/F ratio. The full summary of the exact P-values for each respective study and variable tested can be found in table 3.
 
-Next we investigated how well the OTUs in each study were able to classify obese and non-obese individuals using the random forest algorithm. We found that the average Out Of Bag (OOB) Area Under the Curve (AUC) was 0.7553 +/- 0.0855. We found that the total range for the total number of variables used for the classification ranged from 3 (Ross and Escobar) to 40 (Zupancic). The total number of trees and node size was standardized to 1000 and 20 respectively for each data set. One aspect we found surprising was that there was very little overlap in the variables used by the random forest algorithm for the classification of obese and non-obese individuals by study. The three most common variables was for an OTU that could be classified to the family Ruminococcaceae (7/9 studies), an OTU that could be classified to the family Lachnospiraceae (5/9 studies), and the Shannon diversity metric (4/9 studies).
+Next we investigated how well the OTUs in each study were able to classify obese and non-obese individuals using the random forest algorithm. We found that the average Out Of Bag (OOB) Area Under the Curve (AUC) was 0.79 +/- 0.08. We found that the total range for the total number of variables used for the classification ranged from 3 (Ross and Escobar) to 40 (Zupancic). The total number of trees and node size was standardized to 1000 and 20 respectively for each data set. One aspect we found surprising was that there was very little overlap in the variables used by the random forest algorithm for the classification of obese and non-obese individuals by study. The three most common variables was for an OTU that could be classified to the family Ruminococcaceae (7/8 studies), an OTU that could be classified to the family Lachnospiraceae (6/8 studies), Clostridiales (6/8) and Shannon diversity metric (5/8 studies).
 
 
 ***Classical Pooled Meta-analysis***
@@ -183,14 +185,14 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 |    Study    |  Shannon Diversity Power (%)  |  B/F Ratio Power (%)  |
 |:-----------:|:-----------------------------:|:---------------------:|
-|   Baxter    |             62.1              |          9.2          |
-|    Ross     |             23.2              |         13.3          |
-|  Goodrich   |             12.7              |         19.6          |
-|   Escobar   |              4.9              |          9.6          |
-|  Zupancic   |              6.7              |          5.1          |
-|     HMP     |             10.2              |          2.5          |
-|     Wu      |              0.7              |          0.6          |
-|  Turnbaugh  |             40.7              |          7.6          |
+|   Baxter    |              59               |          9.6          |
+|    Ross     |             21.9              |         12.5          |
+|  Goodrich   |             11.8              |         18.3          |
+|   Escobar   |              4.1              |          9.3          |
+|  Zupancic   |              8.7              |          6.5          |
+|     HMP     |              9.4              |          3.1          |
+|     Wu      |               1               |          0.7          |
+|  Turnbaugh  |             42.7              |           8           |
 
 
 
@@ -211,7 +213,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 ![](results/figures/Figure_3-1.png)\
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.882).
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.516).
 
 
 ![](results/figures/Figure_4-1.png)\
