@@ -7,7 +7,7 @@
 library(vegan)
 library(epiR)
 library(AUCRF)
-
+source("code/UsedFunctions.R")
 
 ###########################################################################
 ############ Preparing Data Tables for Analysis ###########################
@@ -122,7 +122,8 @@ GoodrichDemo$BMIclass2[GoodrichDemo$BMI.class=="Normal"] <- "Normal"
 GoodrichDemo$BMIclass2[GoodrichDemo$BMI.class=="Overweight"] <- "Overweight"                     
 GoodrichDemo$BMIclass2[GoodrichDemo$BMI.class=="Obese" | 
                          GoodrichDemo$BMI.class=="Extreme Obesity"] <- "Obese"
-
+colnames(GoodrichDemo)[12] <- "BMI"
+GoodrichDemo$BMI <- as.numeric(as.character(GoodrichDemo$BMI))
 rm(keep)
 
 
@@ -315,91 +316,113 @@ rm(keep1)
 
 
 ###########################################################################
-########## Similar Classification OTUs Data Table Prep ####################
+########## Visualizing How the Different OTUs look ########################
+################### Clostridiales OTUs ####################################
 ###########################################################################
 
-Clostridiales <- microbiome$Otu00479
-Lachnospiraceae <- microbiome$Otu00036
-Ruminococcaceae <- microbiome$Otu00320
+library(gridExtra)
 
-##Run the RR for Clostridiales
-test <- as.data.frame(Clostridiales)
-test <- within(test, {Clostridiales.cat = ifelse(Clostridiales <= median(Clostridiales), "less", "higher")})
+a1 <- ggBaseBox(BaxterMicrobiome, BaxterDemo, "Otu00479", "Baxter", log=TRUE)
+b1 <- ggBaseBox(RossMicrobiome, RossDemo, "Otu00102", "Ross", log=TRUE)
+c1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000287", "Goodrich", log=TRUE)
+d1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000662", "Goodrich", log=TRUE)
+e1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000145", "Goodrich", log=TRUE)
+f1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000244", "Goodrich", log=TRUE)
+g1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000442", "Goodrich", log=TRUE)
+h1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000322", "Zupancic", log=TRUE)
+i1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000062", "Zupancic", log=TRUE)
+h1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000322", "Zupancic", log=TRUE)
+j1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000256", "Zupancic", log=TRUE)
+k1 <- ggBaseBox(HMPmicrobiome, HMPDemo, "Otu000293", "HMP", log=TRUE)
+l1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00191", "Wu", log=TRUE)
 
-test4 <- cbind(test, obese)
-test4 <- test4[order(Clostridiales.cat), ]
-orderedtestCat <- test4[, 2]
-BaxtestHighTotal <- length(orderedtestCat[
-  orderedClostridialesCat=="higher"])
-BaxHightestGroup <- as.data.frame(
-  table(test4[c(1:BaxtestHighTotal), 3]))
-BaxLowtestGroup <- as.data.frame(
-  table(test4[c((BaxtestHighTotal + 1):BaxtotalN), 3]))
-
-group1 <- c(BaxHightestGroup[2, 2], BaxHightestGroup[1, 2])
-group2 <- c(BaxLowtestGroup[2, 2], BaxLowtestGroup[1, 2])
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-baxterClostEpi <- epi.2by2(r.test, method="cohort.count")
-baxterClostMassoc <- baxterBFEpi$massoc
-baxterClostsRR <- baxterBFMassoc$RR.strata.score
-baxterClostRRsig <- baxterBFMassoc$chisq.strata
-
-
-##Run the RR for Lachnospiraceae
-test <- as.data.frame(Lachnospiraceae)
-test <- within(test, {Lachnospiraceae.cat = ifelse(Lachnospiraceae <= median(Lachnospiraceae), "less", "higher")})
-
-test4 <- cbind(test, obese)
-test4 <- test4[order(test[, 2]), ]
-orderedtestCat <- test4[, 2]
-BaxtestHighTotal <- length(orderedtestCat[
-  orderedClostridialesCat=="higher"])
-BaxHightestGroup <- as.data.frame(
-  table(test4[c(1:BaxtestHighTotal), 3]))
-BaxLowtestGroup <- as.data.frame(
-  table(test4[c((BaxtestHighTotal + 1):BaxtotalN), 3]))
-
-group1 <- c(BaxHightestGroup[2, 2], BaxHightestGroup[1, 2])
-group2 <- c(BaxLowtestGroup[2, 2], BaxLowtestGroup[1, 2])
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-baxterLachnoEpi <- epi.2by2(r.test, method="cohort.count")
-baxterLachnoMassoc <- baxterBFEpi$massoc
-baxterLachnoRR <- baxterBFMassoc$RR.strata.score
-baxterLachnoRRsig <- baxterBFMassoc$chisq.strata
+png("results/figures/suppFigClostridiales.png")
+grid.arrange(a1, b1, c1, d1, e1, f1, g1, h1, i1, h1, j1, k1, l1)
+dev.off()
 
 
-##Run the RR for Lachnospiraceae
-test <- as.data.frame(Ruminococcaceae)
-test <- within(test, {Ruminococcaceae.cat = ifelse(Ruminococcaceae <= median(Ruminococcaceae), "less", "higher")})
+###########################################################################
+########## Visualizing How the Different OTUs look ########################
+################### Lachnospiraceae OTUs ##################################
+###########################################################################
 
-test4 <- cbind(test, obese)
-test4 <- test4[order(test[, 2]), ]
-orderedtestCat <- test4[, 2]
-BaxtestHighTotal <- length(orderedtestCat[
-  orderedClostridialesCat=="higher"])
-BaxHightestGroup <- as.data.frame(
-  table(test4[c(1:BaxtestHighTotal), 3]))
-BaxLowtestGroup <- as.data.frame(
-  table(test4[c((BaxtestHighTotal + 1):BaxtotalN), 3]))
+library(gridExtra)
 
-group1 <- c(BaxHightestGroup[2, 2], BaxHightestGroup[1, 2])
-group2 <- c(BaxLowtestGroup[2, 2], BaxLowtestGroup[1, 2])
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
+a1 <- ggBaseBox(BaxterMicrobiome, BaxterDemo, "Otu00036", "Baxter", log=TRUE)
+b1 <- ggBaseBox(RossMicrobiome, RossDemo, "Otu00177", "Ross", log=TRUE)
+c1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000180", "Goodrich", log=TRUE)
+d1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000075", "Goodrich", log=TRUE)
+e1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000122", "Goodrich", log=TRUE)
+f1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000092", "Goodrich", log=TRUE)
+g1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000673", "Goodrich", log=TRUE)
+h1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000523", "Goodrich", log=TRUE)
+i1 <- ggBaseBox(EscobarMicrobiome, EscobarDemo, 
+                "Otu00067", "Escobar", log=TRUE)
+h1 <- ggBaseBox(EscobarMicrobiome, EscobarDemo, 
+                "Otu00074", "Escobar", log=TRUE)
+j1 <- ggBaseBox(EscobarMicrobiome, EscobarDemo, 
+                "Otu00080", "Escobar", log=TRUE)
+k1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00075", "Wu", log=TRUE)
+l1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00229", "Wu", log=TRUE)
+m1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00005", "Wu", log=TRUE)
+n1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00067", "Wu", log=TRUE)
 
-baxterRuminEpi <- epi.2by2(r.test, method="cohort.count")
-baxterRuminMassoc <- baxterBFEpi$massoc
-baxterRuminRR <- baxterBFMassoc$RR.strata.score
-baxterRuminRRsig <- baxterBFMassoc$chisq.strata
+png("results/figures/suppFigLachno.png")
+grid.arrange(a1, b1, c1, d1, e1, f1, g1, h1, i1, h1, j1, k1, l1, m1, n1)
+dev.off()
 
 
+
+###########################################################################
+########## Visualizing How the Different OTUs look ########################
+################### Ruminocoaccaceae OTUs ##################################
+###########################################################################
+
+library(gridExtra)
+
+a1 <- ggBaseBox(BaxterMicrobiome, BaxterDemo, "Otu00320", "Baxter", log=TRUE)
+b1 <- ggBaseBox(RossMicrobiome, RossDemo, "Otu00022", "Ross", log=TRUE)
+c1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000068", "Goodrich", log=TRUE)
+d1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000255", "Goodrich", log=TRUE)
+e1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu001145", "Goodrich", log=TRUE)
+f1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000558", "Goodrich", log=TRUE)
+g1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000297", "Goodrich", log=TRUE)
+h1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000006", "Goodrich", log=TRUE)
+i1 <- ggBaseBox(GoodrichMicrobiome, GoodrichDemo, 
+                "Otu000132", "Goodrich", log=TRUE)
+h1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000398", "Zupancic", log=TRUE)
+j1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000850", "Zupancic", log=TRUE)
+k1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo, 
+                "Otu000817", "Zupancic", log=TRUE)
+l1 <- ggBaseBox(HMPmicrobiome, HMPDemo, "Otu000252", "HMP", log=TRUE)
+m1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00123", "Wu", log=TRUE)
+
+png("results/figures/suppFigRumi.png")
+grid.arrange(a1, b1, c1, d1, e1, f1, g1, h1, i1, h1, j1, k1, l1, m1)
+dev.off()
 
 
 
