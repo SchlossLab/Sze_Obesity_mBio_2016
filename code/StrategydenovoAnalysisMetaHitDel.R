@@ -3,6 +3,7 @@
 ## Marc Sze
 ## March 9, 2016
 
+library(statmod)
 library(vegan)
 library(epiR)
 library(AUCRF)
@@ -164,8 +165,22 @@ combinedData$Study <- "Baxter"
 StudyPowerH <- NonParaPowerSim(
   alpha.test, demographics, "H", "obese", n=1000)
 
+set.seed(3)
+StudyPowerHRR <- power.fisher.test(
+  BaxterHRR$tpos/(BaxterHRR$tpos+BaxterHRR$tneg), 
+  BaxterHRR$cpos/(BaxterHRR$cpos+BaxterHRR$cneg), 
+  BaxterHRR$tpos+BaxterHRR$tneg, BaxterHRR$cpos+BaxterHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100
+
 StudyPowerBF <- NonParaPowerSim(
   BFRatio, demographics, "BFRatio", "obese", n=1000)
+
+set.seed(3)
+StudyPowerBFRR <- power.fisher.test(
+  BaxterBFRR$tpos/(BaxterBFRR$tpos+BaxterBFRR$tneg), 
+  BaxterBFRR$cpos/(BaxterBFRR$cpos+BaxterBFRR$cneg), 
+  BaxterBFRR$tpos+BaxterBFRR$tneg, BaxterBFRR$cpos+BaxterBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100
 
 rm(baxterBacter, baxterFirm, baxterBF, baxterH, baxterS, baxterJ, baxterPERM, 
    BaxterZH, BaxterZLogBF, BaxterBMI, baxter2)
@@ -346,10 +361,23 @@ combinedData <- rbind(combinedData, RossData)
 StudyPowerH <- c(StudyPowerH, 
                  NonParaPowerSim(
                    alpha.test, metadata, "H", "obese", n=1000))
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  RossHRR$tpos/(RossHRR$tpos+RossHRR$tneg), 
+  RossHRR$cpos/(RossHRR$cpos+RossHRR$cneg), 
+  RossHRR$tpos+RossHRR$tneg, RossHRR$cpos+RossHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, metadata, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  RossBFRR$tpos/(RossBFRR$tpos+RossBFRR$tneg), 
+  RossBFRR$cpos/(RossBFRR$cpos+RossBFRR$cneg), 
+  RossBFRR$tpos+RossBFRR$tneg, RossBFRR$cpos+RossBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(rossBacter, rossFirm, rossBF, rossH, rossS, rossJ, rossPERM,RossZH, 
    RossZLogBF, RossBMI, ross2)
@@ -528,9 +556,23 @@ StudyPowerH <- c(StudyPowerH,
                  NonParaPowerSim(
                    alpha.test, metadata, "H", "obese", n=1000))
 
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  GoodrichHRR$tpos/(GoodrichHRR$tpos+GoodrichHRR$tneg), 
+  GoodrichHRR$cpos/(GoodrichHRR$cpos+GoodrichHRR$cneg), 
+  GoodrichHRR$tpos+GoodrichHRR$tneg, GoodrichHRR$cpos+GoodrichHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
+
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, metadata, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  GoodrichBFRR$tpos/(GoodrichBFRR$tpos+GoodrichBFRR$tneg), 
+  GoodrichBFRR$cpos/(GoodrichBFRR$cpos+GoodrichBFRR$cneg), 
+  GoodrichBFRR$tpos+GoodrichBFRR$tneg, GoodrichBFRR$cpos+GoodrichBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(goodrichBacter, goodrichFirm, goodrichBF, goodrichH, goodrichS, goodrichJ, 
    goodrichPERM, GoodrichZH, GoodrichZLogBF, GoodrichBMI, goodrich2, 
@@ -717,9 +759,23 @@ StudyPowerH <- c(StudyPowerH,
                  NonParaPowerSim(
                    alpha.test, metadata, "H", "obese", n=1000))
 
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  EscobarHRR$tpos/(EscobarHRR$tpos+EscobarHRR$tneg), 
+  EscobarHRR$cpos/(EscobarHRR$cpos+EscobarHRR$cneg), 
+  EscobarHRR$tpos+EscobarHRR$tneg, EscobarHRR$cpos+EscobarHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
+
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, metadata, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  EscobarBFRR$tpos/(EscobarBFRR$tpos+EscobarBFRR$tneg), 
+  EscobarBFRR$cpos/(EscobarBFRR$cpos+EscobarBFRR$cneg), 
+  EscobarBFRR$tpos+EscobarBFRR$tneg, EscobarBFRR$cpos+EscobarBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(escobarBacter, escobarFirm, escobarBF, escobarH, escobarS, escobarJ, 
    escobarPERM, EscobarZH, EscobarZLogBF, EscobarBMI, escobar2, Escobar)
@@ -907,9 +963,23 @@ StudyPowerH <- c(StudyPowerH,
                  NonParaPowerSim(
                    alpha.test, metadata, "H", "obese", n=1000))
 
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  ZupancicHRR$tpos/(ZupancicHRR$tpos+ZupancicHRR$tneg), 
+  ZupancicHRR$cpos/(ZupancicHRR$cpos+ZupancicHRR$cneg), 
+  ZupancicHRR$tpos+ZupancicHRR$tneg, ZupancicHRR$cpos+ZupancicHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
+
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, metadata, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  ZupancicBFRR$tpos/(ZupancicBFRR$tpos+ZupancicBFRR$tneg), 
+  ZupancicBFRR$cpos/(ZupancicBFRR$cpos+ZupancicBFRR$cneg), 
+  ZupancicBFRR$tpos+ZupancicBFRR$tneg, ZupancicBFRR$cpos+ZupancicBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(zupancicBacter, zupancicFirm, zupancicBF, zupancicH, zupancicS, zupancicJ, 
    zupancicPERM, ZupancicZH, ZupancicZLogBF, ZupancicBMI, zupancic2, 
@@ -1097,9 +1167,23 @@ StudyPowerH <- c(StudyPowerH,
                  NonParaPowerSim(
                    alpha.test, meta.cont, "H", "obese", n=1000))
 
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  HMPHRR$tpos/(HMPHRR$tpos+HMPHRR$tneg), 
+  HMPHRR$cpos/(HMPHRR$cpos+HMPHRR$cneg), 
+  HMPHRR$tpos+HMPHRR$tneg, HMPHRR$cpos+HMPHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
+
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, meta.cont, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  HMPBFRR$tpos/(HMPBFRR$tpos+HMPBFRR$tneg), 
+  HMPBFRR$cpos/(HMPBFRR$cpos+HMPBFRR$cneg), 
+  HMPBFRR$tpos+HMPBFRR$tneg, HMPBFRR$cpos+HMPBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(HMPBacter, HMPFirm, HMPBF, HMPH, HMPS, HMPJ, HMPPERM, HMPZH, HMPZLogBF, 
    HMPBMI, HMP2, HMP, meta.cat, meta.cont)
@@ -1277,9 +1361,23 @@ StudyPowerH <- c(StudyPowerH,
                  NonParaPowerSim(
                    alpha.test, metadata, "H", "obese", n=1000))
 
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  WuHRR$tpos/(WuHRR$tpos+WuHRR$tneg), 
+  WuHRR$cpos/(WuHRR$cpos+WuHRR$cneg), 
+  WuHRR$tpos+WuHRR$tneg, WuHRR$cpos+WuHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
+
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, metadata, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  WuBFRR$tpos/(WuBFRR$tpos+WuBFRR$tneg), 
+  WuBFRR$cpos/(WuBFRR$cpos+WuBFRR$cneg), 
+  WuBFRR$tpos+WuBFRR$tneg, WuBFRR$cpos+WuBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(WuBacter, WuFirm, WuBF, WuH, WuS, WuJ, WuPERM, WuZH, WuZLogBF, 
    WuBMI, Wu2, Wu)
@@ -1456,9 +1554,24 @@ StudyPowerH <- c(StudyPowerH,
                  NonParaPowerSim(
                    alpha.test, metadata, "H", "obese", n=1000))
 
+set.seed(3)
+StudyPowerHRR <- c(StudyPowerHRR, power.fisher.test(
+  TurnbaughHRR$tpos/(TurnbaughHRR$tpos+TurnbaughHRR$tneg), 
+  TurnbaughHRR$cpos/(TurnbaughHRR$cpos+TurnbaughHRR$cneg), 
+  TurnbaughHRR$tpos+TurnbaughHRR$tneg, TurnbaughHRR$cpos+TurnbaughHRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
+
 StudyPowerBF <- c(StudyPowerBF, 
                   NonParaPowerSim(
                     BFRatio, metadata, "BFRatio", "obese", n=1000))
+
+set.seed(3)
+StudyPowerBFRR <- c(StudyPowerBFRR, power.fisher.test(
+  TurnbaughBFRR$tpos/(TurnbaughBFRR$tpos+TurnbaughBFRR$tneg), 
+  TurnbaughBFRR$cpos/(TurnbaughBFRR$cpos+TurnbaughBFRR$cneg), 
+  TurnbaughBFRR$tpos+TurnbaughBFRR$tneg, 
+  TurnbaughBFRR$cpos+TurnbaughBFRR$cneg, 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100)
 
 rm(turnbaughBacter, turnbaughFirm, turnbaughBF, turnbaughH, turnbaughS, 
    turnbaughJ, turnbaughPERM, TurnbaughZH, TurnbaughZLogBF, TurnbaughObese, 
@@ -1538,7 +1651,8 @@ AUCRFDataTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic",
                           "HMP", "Wu", "Turnbaugh")
 write.csv(AUCRFDataTable, "results/tables/denovoAUCRFDataTable.csv")
 
-PowerTable <- as.data.frame(cbind(StudyPowerH, StudyPowerBF))
+PowerTable <- as.data.frame(cbind(StudyPowerH, StudyPowerHRR, 
+                                  StudyPowerBFRR, StudyPowerBF))
 PowerTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Turnbaugh")
 write.csv(PowerTable, "results/tables/denovoPowerTable.csv")
