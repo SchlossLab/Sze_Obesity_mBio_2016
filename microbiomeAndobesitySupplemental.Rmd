@@ -9,108 +9,6 @@ bibliography: metaAnalysis.obesity.microbiome.bib
 ---
 <br><br>
 
-```{r data_table_loading, include=FALSE}
-setwd("C:/Users/marc/Desktop/obesity2/HMP.analysis")
-
-metaphlanData <- read.table("HMP_metaphlan2_merged_abundance_table.txt", header=T)
-IDconversion <- read.csv("HMP.stool.IDs.csv")
-microbiome <- read.table("Stool.an.0.03.subsample.shared", header=T)
-
-#Only interested in first visit microbiome data
-#need to create microbiome data set for only that
-
-Data16S <- microbiome[grep("\\.01\\.", microbiome$Group), ] #selecting by .01. 
-
-microb.rownames <- gsub("([0-9]+).*", "\\1", Data16S$Group) #extracting only numeric before first "."
-rownames(Data16S) <- microb.rownames
-
-#Get rid of information not used in downstram analysis
-Data16S <- Data16S[, -c(1:3)]
-
-#Get phyla information
-#Edited out non phyla information first with sed in linux
-#combined new labels with previous taxonomy file with excel
-phylogenetic.info <- read.csv("phyla.data.csv")
-rownames(phylogenetic.info) <- phylogenetic.info[,1]
-phylogenetic.info <- phylogenetic.info[,-c(1)]
-phyla.names <- as.character(phylogenetic.info$Taxonomy)
-keep <- colnames(Data16S)
-phyla.good <- phylogenetic.info[keep, ]
-phyla.names <- as.character(phyla.good[,2])
-phyla.table <- Data16S
-colnames(phyla.table) <- phyla.names
-#add all the same columns up and then return the sum
-testing <- t(rowsum(t(phyla.table), group = rownames(t(phyla.table))))
-phyla.table <- as.data.frame(testing)
-rm(testing, keep, microb.rownames, phyla.names)
-
-#combine phyla that are not that abundant
-phyla.table$other <- apply(phyla.table[, c("Acidobacteria", "Deinococcus-Thermus", "Fusobacteria", "Lentisphaerae", "Spirochaetes", "Synergistetes", "Tenericutes", "TM7")], 1, sum)
-phyla.table <- phyla.table[, -c(1, 4, 6, 7, 9, 10:12)]
-
-#Create a relative abundance table for phyla
-phyla.total <- apply(phyla.table[, c(1:7)], 1, sum)
-phyla.table.rel.abund <- (phyla.table/phyla.total)*100
-rm(phyla.total)
-
-# Create comparable data set with 
-metaphlanPhlyaData <- read.csv("HMP.metaphlan.phyla.data.csv", header=T)
-rownames(metaphlanPhlyaData) <- metaphlanPhlyaData$ID
-metaphlanPhlyaData <- metaphlanPhlyaData[,-1]
-metaphlanPhlyaData <- as.data.frame(t(metaphlanPhlyaData))
-
-#combine phyla that are not that abundant
-metaphlanPhlyaData$other <- apply(metaphlanPhlyaData[, c("Acidobacteria", "Candidatus_Saccharibacteria", "Deinococcus_Thermus", "Fusobacteria", "Spirochaetes", "Synergistetes", "Tenericutes")], 1, sum)
-metaphlanPhlyaData <- metaphlanPhlyaData[, -c(1, 4:5, 7, 9:11)]
-
-#Create a relative abundance table for phyla
-metaphlanPhlyaData.total <- apply(metaphlanPhlyaData[, c(1:6)], 1, sum)
-metaphlanPhlyaData.rel.abund <- (metaphlanPhlyaData/metaphlanPhlyaData.total)*100
-
-#Need to get sampleIDs to match 16S data
-metaphlanNames <- rownames(metaphlanPhlyaData)
-rownames(IDconversion) <- IDconversion[,1]
-matchedData <- IDconversion[metaphlanNames, c(1,3)]
-IndIDmatched <- matchedData[,2]
-
-#Need to find and remove duplicated values (No idea which sample goes with which)
-test1 <- as.data.frame(table(matchedData$Individual.ID))
-good <- which(test1$Freq == 1)
-unique <- test1[good, ]
-uniqueNames <- as.character(unique$Var1)
-
-test <- phyla.table.rel.abund[rownames(phyla.table.rel.abund) %in% uniqueNames, ]
-finalUniqueNames <- rownames(test)
-UpdatedMatchedData <- matchedData[matchedData$Individual.ID %in% finalUniqueNames, ]
-
-goodMetaphlanPhylaData.rel.abund <- metaphlanPhlyaData.rel.abund[rownames(metaphlanPhlyaData.rel.abund) %in% rownames(UpdatedMatchedData), ]
-rownames(goodMetaphlanPhylaData.rel.abund) <- UpdatedMatchedData[, 2]
-testing <- goodMetaphlanPhylaData.rel.abund[order(rownames(goodMetaphlanPhylaData.rel.abund)), ]
-
-phyla16SData <- test
-phylaMetaphlanData <- testing
-rm(finalUniqueNames, good, IndIDmatched, metaphlanNames, metaphlanPhlyaData.total, uniqueNames, goodMetaphlanPhylaData.rel.abund, matchedData, metaphlanPhlyaData, metaphlanPhlyaData.rel.abund, phyla.good, phyla.table, phyla.table.rel.abund, phylogenetic.info, test, test1, testing, unique, UpdatedMatchedData)
-
-# Can start off with a general bar plot of the two side by side 
-library(qdap)
-library(plyr)
-library(reshape2)
-library(ggplot2)
-library(RColorBrewer)
-library(scales)
-library(gridExtra) #using grid.arrange() can add different plots together
-library(plotrix)
-library(ggExtra)
-library(BlandAltmanLeh)
-
-#phyla16SData <- phyla16SData[,-5] only if want to ignore unclassified
-phylaMetaphlanData$unclassified <- 0
-phylaMetaphlanData <- subset(phylaMetaphlanData, select=c(Actinobacteria:Proteobacteria, unclassified, Verrucomicrobia, other))
-phyla16SData$dataset <- 1 
-phylaMetaphlanData$dataset <- 2
-
-```
-
 
 ###In-Depth Overview of Search Strategy:
 
@@ -124,9 +22,9 @@ This search yielded a total of 187 manuscripts.  From two previous other reviews
 
 From this total we browsed abstracts for mention of stool or feces examination, that did not involve children, was not a clinical trial for probiotics or other diet related treatments, did not only have participants with inflammatory bowel disease, the articles were in English, did not only use PCR, qPCR, or RT-PCR only for their analysis, and sequecning that used only clone libraries.  This ultimately excluded all but a total of 11 studies.
 
-From this total of 12 studies the full text was reviewed for whether or not sequencing data was publicly available, BMI information (either categorical or continuous) was available in a supplement or, if it was not available, whether authors upon contact were willing to share this information or direct us to repositories that stored this specific information.  One study was excluded [@yatsunenko_human_2012] because it contained children and their sequencing of the 16S rRNA gene involved amplicons of only 100bp in length.  They also did not have obesity as part of their results in the actual published manuscript.  The second study was excluded because they did not have BMI information available and when contacted the authors never returned any correspondance [@zeevi_personalized_2015].  
+From this total of 12 studies the full text was reviewed for whether or not sequencing data was publicly available, BMI information (either categorical or continuous) was available in a supplement or, if it was not available, whether authors upon contact were willing to share this information or direct us to repositories that stored this specific information.  One study was excluded [@yatsunenko_human_2012] because it contained children and their sequencing of the 16S rRNA gene involved amplicons of only 100bp in length.  They also did not have obesity as part of their results in the actual published manuscript.  The second study was excluded because they did not have BMI information available and when contacted the authors never returned any correspondance [@zeevi_personalized_2015].  A thrid study was excluded since it did not use 16S rRNA gene sequencing for their bacterial microbiome analysis [@arumugam_enterotypes_2011]  
 
-This included a total of 10 studies in the qualitative synthesis of the analysis.  Because we decided a prioi to use the standard definition for BMI group classification one study from this ten did not have any individuals who were obese by this criteria [@nam_comparative_2011] and was excluded from the final quantitative synthesis and analysis.  
+Once these 3 studies were excluded there was a total of 9 studies in the qualitative synthesis of the analysis.  Because we decided a prioi to use the standard definition for BMI group classification one study from this ten did not have any individuals who were obese by this criteria [@nam_comparative_2011] and was excluded from the final quantitative synthesis and analysis.  
 
 *Inclusion Criteria:*
 
@@ -141,7 +39,7 @@ This included a total of 10 studies in the qualitative synthesis of the analysis
 
 *Exclusion Criteria:*
 
-* PCR, qPCR, or RT-PCR used as main analysis Tool
+* PCR, qPCR, metagenomic sequencing, or RT-PCR used as main analysis Tool
 * TRFLP or clone sequencing used to asses the bacterial community
 * Utilization of 100bp or less single end reads for sequencing
 * Sequencing Data not publicly available for download
@@ -151,129 +49,51 @@ This included a total of 10 studies in the qualitative synthesis of the analysis
 * Study was a review
 
 
-###A Comparison of 16S Amplicon Sequencing and Metaphlan2:
 
-```{r Figure_S1, echo=FALSE}
-testset <- rbind(phyla16SData, phylaMetaphlanData)
-testset$dataset <- factor(testset$dataset)
-melt.testset <- melt(testset, id.vars=c("dataset"))
-colnames(melt.testset)[2] <- "phyla"
-barplotAnalysisData <- ddply(melt.testset, c("dataset", "phyla"), summarise, mean = mean(value), sd=sd(value), sem=sd(value/sqrt(length(value))))
-  
-bpg1 <- ggplot(barplotAnalysisData, aes(x=dataset, y=mean, fill=phyla)) + geom_bar(position = "fill", stat="identity")
-bpg2 <- bpg1 + scale_fill_brewer(palette="Set1") + scale_y_continuous(label=percent)
-bpg3 <- bpg2 + theme(axis.text=element_text(size=15), axis.title=element_text(size=20, face="bold"))
-bpg4 <- bpg3 + xlab("Analysis Used") + ylab("Mean Relative Abundance (%)")
-bpg5 <- bpg4 + guides(fill=guide_legend(title="Phyla")) + theme(legend.title = element_text(size=16, face="bold"))
-bpg6 <- bpg5 + theme(axis.line=element_line(colour="black"), 
-                 panel.grid.major = element_blank(), 
-                 panel.grid.minor = element_blank(), 
-                 panel.border = element_blank(), 
-                 panel.background = element_blank())
-bpg7 <- bpg6 + scale_x_discrete(breaks = 1:2, labels=c("16S", "Metaphlan2"))
-
-bpg7
-```
-
-**Figure S1:Comparison of Phyla between 16S Sequencing and Metaphlan2.** 
-
-
-
-
-
-
-```{r Figure_S2, echo=FALSE, warning=FALSE, message=FALSE}
-graphData <- as.data.frame(cbind(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes))
-colnames(graphData) <- c("rRNA_16S", "Metaphlan2")
-
-p1 <- ggplot(graphData, aes(x=rRNA_16S, y=Metaphlan2)) + geom_point(colour="blue", size=4)
-p2 <- p1 + geom_smooth(method="lm", colour="black", se=TRUE)
-p3 <- p2 + theme(axis.text=element_text(size=15), axis.title=element_text(size=20, face="bold"))
-p4 <- p3 + xlim(0, 100) + xlab("16S") + ylim(0, 100)
-p5 <- p4 + theme(axis.line=element_line(colour="black"), 
-                 panel.grid.major = element_blank(), 
-                 panel.grid.minor = element_blank(), 
-                 panel.border = element_blank(), 
-                 panel.background = element_blank())
-
-ggExtra::ggMarginal(p5, type = "histogram")
-
-```
-
-**Figure S2: Bacteroidetes Linear Correlation between 16S Sequencing and Metaphlan2.**  Bacteroidetes has the best correlation of all the phyla (P-value = 0.0002277, R^2^ = 0.2358). The histogram for the 16S samples are on the x-axis while the histogram for Metaphlan2 is on the y-axis.
-
-
-
-```{r Figure_S3, echo=FALSE}
-
-ba <- bland.altman.plot(phyla16SData$Bacteroidetes, phylaMetaphlanData$Bacteroidetes, graph.sys="ggplot2", main="Bland Altman Plot of Bacteroidetes", xlab="Means", ylab="Differences")
-
-
-
-ba1 <- ba + theme(axis.text=element_text(size=15), axis.title=element_text(size=25, face="bold"))
-ba2 <- ba1 + ylab("Difference") + xlab("Mean of Measurements")
-ba3 <- ba2 + geom_point(size=4)
-ba4 <- ba3 + theme(axis.line=element_line(colour="black"), 
-                     panel.grid.major = element_blank(), 
-                     panel.grid.minor = element_blank(), 
-                     panel.border = element_blank(), 
-                     panel.background = element_blank())
-
-ba4
-```
-
-**Figure S3: Bland-Altman plot of Bacteroidetes measurements for Metaphlan2 and 16S sequencing.**
 
 
 ###Supplemental Results:
 
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-#Load required packages
-library(meta)
-library(metafor) #This package is used mostly for the more in-depth graph
-
-#Change working directory
-setwd("C:/users/marc/Desktop/obesity2")
-
-StudyNo <- c(1, 2, 3, 4, 5, 6, 7)
-Study <- c("Baxter", "HMP", "Escobar", "Arumugam", "Turnbaugh", "Zupancic", "Wu")
-Year <- c("2015", "2011", "2014", "2010", "2009", "2012", "2012")
-Total <- c("n=172", "n=256", "n=30", "n=85", "n=146", "n=199", "n=58")
-tpos <- c(36, 13, 7, 17, 22, 52, 2) #obese in low Rumi group
-tneg <- c(59, 140, 8, 26, 56, 110, 37) #nonobese in low Rumi group
-cpos <- c(11, 13, 3, 20, 25, 18, 3) #obese in high Rumi group
-cneg <- c(66, 90, 12, 22, 43, 19, 16) #nonobese in high Rumi group
-RR <- c(2.65, 0.67, 2.33, 0.83, 0.77, 0.66, 0.32)
-low <- c(1.45, 0.33, 0.74, 0.51, 0.48, 0.44, 0.06)
-high <- c(4.86, 1.39, 7.35, 1.35, 1.23, 0.98, 1.78)
-
-numeric.data <-as.data.frame(cbind(tpos, tneg, cpos, cneg))
-raw.overall <- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
-
-dat <- escalc(measure = "RR", ai = tpos, bi = tneg, ci = cpos, di = cneg, data=raw.overall, append=TRUE)
-k <- length(dat$StudyNo)
-dat.fm <- data.frame(study=factor(rep(1:k, each = 4)))
-dat.fm$grp <- factor(rep(c("T", "T", "C", "C"), k), levels = c("T", "C"))
-dat.fm$out <- factor(rep(c("+", "-", "+", "-"), k), levels = c("+", "-"))
-dat.fm$freq <- with(raw.overall, c(rbind(tpos, tneg, cpos, cneg)))
-
-#escalc(out ~ grp | study, weights = freq, data = dat.fm, measure = "RR")
+![Figure S1](results/figures/suppFigClostridiales.png)\
 
 
-#Used to generate the RE Model estimate based on all the studies
-res <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", slab=paste(Study, Year, Total, sep=", "), method="REML")
+**Figure S1: Boxplots of All Clostridiales OTUs Important for Non-Obese and Obese Classification.** A total of 6/8 studies had at least 1 OTU that was classified to Clostridiales.  However, overall there was a wide range in direction both between studies and within studies.
 
-#To create a graph visualize the data
-forest(res, at=log(c(0.01, 1, 10)), atransf=exp, xlab="RR of Obesity in high versus low Ruminococcaceae based on Median", cex=0.8)
-par(font=2) #Switch to bold
 
-text(7.4, 8.3, "Relative Risk [95% CI]", pos=2, cex=0.8)  
-text(-8.0, 8.3, "Study, Year, and n", pos=4, cex=0.8)   
+![Figure S2](results/figures/suppFigLachno.png)\
 
+
+**Figure S2: Boxplots of All Lachnospiraceae OTUs Important for Non-Obese and Obese Classification.** A total of 6/8 studies had at least 1 OTU that was classified to Lachnospiraceae.  However, overall there was a wide range in direction both between studies and within studies.
+
+
+![Figure S3](results/figures/suppFigRumi.png)\
+
+**Figure S3: Boxplots of All Ruminococcaceae OTUs Important for Non-Obese and Obese Classification.** A total of 7/8 studies had at least 1 OTU that was classified to Ruminococcaceae  However, overall there was a wide range in direction both between studies and within studies.
+
+
+**Table 1. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
+
+```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(knitr)
+
+Study <- c("Wu", "Turnbaugh", "Ross", "Escobar", "Zupancic", "Baxter", "Goodrich", "HMP")
+VariableRegion <- c("V1-V2", "V2", "V1-V3", "V1-V3", "V1-V3", "V4", "V4", "V3-V5")
+ClosMostPrev <- c("OTU191:3 Clostridium", "None", "OTU102:8 Ruminococcus", "None", "OTU322:3 Parvimonas | OTU62:3 Parvimonas | OTU256:4 Clostridium", "OTU479:4 Anaerostipes", "OTU287:5 Clostridium | OTU662:8 Clostridium | OTU145:6 Clostridium | OTU244:3 Clostridium | OTU442:4 Clostridium", "OTU293:7 Clostridium") 
+ClostHighMatch <- c("Anaerovorax odorimutans(81|95)", "None", "Ruminococcus champanellensis(100|100)", "None", "OTU322:Eubacterium hallii(92|100) | OTU62:Eubacterium hallii(92|99) | OTU256:Romboutsia lituseburensis(92|99)", "Anaerosporbacter mobilis(100|94)", "OTU287:Clostridium fimetarium(100|94) |  OTU662:Ruminiclostridium thermocellum(100|91) | OTU145:Ruminococcus lactaris(100|100) | OTU244:Anaerosporobacter mobilis(100|94) | OTU442:Clostridium propionicum(100|92)", "Anaerobacterium chartisolvens (100|91)")
+LachMostPrev <- c("OTU75:6 Clostridium | OTU229:5 Peptostreptococcus | OTU5: 4 Blautia", "OTU318:", "OTU177:3 Roseburia", "OTU67:6 Eubacterium | OTU74:5 Blautia | OTU80:4 Blautia", "None", "OTU36:8 Clostridium", "OTU180:4 Clostridium | OTU75: 5 Clostridium | OTU122:5 Roseburia | OTU92:8 Clostridium | OTU673:7 Clostridium", "None")
+LachHighMatch <- c("Clostridium bolteae(100|96)", "", "Clostridium Spp(100|98)", "OTU67:Dorea formicigenerans(100|96) | OTU74:Blautia luti(100|96) | OTU80:Blautia producta(100|93)", "None", "Lachnobacterium bovis(100|96)", "OTU180:Hungatella effluvii(100|95) | OTU75:Ruminococcus gnavus(100|100) | OTU122:Eubacterium ramulus(100|96) | OTU92:Fusicatenibacter saccharivorans(100|94) | OTU673:Bacteroides xylanolyticus(92|97) | OTU523:Eubacterium rectale(100|97)", "None")
+RumiMostPrev <- c("OTU123:4 Clostridium", "OTU30:", "OTU22:3 Oscillibacter", "None", "OTU398:3 Eubacterium | OTU850:3 Ethanoligenens | OTU817:8 Ruminococcus", "OTU320:4 Clostridium", "OTU68:5 Ruminococcus | OTU255:3 Blautia | OTU1145:3 Ethanoligenens | OTU558:8 Ruminococcus | OTU297:3 Oscillibacter | OTU6:4 Clostridium | OTU132:2 Ruminoclostridium", "OTU252:10 Clostridium")
+RumiHighMatch <- c("Anaerotruncus colihominis(85|95)", "", "Oscillibacter Spp(100|97)", "None", "OTU398:Oscillibacter valericigene(77|96) | OTU850:Papillibacter cinnamivorans(90|91) | OTU817:Ruminococcus callidus(91|95)", "Sporobacter termitidis(100|94)", "OTU68:Acetanaerobacterium elongatum(100|89) | OTU255:Pseudoflaconifractor capillosus(100|91) | OTU1145:Subdoligranulum variable(100|95) | OTU558:Ruminococcus champanellensis(92|98) | OTU297:Flavonifractor plautii(100|95) | OTU6:Oscillibacter valericigenes(100|93) | OTU132:Intestinimonas butyriciproducens(100|92)", "Clostridium Spp(100|97)")
+
+
+
+table1 <- cbind(Study, VariableRegion, ClosMostPrev, ClostHighMatch, LachMostPrev, LachHighMatch, RumiMostPrev, RumiHighMatch)
+colnames(table1) <- c("Study", "Hypervariable Region", "Clostridiales OTU Most Prevalent Match", "Clostridiales OTU Highest Match (Query Cover|Identity)", "Lachnospiraceae OTU Most Prevalent Match", "Lachnospiraceae OTU Highest Match (Query Cover|Identity)", "Ruminococcaceae OTU Most Prevalent Match", "Ruminococcaceae OTU Highest Match (Query Cover|Identity)")
+
+kable(table1, format = "markdown", align = 'c', padding = 2)
 ```
 
-**Figure S4: Forest Plot of the Relative Risk based on the Ruminococcaceae classified OTU.**
 
 *******
 ##### References:
