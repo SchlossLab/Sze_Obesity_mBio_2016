@@ -180,19 +180,20 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 |  Turnbaugh  |      0.805      |    0.859     |    0.789    |        0.116        |     0.055      |   0.175    |     0.095     |
 
 
-**Table 4. Summary of Power Calculations for each Individual for Shannon Diversity and B/F ratio for Non-obese versus Obese**
+**Table 4. Summary of Power Calculations for Shannon Diversity and B/F ratio for Non-obese versus Obese**
 
 
-|    Study    |  Shannon Diversity Power (%)  |  B/F Ratio Power (%)  |
-|:-----------:|:-----------------------------:|:---------------------:|
-|   Baxter    |              59               |          9.1          |
-|    Ross     |             21.9              |         12.5          |
-|  Goodrich   |             11.8              |         18.3          |
-|   Escobar   |              4.1              |          9.3          |
-|  Zupancic   |              8.7              |          6.5          |
-|     HMP     |              9.4              |          3.1          |
-|     Wu      |               1               |          0.7          |
-|  Turnbaugh  |             42.7              |           8           |
+|    Study    |  Shannon Diversity Power (%)  |  Shannon RR Power (%)  |  B/F Ratio Power (%)  |  B/F ratio RR (%)  |
+|:-----------:|:-----------------------------:|:----------------------:|:---------------------:|:------------------:|
+|   Baxter    |              59               |          6.1           |          9.1          |        6.1         |
+|    Ross     |             21.9              |          12.6          |         12.5          |        9.6         |
+|  Goodrich   |             11.8              |          17.7          |         18.3          |        5.9         |
+|   Escobar   |              4.1              |          1.6           |          9.3          |        18.5        |
+|  Zupancic   |              8.7              |          29.7          |          6.5          |        2.8         |
+|     HMP     |              9.4              |          18.8          |          3.1          |        2.9         |
+|     Wu      |               1               |          2.7           |          0.7          |        2.1         |
+|  Turnbaugh  |             42.7              |          10.2          |           8           |        3.1         |
+|  COMBINED   |             37.5              |          18.7          |          7.7          |        7.2         |
 
 
 

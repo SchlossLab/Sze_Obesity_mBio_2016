@@ -46,7 +46,7 @@ PowerTable <- read.csv("results/tables/denovoPowerTable.csv")
 ```
 
 ```{r install_needed_packages, echo=FALSE, message=FALSE, warning=FALSE}
-deps = c("knitr","vegan","epiR","AUCRF","meta","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra");
+deps = c("knitr","vegan","epiR","AUCRF","meta","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra", "pwr", "statmod");
 for (dep in deps){
   if (dep %in% installed.packages()[,"Package"] == FALSE){
     install.packages(as.character(dep), quiet=TRUE);
@@ -292,16 +292,40 @@ kable(table3, format = "markdown", align = 'c', padding = 2)
 ```
 
 
-**Table 4. Summary of Power Calculations for each Individual for Shannon Diversity and B/F ratio for Non-obese versus Obese**
+**Table 4. Summary of Power Calculations for Shannon Diversity and B/F ratio for Non-obese versus Obese**
 
 ```{r Table_4, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- as.character(PowerTable$Study)
-PowerH <- PowerTable$StudyPowerH
-PowerBF <- PowerTable$StudyPowerBF
+Study <- c(as.character(PowerTable$Study), "COMBINED")
+keep <- which(group.data.test$obese=="Yes")
+CombinedH <- pwr.t2n.test(d=mean(group.data.test$ZH[-keep])-mean(group.data.test$ZH[keep]), n1=length(group.data.test$ZH[-keep]), n2=length(group.data.test$ZH[keep]))
+CombinedBF <- pwr.t2n.test(d=mean(group.data.test$ZLogBF[-keep])-mean(group.data.test$ZLogBF[keep]), n1=length(group.data.test$ZLogBF[-keep]), n2=length(group.data.test$ZLogBF[keep]))
 
-table4 <- cbind(Study, PowerH, PowerBF)
-colnames(table4) <- c("Study", "Shannon Diversity Power (%)", "B/F Ratio Power (%)")
+set.seed(3)
+CombinedHRR <- power.fisher.test(
+  sum(ShannonRRTable$tposH)/
+        (sum(ShannonRRTable$tposH)+sum(ShannonRRTable$tnegH)), 
+  sum(ShannonRRTable$cposH)/
+    (sum(ShannonRRTable$cposH)+sum(ShannonRRTable$cnegH)), 
+  sum(ShannonRRTable$tposH)+sum(ShannonRRTable$tnegH), sum(ShannonRRTable$cposH)+sum(ShannonRRTable$cnegH), 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100
+
+set.seed(3)
+CombinedBFRR <- power.fisher.test(
+  sum(BFRatioRRTable$tposBF)/
+        (sum(BFRatioRRTable$tposBF)+sum(BFRatioRRTable$tnegBF)), 
+  sum(BFRatioRRTable$cposBF)/
+    (sum(BFRatioRRTable$cposBF)+sum(BFRatioRRTable$cnegBF)), 
+  sum(BFRatioRRTable$tposBF)+sum(BFRatioRRTable$tnegBF), sum(BFRatioRRTable$cposBF)+sum(BFRatioRRTable$cnegBF), 
+  alpha=0.05, nsim=1000, alternative="two.sided")*100
+
+PowerH <- c(PowerTable$StudyPowerH, format(round(CombinedH$power*100, 1), nsmall=1))
+PowerHRR <- c(PowerTable$StudyPowerHRR, CombinedHRR)
+PowerBF <- c(PowerTable$StudyPowerBF, format(round(CombinedBF$power*100, 1), nsmall=1))
+PowerBFRR <-c(PowerTable$StudyPowerBFRR, CombinedBFRR)
+
+table4 <- cbind(Study, PowerH, PowerHRR, PowerBF, PowerBFRR)
+colnames(table4) <- c("Study", "Shannon Diversity Power (%)", "Shannon RR Power (%)", "B/F Ratio Power (%)", "B/F ratio RR (%)")
 
 kable(table4, format = "markdown", align = 'c', padding = 2)
 ```
