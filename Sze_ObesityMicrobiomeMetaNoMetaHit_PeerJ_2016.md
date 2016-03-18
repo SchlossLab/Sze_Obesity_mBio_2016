@@ -170,7 +170,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 |    Study    |  Bacteroidetes  |  Firmicutes  |  B/F Ratio  |  Shannon Diversity  |  OTU Richness  |  Evenness  |  Bray Curtis  |
 |:-----------:|:---------------:|:------------:|:-----------:|:-------------------:|:--------------:|:----------:|:-------------:|
-|   Baxter    |      0.207      |    0.590     |    0.190    |        0.065        |     0.039      |   0.125    |     0.064     |
+|   Baxter    |      0.202      |    0.607     |    0.192    |        0.065        |     0.039      |   0.125    |     0.064     |
 |    Ross     |      0.204      |    0.380     |    0.221    |        0.285        |     0.249      |   0.383    |     0.823     |
 |  Goodrich   |      0.435      |    0.290     |    0.270    |        0.614        |     0.324      |   0.836    |     0.326     |
 |   Escobar   |      0.056      |    0.131     |    0.082    |        0.948        |     0.231      |   0.619    |     0.074     |
@@ -185,7 +185,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 |    Study    |  Shannon Diversity Power (%)  |  B/F Ratio Power (%)  |
 |:-----------:|:-----------------------------:|:---------------------:|
-|   Baxter    |              59               |          9.6          |
+|   Baxter    |              59               |          9.1          |
 |    Ross     |             21.9              |         12.5          |
 |  Goodrich   |             11.8              |         18.3          |
 |   Escobar   |              4.1              |          9.3          |
@@ -213,7 +213,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 ![](results/figures/Figure_3-1.png)\
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.516).
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.454).
 
 
 ![](results/figures/Figure_4-1.png)\
@@ -228,7 +228,7 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 ![](results/figures/Figure_5-1.png)\
 
 
-**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.0972). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.16) but no difference between lean and obese group (P-value = 0.512). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.627). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.564).
+**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.0972). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.16) but no difference between lean and obese group (P-value = 0.512). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.632). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.56).
 
 
 
