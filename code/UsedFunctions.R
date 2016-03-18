@@ -3,6 +3,103 @@
 ## Marc Sze
 ## March 16, 2016
 
+## Function to make demo and microbiome table more uniform and remove unneeded info.
+## An Example of how to use:
+  ## EditTable(microbiome, 2, delRange=c(1:3))
+EditTable <- function(dataFile, dataRow, delRange=1){
+  rownames(dataFile) <- dataFile[,dataRow]
+  suppressWarnings(
+    if(delRange == 0){
+    dataFile <- dataFile
+  }else{
+    dataFile <- dataFile[,-delRange]
+  })
+  
+  return(dataFile)
+}
+
+## Function to generate the Shannon Diversity and other alpha metrics used in analysis
+## An Example of how to use:
+## makeAlphaTable(microbiome)
+makeAlphaTable <- function(sharedFile){
+  # Check for necessary Libraries and load in not already attached
+  deps = c("vegan");
+  for (dep in deps){
+    if (dep %in% installed.packages()[,"Package"] == FALSE){
+      install.packages(as.character(dep), quiet=TRUE);
+    }
+    library(dep, verbose=FALSE, character.only=TRUE)
+  }
+  H <- diversity(sharedFile)
+  S <- specnumber(sharedFile)
+  J <- H/log(S)
+  alpha.diversity.shannon <- cbind(H,S,J)
+  alpha.test <- as.data.frame(alpha.diversity.shannon)
+  
+  return(alpha.test)
+}
+
+## Function to make the necessary phyla table for analysis
+## An Example of how to use:
+  ## MakePhylaTable(his.microb.edit, "data/process/Ross/taxonomyKey.txt", csv=F)
+MakePhylaTable <- function(sharedFile, LoadFile, csv=F){
+  if(csv==T){
+    phylogenetic.info <- read.csv(LoadFile)
+  }else{
+    phylogenetic.info <- read.table(LoadFile, header=T)
+  }
+  rownames(phylogenetic.info) <- phylogenetic.info[,1]
+  phylogenetic.info <- phylogenetic.info[,-c(1)]
+  phyla.names <- as.character(phylogenetic.info$Taxonomy)
+  keep <- colnames(sharedFile)
+  phyla.good <- phylogenetic.info[keep, ]
+  phyla.names <- as.character(phyla.good[,2])
+  phyla.table <- sharedFile
+  colnames(phyla.table) <- phyla.names
+  phyla.table <- as.data.frame(t(rowsum(t(phyla.table), group = rownames(t(phyla.table)))))
+  
+  return(phyla.table)
+}
+
+
+## Function to add necessary BMI classification data to demo file
+## An Example of how to use:
+  ## AddBMIClass(demographics, "BMI.classification", numbers=FALSE)
+AddBMIClass <- function(demo, BMIVar1, numbers=FALSE){
+  if(numbers==FALSE){
+    # Create Obese group
+    demo$obese[demo[BMIVar1]=="Normal" | demo[BMIVar1]=="Lean" | 
+                 demo[BMIVar1]=="Overweight"] <- "No"
+    demo$obese[demo[BMIVar1]=="Obese" | demo[BMIVar1]=="Extreme Obesity"] <- "Yes"
+    #Create Obese.num groups
+    demo$obese.num[demo$obese=="No"] <- 0
+    demo$obese.num[demo$obese=="Yes"] <- 1
+    #Create a column with obese and extreme obese as single entity
+    demo$BMIclass2[demo[BMIVar1]=="Normal" | demo[BMIVar1]=="Lean"] <- "Normal"
+    demo$BMIclass2[demo[BMIVar1]=="Overweight"] <- "Overweight"                     
+    demo$BMIclass2[demo[BMIVar1]=="Obese" | demo[BMIVar1]=="Extreme Obesity"] <- "Obese"
+  }else{
+    #Create BMI groups
+    demo$BMI.class[demo[BMIVar1]<=24] <- "Normal"
+    demo$BMI.class[demo[BMIVar1]>24 & demo[BMIVar1]] <- "Overweight"
+    demo$BMI.class[demo[BMIVar1]>=30 & demo[BMIVar1]<40] <- "Obese"
+    demo$BMI.class[demo[BMIVar1]>=40] <- "Extreme Obesity"
+    #Create Obese group
+    demo$obese[demo$BMI.class=="Normal" | demo$BMI.class=="Overweight"] <- "No"
+    demo$obese[demo$BMI.class=="Obese" | demo$BMI.class=="Extreme Obesity"] <- "Yes"
+    #Create Obese.num groups
+    demo$obese.num[demo$obese=="No"] <- 0
+    demo$obese.num[demo$obese=="Yes"] <- 1
+    #Create BMI class 2 groups
+    demo$BMI.class2[demo[BMIVar1]<=24] <- "Normal"
+    demo$BMI.class2[demo[BMIVar1]>24 & demo[BMIVar1]<30] <- "Overweight"
+    demo$BMI.class2[demo[BMIVar1]>=30] <- "Obese"
+  }
+  return(demo)
+}
+
+
+
 ## Function to make table for RR Analysis and run RR Test.
 ## Needed Libraries include epiR.  
 ## An Example of how to use:
