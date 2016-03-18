@@ -73,7 +73,10 @@ The following are what is missing: h5py, sortmerna, sumaclust
 	
 	* Currently done but only have power calculation, no sample size values.
 	
+	* Done
+	
 * Probably want to add a seperate R file for the analysis of specific common OTUs
+	* Done
 	
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
