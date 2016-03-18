@@ -41,6 +41,8 @@ rm(phyla.total, phyla.table)
 
 #Generate Alpha Diversity Measures and alpha diversity table
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- mean(alpha.test$H)
+sdH <- sd(alpha.test$H)
 
 #Create BMI Classifications needed for analysis
 demographics <- AddBMIClass(demographics, "BMI.classification", numbers=FALSE)
@@ -56,6 +58,8 @@ obese <- factor(demographics$obese.num)
 ##Test BMI versus alpha diversity and phyla
 
 baxterH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.065
+MeanNonObeseH <- mean(alpha.test$H[which(demographics$obese == "No")])
+MeanObeseH <- mean(alpha.test$H[which(demographics$obese == "Yes")])
 baxterS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.03923
 baxterJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1254
 
@@ -63,6 +67,10 @@ baxterJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1254
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- mean(BFratio)
+sdBF <- sd(BFratio)
+MeanNonObeseBF <- mean(BFratio[which(demographics$obese == "No")])
+MeanObeseBF <- mean(BFratio[which(demographics$obese == "Yes")])
 
 baxterBacter <- wilcox.test(bacter ~ obese) #P-value=0.3175
 baxterFirm <- wilcox.test(firm ~ obese) #P-value=0.6817
@@ -216,6 +224,8 @@ rm (sample.match, keep, order1, test, test2)
 
 #Get alpha diversity of the samples
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/Ross/taxonomyKey.txt")
@@ -243,6 +253,10 @@ obese <- factor(metadata$obese)
 ###########################################################################
 
 rossH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.2848
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(metadata$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(metadata$obese == "Yes")]))
 rossS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.2492
 rossJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.3826
 
@@ -250,6 +264,8 @@ rossJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.3826
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 rossBacter <- wilcox.test(bacter ~ obese) #P-value=0.2036
 rossFirm <- wilcox.test(firm ~ obese) #P-value=0.3799
@@ -401,6 +417,8 @@ rm(keep)
 
 #generate alpha diversity measures with vegan
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/Goodrich/taxonomyKey.txt")
@@ -433,6 +451,10 @@ obese <- factor(metadata$obese)
 ##Test BMI versus alpha diversity and phyla
 
 goodrichH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.614
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(metadata$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(metadata$obese == "Yes")]))
 goodrichS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.3244
 goodrichJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.8362
 
@@ -440,6 +462,8 @@ goodrichJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.8362
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 goodrichBacter <- wilcox.test(bacter ~ obese) #P-value=0.4353
 goodrichFirm <- wilcox.test(firm ~ obese) #P-value=0.2896
@@ -607,6 +631,8 @@ rm(order1)
 
 #Get alpha diversity of the samples
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/Escobar/taxonomyKey.txt")
@@ -636,6 +662,10 @@ obese <- factor(metadata$obese)
 ##Test BMI versus alpha diversity and phyla
 
 escobarH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.9483
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(metadata$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(metadata$obese == "Yes")]))
 escobarS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.2307
 escobarJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.6187
 
@@ -643,6 +673,8 @@ escobarJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.6187
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 escobarBacter <- wilcox.test(bacter ~ obese) #P-value=0.05563
 escobarFirm <- wilcox.test(firm ~ obese) #P-value=0.1307
@@ -811,6 +843,8 @@ rm(keep, metadata2)
 
 #generate alpha diversity measures with vegan
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/Zupancic/taxonomyKey.txt")
@@ -840,6 +874,10 @@ obese <- factor(metadata$obese)
 ##Test BMI versus alpha diversity and phyla
 
 zupancicH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.3108
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(metadata$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(metadata$obese == "Yes")]))
 zupancicS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.161
 zupancicJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.4407
 
@@ -847,6 +885,8 @@ zupancicJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.4407
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 zupancicBacter <- wilcox.test(bacter ~ obese) #P-value=0.5674
 zupancicFirm <- wilcox.test(firm ~ obese) #P-value=0.6016
@@ -1015,6 +1055,8 @@ meta.cont <- meta.cont[microb.rownames, ]
 
 #generate alpha diversity measures with vegan
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/HMP/phyla.data.csv", csv=T)
@@ -1045,6 +1087,10 @@ obese <- factor(meta.cont$obese)
 ##Test BMI versus alpha diversity and phyla
 
 HMPH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.5772
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(meta.cont$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(meta.conts$obese == "Yes")]))
 HMPS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.9654
 HMPJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.4667
 
@@ -1053,6 +1099,8 @@ HMPJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.4667
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 HMPBacter <- wilcox.test(bacter ~ obese) #P-value=0.459
 HMPFirm <- wilcox.test(firm ~ obese) #P-value=0.7864
@@ -1207,6 +1255,8 @@ rm(namesToKeep)
 
 #Get alpha diversity of the samples
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/Wu/taxonomyKey.txt")
@@ -1235,6 +1285,10 @@ obese <- factor(metadata$obese)
 ##Test BMI versus alpha diversity and phyla
 
 WuH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.9089
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(metadata$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(metadata$obese == "Yes")]))
 WuS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.2798
 WuJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.3804
 
@@ -1242,6 +1296,8 @@ WuJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.3804
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 WuBacter <- wilcox.test(bacter ~ obese) #P-value=0.7124
 WuFirm <- wilcox.test(firm ~ obese) #P-value=0.7506
@@ -1406,6 +1462,8 @@ rm(keep1)
 
 #generate alpha diversity measures with vegan
 alpha.test <- makeAlphaTable(microbiome)
+averageStudyH <- c(averageStudyH, mean(alpha.test$H))
+sdH <- c(sdH, sd(alpha.test$H))
 
 #Get phyla information
 phyla.table <- MakePhylaTable(microbiome, "data/process/Turnbaugh/phyla.csv", 
@@ -1435,6 +1493,10 @@ bmi <- metadata$BMI.category
 ##Test BMI versus alpha diversity and phyla
 
 turnbaughH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.1162
+MeanNonObeseH <- c(MeanNonObeseH, 
+                   mean(alpha.test$H[which(metadata$obese == "No")]))
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(metadata$obese == "Yes")]))
 turnbaughS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.05479
 turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1748
 
@@ -1442,6 +1504,8 @@ turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1748
 bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
+averageStudyBF <- c(averageStudyBF, mean(BFratio))
+sdBF <- c(sdBF, sd(BFratio))
 
 turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.8048
 turnbaughFirm <- wilcox.test(firm ~ obese) #P-value=0.8587
@@ -1651,9 +1715,13 @@ AUCRFDataTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic",
                           "HMP", "Wu", "Turnbaugh")
 write.csv(AUCRFDataTable, "results/tables/denovoAUCRFDataTable.csv")
 
-PowerTable <- as.data.frame(cbind(StudyPowerH, StudyPowerHRR, 
-                                  StudyPowerBFRR, StudyPowerBF))
+PowerTable <- as.data.frame(cbind(averageStudyH, MeanNonObeseH, MeanObeseH, 
+                                  sdH, StudyPowerH, StudyPowerHRR, 
+                                  averageStudyBF, sdBF, StudyPowerBFRR, 
+                                  StudyPowerBF))
 PowerTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Turnbaugh")
 write.csv(PowerTable, "results/tables/denovoPowerTable.csv")
 
+MeanObeseH <- c(MeanObeseH, 
+                mean(alpha.test$H[which(demographics$obese == "Yes")]))
