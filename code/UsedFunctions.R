@@ -191,6 +191,20 @@ DefNonParaPowerSim <- function(mean1, mean2, n1, n2, sdselect, iters=1000){
   
 }
 
+
+## Re write of Function to get estimated Power based on user inputed means and sd
+## to better simulate the actual data (add ability for two differet
+## SDs to be entered.
+## Example on how to use:
+  ## DefNonParaPowerSim(3.0, 3.35, 20, 50, 0.2, 0.2, n=1000)
+DefNonParaPowerSim2 <- function(mean1, mean2, n1, n2, sd1, sd2, iters=1000){
+  set.seed(3)
+  PvalSim <- replicate(iters, wilcox.test(
+    rnorm(n1, mean1, sd1), rnorm(n2, mean2, sd2))$p.value)
+  return((sum(PvalSim < 0.05)) / 10)
+  
+}
+
 ## Function to graph OTU versus BMI linear regression with log scale option
 ## Default for log is FALSE. Necessary library is ggplot2. 
 ## Example on how to use:

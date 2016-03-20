@@ -60,6 +60,8 @@ obese <- factor(demographics$obese.num)
 baxterH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.065
 MeanNonObeseH <- mean(alpha.test$H[which(demographics$obese == "No")])
 MeanObeseH <- mean(alpha.test$H[which(demographics$obese == "Yes")])
+SDNonObeseH <- sd(alpha.test$H[which(demographics$obese == "No")])
+SDObeseH <- sd(alpha.test$H[which(demographics$obese == "Yes")])
 baxterS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.03923
 baxterJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1254
 
@@ -71,7 +73,8 @@ averageStudyBF <- mean(BFratio)
 sdBF <- sd(BFratio)
 MeanNonObeseBF <- mean(BFratio[which(demographics$obese == "No")])
 MeanObeseBF <- mean(BFratio[which(demographics$obese == "Yes")])
-
+SDNonObeseBF <- sd(BFratio[which(demographics$obese == "No")])
+SDObeseBF <- sd(BFratio[which(demographics$obese == "Yes")])
 baxterBacter <- wilcox.test(bacter ~ obese) #P-value=0.3175
 baxterFirm <- wilcox.test(firm ~ obese) #P-value=0.6817
 baxterBF <- wilcox.test(BFratio ~ obese) #P-value=0.6305
@@ -257,6 +260,11 @@ MeanNonObeseH <- c(MeanNonObeseH,
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
                 mean(alpha.test$H[which(metadata$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(metadata$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(metadata$obese == "Yes")]))
+
 rossS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.2492
 rossJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.3826
 
@@ -265,6 +273,12 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(metadata$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(metadata$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
 
 rossBacter <- wilcox.test(bacter ~ obese) #P-value=0.2036
@@ -455,6 +469,10 @@ MeanNonObeseH <- c(MeanNonObeseH,
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
                 mean(alpha.test$H[which(metadata$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(metadata$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(metadata$obese == "Yes")]))
 goodrichS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.3244
 goodrichJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.8362
 
@@ -463,8 +481,13 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(metadata$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(metadata$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
-
 goodrichBacter <- wilcox.test(bacter ~ obese) #P-value=0.4353
 goodrichFirm <- wilcox.test(firm ~ obese) #P-value=0.2896
 goodrichBF <- wilcox.test(BFratio ~ obese) #P-value=0.2702
@@ -666,6 +689,10 @@ MeanNonObeseH <- c(MeanNonObeseH,
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
                 mean(alpha.test$H[which(metadata$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(metadata$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(metadata$obese == "Yes")]))
 escobarS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.2307
 escobarJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.6187
 
@@ -674,8 +701,13 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(metadata$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(metadata$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
-
 escobarBacter <- wilcox.test(bacter ~ obese) #P-value=0.05563
 escobarFirm <- wilcox.test(firm ~ obese) #P-value=0.1307
 escobarBF <- wilcox.test(BFratio ~ obese) #P-value=0.08221
@@ -878,6 +910,10 @@ MeanNonObeseH <- c(MeanNonObeseH,
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
                 mean(alpha.test$H[which(metadata$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(metadata$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(metadata$obese == "Yes")]))
 zupancicS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.161
 zupancicJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.4407
 
@@ -886,6 +922,12 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(metadata$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(metadata$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
 
 zupancicBacter <- wilcox.test(bacter ~ obese) #P-value=0.5674
@@ -1090,7 +1132,11 @@ HMPH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.5772
 MeanNonObeseH <- c(MeanNonObeseH, 
                    mean(alpha.test$H[which(meta.cont$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
-                mean(alpha.test$H[which(meta.conts$obese == "Yes")]))
+                mean(alpha.test$H[which(meta.cont$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(meta.cont$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(meta.cont$obese == "Yes")]))
 HMPS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.9654
 HMPJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.4667
 
@@ -1100,6 +1146,12 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(meta.cont$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(meta.cont$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(meta.cont$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(meta.cont$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
 
 HMPBacter <- wilcox.test(bacter ~ obese) #P-value=0.459
@@ -1289,6 +1341,10 @@ MeanNonObeseH <- c(MeanNonObeseH,
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
                 mean(alpha.test$H[which(metadata$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(metadata$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(metadata$obese == "Yes")]))
 WuS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.2798
 WuJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.3804
 
@@ -1297,6 +1353,12 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(metadata$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(metadata$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
 
 WuBacter <- wilcox.test(bacter ~ obese) #P-value=0.7124
@@ -1486,8 +1548,8 @@ metadata <- AddBMIClass(metadata, "BMI.category", numbers=FALSE)
 obese <- factor(metadata$obese)
 bmi <- metadata$BMI.category
 
-####################################################################################### First Level Analysis & Alpha Diversity with BMI #############
 ###########################################################################
+############# First Level Analysis & Alpha Diversity with BMI #############
 ###########################################################################
 
 ##Test BMI versus alpha diversity and phyla
@@ -1497,6 +1559,10 @@ MeanNonObeseH <- c(MeanNonObeseH,
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
                 mean(alpha.test$H[which(metadata$obese == "Yes")]))
+SDNonObeseH <- c(SDNonObeseH, 
+                 sd(alpha.test$H[which(metadata$obese == "No")]))
+SDObeseH <- c(SDObeseH, 
+              sd(alpha.test$H[which(metadata$obese == "Yes")]))
 turnbaughS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.05479
 turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1748
 
@@ -1505,6 +1571,12 @@ bacter <- phyla.table.rel.abund$Bacteroidetes
 firm <- phyla.table.rel.abund$Firmicutes
 BFratio <- bacter/firm
 averageStudyBF <- c(averageStudyBF, mean(BFratio))
+MeanNonObeseBF <- c(MeanNonObeseBF, 
+                    mean(BFratio[which(metadata$obese == "No")]))
+MeanObeseBF <- c(MeanObeseBF, 
+                 mean(BFratio[which(metadata$obese == "Yes")]))
+SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
+SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
 
 turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.8048
@@ -1715,13 +1787,12 @@ AUCRFDataTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic",
                           "HMP", "Wu", "Turnbaugh")
 write.csv(AUCRFDataTable, "results/tables/denovoAUCRFDataTable.csv")
 
-PowerTable <- as.data.frame(cbind(averageStudyH, MeanNonObeseH, MeanObeseH, 
-                                  sdH, StudyPowerH, StudyPowerHRR, 
-                                  averageStudyBF, sdBF, StudyPowerBFRR, 
-                                  StudyPowerBF))
+PowerTable <- as.data.frame(cbind(averageStudyH, sdH, MeanNonObeseH, SDNonObeseH, 
+                                  MeanObeseH, SDObeseH, StudyPowerH, StudyPowerHRR, 
+                                  averageStudyBF, sdBF, MeanNonObeseBF, SDNonObeseBF, 
+                                  MeanObeseBF, SDObeseBF, StudyPowerBFRR, StudyPowerBF))
 PowerTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Turnbaugh")
 write.csv(PowerTable, "results/tables/denovoPowerTable.csv")
 
-MeanObeseH <- c(MeanObeseH, 
-                mean(alpha.test$H[which(demographics$obese == "Yes")]))
+
