@@ -280,7 +280,7 @@ ModelledPowerH <- as.data.frame(
     ActualDiff, 1), nsmall=1)))
 colnames(ModelledPowerH) <- c("Pow1Diff", "Pow5Diff", "Pow10Diff", "Pow15Diff", "ActualPerDiff")
 ModelledPowerH$Study <- Study
-
+write.csv(ModelledPowerH, "results/tables/denovoModelledPowerH.csv")
 
 ## Generate Estimates for BF Ratio
 
@@ -553,7 +553,7 @@ ModelledPowerBF <- as.data.frame(
     ActualDiff, 1), nsmall=1)))
 colnames(ModelledPowerBF) <- c("Pow1Diff", "Pow5Diff", "Pow10Diff", "Pow15Diff", "ActualPerDiff")
 ModelledPowerBF$Study <- Study
-
+write.csv(ModelledPowerBF, "results/tables/denovoModelledPowerBF.csv")
 
 #######################################################################################
 
