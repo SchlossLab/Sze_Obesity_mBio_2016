@@ -78,6 +78,9 @@ The following are what is missing: h5py, sortmerna, sumaclust
 * Probably want to add a seperate R file for the analysis of specific common OTUs
 	* Done
 	
+* Search two sequences against each other using [EMBOSS Needle](http://www.ebi.ac.uk/Tools/psa/emboss_needle/nucleotide.html)
+(Pairwise Sequence Alignment) from EMBL-EBI
+	
 * Need to update SequenceProcessing.Rmd since I changed a few things to make data sets more similar
 	
 

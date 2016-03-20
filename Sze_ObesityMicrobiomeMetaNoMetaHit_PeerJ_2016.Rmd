@@ -42,7 +42,8 @@ ZScoreCombinedData <- read.csv("results/tables/denovoCombinedData.csv")
 ZScoreTurnbaughData <- read.csv("results/tables/denovoTurnbaughData.csv")
 AUCRFData <- read.csv("results/tables/denovoAUCRFDataTable.csv")
 PowerTable <- read.csv("results/tables/denovoPowerTable.csv")
-
+ModelledPowerH <- read.csv("results/tables/denovoModelledPowerH.csv")
+ModelledPowerBF <- read.csv("results/tables/denovoModelledPowerBF.csv")
 ```
 
 ```{r install_needed_packages, echo=FALSE, message=FALSE, warning=FALSE}
@@ -296,38 +297,57 @@ kable(table3, format = "markdown", align = 'c', padding = 2)
 
 ```{r Table_4, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- c(as.character(PowerTable$Study), "COMBINED")
-keep <- which(group.data.test$obese=="Yes")
-CombinedH <- pwr.t2n.test(d=mean(group.data.test$ZH[-keep])-mean(group.data.test$ZH[keep]), n1=length(group.data.test$ZH[-keep]), n2=length(group.data.test$ZH[keep]))
-CombinedBF <- pwr.t2n.test(d=mean(group.data.test$ZLogBF[-keep])-mean(group.data.test$ZLogBF[keep]), n1=length(group.data.test$ZLogBF[-keep]), n2=length(group.data.test$ZLogBF[keep]))
+Study <- c(as.character(PowerTable$Study))
+PowerH <- c(PowerTable$StudyPowerH)
+GroupsOposH <- c(ShannonRRTable$tposH + ShannonRRTable$cposH)
+GroupsNonOposH <- c(ShannonRRTable$tnegH + ShannonRRTable$cnegH)
+GroupsH <- paste(GroupsOposH, "|", GroupsNonOposH, sep="")
 
-set.seed(3)
-CombinedHRR <- power.fisher.test(
-  sum(ShannonRRTable$tposH)/
-        (sum(ShannonRRTable$tposH)+sum(ShannonRRTable$tnegH)), 
-  sum(ShannonRRTable$cposH)/
-    (sum(ShannonRRTable$cposH)+sum(ShannonRRTable$cnegH)), 
-  sum(ShannonRRTable$tposH)+sum(ShannonRRTable$tnegH), sum(ShannonRRTable$cposH)+sum(ShannonRRTable$cnegH), 
-  alpha=0.05, nsim=1000, alternative="two.sided")*100
+PowerHRR <- c(PowerTable$StudyPowerHRR)
+GroupsLowH <- c(format(round(ShannonRRTable$tposH / (ShannonRRTable$tposH + ShannonRRTable$tnegH), 1), nsmall=1))
+GroupsHighH <- c(format(round(ShannonRRTable$cposH / (ShannonRRTable$cposH + ShannonRRTable$cnegH), 1), nsmall=1))
+GroupsHRR <- paste(GroupsLowH, "|", GroupsHighH, sep="")
 
-set.seed(3)
-CombinedBFRR <- power.fisher.test(
-  sum(BFRatioRRTable$tposBF)/
-        (sum(BFRatioRRTable$tposBF)+sum(BFRatioRRTable$tnegBF)), 
-  sum(BFRatioRRTable$cposBF)/
-    (sum(BFRatioRRTable$cposBF)+sum(BFRatioRRTable$cnegBF)), 
-  sum(BFRatioRRTable$tposBF)+sum(BFRatioRRTable$tnegBF), sum(BFRatioRRTable$cposBF)+sum(BFRatioRRTable$cnegBF), 
-  alpha=0.05, nsim=1000, alternative="two.sided")*100
+PowerBF <- c(PowerTable$StudyPowerBF)
+GroupsOposBF <- c(BFRatioRRTable$tposBF + BFRatioRRTable$cposBF)
+GroupsNonOposBF <- c(BFRatioRRTable$tnegBF + BFRatioRRTable$cnegBF)
+GroupsBF <- paste(GroupsOposBF, "|", GroupsNonOposBF, sep="")
 
-PowerH <- c(PowerTable$StudyPowerH, format(round(CombinedH$power*100, 1), nsmall=1))
-PowerHRR <- c(PowerTable$StudyPowerHRR, CombinedHRR)
-PowerBF <- c(PowerTable$StudyPowerBF, format(round(CombinedBF$power*100, 1), nsmall=1))
-PowerBFRR <-c(PowerTable$StudyPowerBFRR, CombinedBFRR)
+PowerBFRR <-c(PowerTable$StudyPowerBFRR)
+GroupsLowBF <- c(format(round(BFRatioRRTable$tposBF / (BFRatioRRTable$tposBF + BFRatioRRTable$tnegBF), 1), nsmall=1))
+GroupsHighBF <- c(format(round(BFRatioRRTable$cposBF / (BFRatioRRTable$cposBF + BFRatioRRTable$cnegBF), 1), nsmall=1))
+GroupsBFRR <- paste(GroupsLowBF, "|", GroupsHighBF, sep="")
 
-table4 <- cbind(Study, PowerH, PowerHRR, PowerBF, PowerBFRR)
-colnames(table4) <- c("Study", "Shannon Diversity Power (%)", "Shannon RR Power (%)", "B/F Ratio Power (%)", "B/F ratio RR (%)")
+table4 <- cbind(Study, PowerH, GroupsH, PowerHRR, GroupsHRR, PowerBF, GroupsBF, PowerBFRR, GroupsBFRR)
+colnames(table4) <- c("Study", "Shannon Diversity Power (%)", "Group n (Obese|Non-Obese)", "Shannon RR Power (%)", "Group Proportion (Low|High)", "B/F Ratio Power (%)", "Group n (Obese|Non-Obese)", "B/F ratio RR (%)", "Group Proportion (Low|High)")
 
 kable(table4, format = "markdown", align = 'c', padding = 2)
+```
+
+
+**Table 5. Summary of Power Calculations Simulations for Shannon Diversity for Non-obese versus Obese**
+
+```{r Table_5, echo=FALSE, message=FALSE, warning=FALSE}
+
+table5 <- ModelledPowerH[, -1]
+
+colnames(table5) <- c("Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference", "Actual % Difference", "Study")
+
+kable(table5, format = "markdown", align = 'c', padding = 2)
+
+
+```
+
+
+**Table 6. Summary of Power Calculations Simulations for B/F ratio for Non-obese versus Obese**
+
+```{r Table_6, echo=FALSE, message=FALSE, warning=FALSE}
+
+table6 <- ModelledPowerBF[, -1]
+
+colnames(table6) <- c("Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference", "Actual % Difference", "Study")
+
+kable(table6, format = "markdown", align = 'c', padding = 2)
 ```
 
 

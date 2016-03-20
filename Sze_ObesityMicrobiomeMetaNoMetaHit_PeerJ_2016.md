@@ -183,17 +183,46 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 **Table 4. Summary of Power Calculations for Shannon Diversity and B/F ratio for Non-obese versus Obese**
 
 
-|    Study    |  Shannon Diversity Power (%)  |  Shannon RR Power (%)  |  B/F Ratio Power (%)  |  B/F ratio RR (%)  |
-|:-----------:|:-----------------------------:|:----------------------:|:---------------------:|:------------------:|
-|   Baxter    |              59               |          6.1           |          9.1          |        6.1         |
-|    Ross     |             21.9              |          12.6          |         12.5          |        9.6         |
-|  Goodrich   |             11.8              |          17.7          |         18.3          |        5.9         |
-|   Escobar   |              4.1              |          1.6           |          9.3          |        18.5        |
-|  Zupancic   |              8.7              |          29.7          |          6.5          |        2.8         |
-|     HMP     |              9.4              |          18.8          |          3.1          |        2.9         |
-|     Wu      |               1               |          2.7           |          0.7          |        2.1         |
-|  Turnbaugh  |             42.7              |          10.2          |           8           |        3.1         |
-|  COMBINED   |             37.5              |          18.7          |          7.7          |        7.2         |
+|    Study    |  Shannon Diversity Power (%)  |  Group n (Obese&#124;Non-Obese)  |  Shannon RR Power (%)  |  Group Proportion (Low&#124;High)  |  B/F Ratio Power (%)  |  Group n (Obese&#124;Non-Obese)  |  B/F ratio RR (%)  |  Group Proportion (Low&#124;High)  |
+|:-----------:|:-----------------------------:|:--------------------------------:|:----------------------:|:----------------------------------:|:---------------------:|:--------------------------------:|:------------------:|:----------------------------------:|
+|   Baxter    |              59               |           47&#124;125            |          6.1           |            0.3&#124;0.3            |          9.1          |           47&#124;125            |        6.1         |            0.3&#124;0.3            |
+|    Ross     |             21.9              |            38&#124;25            |          12.6          |            0.7&#124;0.5            |         12.5          |            38&#124;25            |        9.6         |            0.6&#124;0.6            |
+|  Goodrich   |             11.8              |           103&#124;404           |          17.7          |            0.2&#124;0.2            |         18.3          |           103&#124;404           |        5.9         |            0.2&#124;0.2            |
+|   Escobar   |              4.1              |            10&#124;20            |          1.6           |            0.3&#124;0.3            |          9.3          |            10&#124;20            |        18.5        |            0.2&#124;0.5            |
+|  Zupancic   |              8.7              |           71&#124;129            |          29.7          |            0.4&#124;0.3            |          6.5          |            71&#124;99            |        2.8         |            0.5&#124;0.4            |
+|     HMP     |              9.4              |           26&#124;230            |          18.8          |            0.1&#124;0.1            |          3.1          |           26&#124;230            |        2.9         |            0.1&#124;0.1            |
+|     Wu      |               1               |            5&#124;58             |          2.7           |            0.1&#124;0.1            |          0.7          |            5&#124;58             |        2.1         |            0.1&#124;0.1            |
+|  Turnbaugh  |             42.7              |            99&#124;47            |          10.2          |            0.7&#124;0.6            |           8           |            99&#124;47            |        3.1         |            0.7&#124;0.7            |
+
+
+**Table 5. Summary of Power Calculations Simulations for Shannon Diversity for Non-obese versus Obese**
+
+
+|  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |  Actual % Difference  |    Study    |
+|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|:---------------------:|:-----------:|
+|                 6.5                 |                56.3                 |                 99.3                 |                100.0                 |          5.3          |   Baxter    |
+|                 5.1                 |                24.5                 |                 68.1                 |                 96.3                 |          5.8          |    Ross     |
+|                 9.2                 |                88.2                 |                100.0                 |                100.0                 |          1.2          |  Goodrich   |
+|                 4.6                 |                13.1                 |                 36.4                 |                 66.6                 |          0.5          |   Escobar   |
+|                 6.3                 |                33.9                 |                 87.1                 |                 99.7                 |          1.6          |  Zupancic   |
+|                 6.1                 |                22.9                 |                 67.0                 |                 95.5                 |          3.1          |     HMP     |
+|                 4.8                 |                 8.6                 |                 20.6                 |                 39.6                 |          1.8          |     Wu      |
+|                 7.3                 |                50.4                 |                 97.6                 |                100.0                 |          3.6          |  Turnbaugh  |
+
+
+**Table 6. Summary of Power Calculations Simulations for B/F ratio for Non-obese versus Obese**
+
+
+|  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |  Actual % Difference  |    Study    |
+|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|:---------------------:|:-----------:|
+|                 5.3                 |                13.2                 |                 37.6                 |                 69.3                 |          7.2          |   Baxter    |
+|                 4.3                 |                 7.8                 |                 17.1                 |                 32.1                 |         13.7          |    Ross     |
+|                 4.8                 |                22.4                 |                 68.1                 |                 97.3                 |         13.4          |  Goodrich   |
+|                 4.1                 |                 6.2                 |                 9.6                  |                 16.4                 |         29.6          |   Escobar   |
+|                 5.6                 |                 9.9                 |                 20.2                 |                 38.7                 |          0.9          |  Zupancic   |
+|                 5.0                 |                 8.1                 |                 14.9                 |                 29.6                 |         19.8          |     HMP     |
+|                 4.2                 |                 5.6                 |                 6.9                  |                 10.2                 |         17.9          |     Wu      |
+|                 5.6                 |                11.2                 |                 34.6                 |                 64.6                 |          8.7          |  Turnbaugh  |
 
 
 

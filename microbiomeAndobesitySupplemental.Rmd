@@ -73,7 +73,7 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 
 **Table 1. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
 
-```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Table_S1, echo=FALSE, message=FALSE, warning=FALSE}
 
 library(knitr)
 
@@ -93,6 +93,29 @@ colnames(table1) <- c("Study", "Hypervariable Region", "Clostridiales OTU Most P
 
 kable(table1, format = "markdown", align = 'c', padding = 2)
 ```
+
+
+**Table S2. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
+
+```{r Table_S2, echo=FALSE, message=FALSE, warning=FALSE}
+
+VariableRegion <- c("V1-V2 vs V2", "V1-V3", "V4")
+
+TopHitClos <- c("None", "45.2 | 45.2 | 46.5", "60.9 | 60.9 | 32.8")
+AverageClos <- c("None", "34.6 | 34.6 | 59.4", "58.9 | 58.9 | 33.2")
+TopHitLachno <- c("TBC", "40.7 | 40.7 | 50", "61.3 | 61.3 | 32.8")
+AverageLachno <- c("TBC", "37.9 | 37.9 | 52.1", "59.4 | 59.4 | 33.1")
+TopHitRumi <- c("TBC", "15.5 | 15.5 | 84.1", "60.5 | 60.5 | 32.8")
+AverageRumi <- c("TBC", "15.2 | 15.2 | 84.1", "57.5 | 57.5 | 33.2")
+
+table2 <- cbind(VariableRegion, TopHitClos, AverageClos, TopHitLachno, AverageLachno, TopHitRumi, AverageRumi)
+colnames(table2) <- c("Variable Region", "Top Similarity Colstridiales (Id | Sim | Gaps)", "Average Similarity Colstridiales (Id | Sim | Gaps)", "Top Similarity Lachnospiraceae (Id | Sim | Gaps)", "Average Similarity Lachnospiraceae (Id | Sim | Gaps)", "Top Similarity Ruminococcaceae (Id | Sim | Gaps)", "Average Similarity Ruminococcaceae (Id | Sim | Gaps)")
+
+kable(table2, format = "markdown", align = 'c', padding = 2)
+
+```
+
+
 
 
 *******

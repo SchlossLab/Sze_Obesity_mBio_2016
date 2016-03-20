@@ -81,6 +81,18 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 |     HMP     |         V3-V5          |                                                          OTU293:7 Clostridium                                                          |                                                                                                            Anaerobacterium chartisolvens (100&#124;91)                                                                                                            |                                                                None                                                                 |                                                                                                                                                 None                                                                                                                                                 |                                                                                         OTU252:10 Clostridium                                                                                         |                                                                                                                                                                                 Clostridium Spp(100&#124;97)                                                                                                                                                                                 |
 
 
+**Table S2. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
+
+
+|  Variable Region  |  Top Similarity Colstridiales (Id &#124; Sim &#124; Gaps)  |  Average Similarity Colstridiales (Id &#124; Sim &#124; Gaps)  |  Top Similarity Lachnospiraceae (Id &#124; Sim &#124; Gaps)  |  Average Similarity Lachnospiraceae (Id &#124; Sim &#124; Gaps)  |  Top Similarity Ruminococcaceae (Id &#124; Sim &#124; Gaps)  |  Average Similarity Ruminococcaceae (Id &#124; Sim &#124; Gaps)  |
+|:-----------------:|:----------------------------------------------------------:|:--------------------------------------------------------------:|:------------------------------------------------------------:|:----------------------------------------------------------------:|:------------------------------------------------------------:|:----------------------------------------------------------------:|
+|    V1-V2 vs V2    |                            None                            |                              None                              |                             TBC                              |                               TBC                                |                             TBC                              |                               TBC                                |
+|       V1-V3       |                45.2 &#124; 45.2 &#124; 46.5                |                  34.6 &#124; 34.6 &#124; 59.4                  |                  40.7 &#124; 40.7 &#124; 50                  |                   37.9 &#124; 37.9 &#124; 52.1                   |                 15.5 &#124; 15.5 &#124; 84.1                 |                   15.2 &#124; 15.2 &#124; 84.1                   |
+|        V4         |                60.9 &#124; 60.9 &#124; 32.8                |                  58.9 &#124; 58.9 &#124; 33.2                  |                 61.3 &#124; 61.3 &#124; 32.8                 |                   59.4 &#124; 59.4 &#124; 33.1                   |                 60.5 &#124; 60.5 &#124; 32.8                 |                   57.5 &#124; 57.5 &#124; 33.2                   |
+
+
+
+
 *******
 ##### References:
 
