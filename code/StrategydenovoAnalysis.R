@@ -6,6 +6,7 @@
 library(vegan)
 library(epiR)
 library(AUCRF)
+source("code/UsedFunctions.R")
 
 ############# BAXTER ######################################################
 
@@ -107,34 +108,8 @@ baxterPERM <- baxter2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-
-#Shannon diversity
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-##Run the RR for Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-BaxtotalN <- length(orderedHCat)
-BaxHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-BaxHighShannonGroup <- as.data.frame(table(test3[c(1:BaxHHighTotal), 2]))
-BaxLowShannonGroup <- as.data.frame(table(test3[c((BaxHHighTotal + 1):BaxtotalN), 2]))
-#Group1 (Higher than median), obese = 22 and non-obese = 64
-#Group2 (Lower than median), obese = 25 and non-obese = 61
-
-group1 <- c(BaxHighShannonGroup[2, 2], BaxHighShannonGroup[1, 2])
-group2 <- c(BaxLowShannonGroup[2, 2], BaxLowShannonGroup[1, 2])
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-baxterHEpi <- epi.2by2(r.test, method="cohort.count")
-baxterHMassoc <- baxterHEpi$massoc
-baxterHRR <- baxterHMassoc$RR.strata.score
-baxterHRRsig <- baxterHMassoc$chisq.strata
+# Run Shannon Diversity RR Test
+BaxterHRR <- RunRR(alpha.test, demographics, "obese", "H")
 ## Risk Ratio = 1.14
 ## CI = 0.70, 1.85
 ## p-value = 0.608
@@ -144,29 +119,7 @@ Bacter = phyla.table.rel.abund$Bacteroidetes
 Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-BaxBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-BaxHighBFGroup <- as.data.frame(table(test4[c(1:BaxBFHighTotal), 2]))
-BaxLowBFGroup <- as.data.frame(table(test4[c((BaxBFHighTotal + 1):BaxtotalN), 2]))
-#Group1 (Higher than median), obese = 23 and non-obese = 63
-#Group2 (Lower than median), obese = 24 and non-obese = 62
-
-group1 <- c(BaxHighBFGroup[2, 2], BaxHighBFGroup[1, 2])
-group2 <- c(BaxLowBFGroup[2, 2], BaxLowBFGroup[1, 2])
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-baxterBFEpi <- epi.2by2(r.test, method="cohort.count")
-baxterBFMassoc <- baxterBFEpi$massoc
-baxterBFRR <- baxterBFMassoc$RR.strata.score
-baxterBFRRsig <- baxterBFMassoc$chisq.strata
+BaxterBFRR <- RunRR(BFRatio, demographics, "obese", "BFRatio")
 ## Risk Ratio = 1.04
 ## CI = 0.64, 1.70
 ## p-value = 0.864
@@ -223,22 +176,6 @@ overallPTable <- as.data.frame(t(c(baxterBacter$p.value, baxterFirm$p.value,
                                    baxterPERM[1,6])))
 colnames(overallPTable) <- c("Bacteroidetes", "Firmicutes", "BFRatio", "Shannon", "OTURich", "Evenness", "BrayC")
 
-# Get Data for Forest Plots
-tposH <- BaxLowShannonGroup[2, 2]
-tnegH <- BaxLowShannonGroup[1, 2]
-cposH <- BaxHighShannonGroup[2, 2]
-cnegH <- BaxHighShannonGroup[1, 2]
-RRH <- baxterHRR[1,1]
-lowH <- baxterHRR[1,2]
-highH <- baxterHRR[1,3]
-
-tposBF <- BaxLowBFGroup[2, 2]
-tnegBF <- BaxLowBFGroup[1, 2]
-cposBF <- BaxHighBFGroup[2, 2]
-cnegBF <- BaxHighBFGroup[1, 2]
-RRBF <- baxterBFRR[1,1]
-lowBF <- baxterBFRR[1,2]
-highBF <- baxterBFRR[1,3]
 
 # Get data for the combined analysis with Zscores
 combinedData <- as.data.frame(cbind(BaxterZH, BaxterZLogBF, BaxterBMI))
@@ -371,68 +308,22 @@ rossPERM <- ross2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-#Shannon diversity
-
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-##Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-RosstotalN <- length(orderedHCat)
-RossHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-RossHighShannonGroup <- as.data.frame(table(test3[c(1:RossHHighTotal), 2]))
-RossLowShannonGroup <- as.data.frame(table(test3[c((RossHHighTotal + 1):RosstotalN), 2]))
-group1 <- c(RossHighShannonGroup[2, 2], RossHighShannonGroup[1, 2])
-group2 <- c(RossLowShannonGroup[2, 2], RossLowShannonGroup[1, 2])
-#Group1 (Higher than median), obese = 18 and non-obese = 13
-#Group2 (Lower than median), obese = 20 and non-obese = 12
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group1", "group2")
-
-rossHEpi <- epi.2by2(r.test, method="cohort.count")
-rossHMassoc <- rossHEpi$massoc
-rossHRR <- rossHMassoc$RR.strata.score
-rossHRRsig <- rossHMassoc$chisq.strata
+# Run Shannon Diversity RR Test
+RossHRR <- RunRR(alpha.test, edit.metadata2, "obese", "H")
 ## Risk Ratio = 1.20
 ## CI = 0.80, 1.80
 ## p-value = 0.382
 
-
 ##Run the RR for B/F ratio
-BFRatio <- as.data.frame(BFratio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFratio <= median(BFratio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-RossBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-RossHighBFGroup <- as.data.frame(table(test4[c(1:RossBFHighTotal), 2]))
-RossLowBFGroup <- as.data.frame(table(test4[c((RossBFHighTotal + 1):RosstotalN), 2]))
-group1 <- c(RossHighBFGroup[2, 2], RossHighBFGroup[1, 2])
-group2 <- c(RossLowBFGroup[2, 2], RossLowBFGroup[1, 2])
-#Group1 (Higher than median), obese = 22 and non-obese = 9
-#Group2 (Lower than median), obese = 16 and non-obese = 16
-
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-rossBFEpi <- epi.2by2(r.test, method="cohort.count")
-rossBFMassoc <- rossBFEpi$massoc
-rossBFRR <- rossBFMassoc$RR.strata.score
-rossBFRRsig <- rossBFMassoc$chisq.strata
+Bacter = phyla.table.rel.abund$Bacteroidetes
+Firm = phyla.table.rel.abund$Firmicutes
+BFRatio = Bacter/Firm
+BFRatio <- as.data.frame(BFRatio)
+RossBFRR <- RunRR(BFRatio, edit.metadata2, "obese", "BFRatio")
 ## Risk Ratio = 0.87
 ## CI = 0.58, 1.30
 ## p-value = 0.503
+
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -491,23 +382,6 @@ Ross <- c(rossBacter$p.value, rossFirm$p.value, rossBF$p.value,
           rossH$p.value, rossS$p.value, rossJ$p.value, rossPERM[1,6])
 overallPTable <- rbind(overallPTable, Ross)
 
-tposH <- c(tposH, RossLowShannonGroup[2, 2])
-tnegH <- c(tnegH, RossLowShannonGroup[1, 2])
-cposH <- c(cposH, RossHighShannonGroup[2, 2])
-cnegH <- c(cnegH, RossHighShannonGroup[1, 2])
-RRH <- c(RRH, rossHRR[1,1])
-lowH <- c(lowH, rossHRR[1,2])
-highH <- c(highH, rossHRR[1,3])
-
-
-tposBF <- c(tposBF, RossLowBFGroup[2, 2])
-tnegBF <- c(tnegBF, RossLowBFGroup[1, 2])
-cposBF <- c(cposBF, RossHighBFGroup[2, 2])
-cnegBF <- c(cnegBF, RossHighBFGroup[1, 2])
-RRBF <- c(RRBF, rossBFRR[1,1])
-lowBF <- c(lowBF, rossBFRR[1,2])
-highBF <- c(highBF, rossBFRR[1,3])
-
 RossData <- as.data.frame(cbind(RossZH, RossZLogBF, RossBMI))
 RossData$Study <- "Ross"
 colnames(RossData) <- c("ZH", "ZLogBF", "BMI", "Study")
@@ -528,7 +402,7 @@ rm(RossLowShannonGroup, RossHighShannonGroup, rossHRR, rossBacter,
 #Read in and match metadata to microbiome data
 metadata <- read.csv("data/process/Goodrich/TwinsUKStudy2.csv")
 rownames(metadata) <- metadata[, 7]
-shared.data <- read.table("data/process/Goodrich/combined.tx.1.subsample.shared", header=T)
+shared.data <- read.table("data/process/Goodrich/GoodrichGoodSub.shared", header=T)
 rownames(shared.data) <- shared.data[, 2]
 microbiome <- shared.data[, -c(1:3)]
 keep  <- which(metadata$body_mass_index_s != "<not provided>")
@@ -629,70 +503,21 @@ goodrichPERM <- goodrich2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-#Shannon diversity
-
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-
-##Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-GoodtotalN <- length(orderedHCat)
-GoodHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-GoodHighShannonGroup <- as.data.frame(table(test3[c(1:GoodHHighTotal), 2]))
-GoodLowShannonGroup <- as.data.frame(table(test3[c((GoodHHighTotal + 1):GoodtotalN), 2]))
-group1 <- c(GoodHighShannonGroup[2, 2], GoodHighShannonGroup[1, 2])
-group2 <- c(GoodLowShannonGroup[2, 2], GoodLowShannonGroup[1, 2])
-#Group1 (Higher than median), obese = 47 and non-obese = 206
-#Group2 (Lower than median), obese = 56 and non-obese = 198
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-goodrichHEpi <- epi.2by2(r.test, method="cohort.count")
-goodrichHMassoc <- goodrichHEpi$massoc
-goodrichHRR <- goodrichHMassoc$RR.strata.score
-goodrichHRRsig <- goodrichHMassoc$chisq.strata
-## Risk Ratio = 1.19
-## CI = 0.84, 1.68
-## p-value = 0.332
+# Run Shannon Diversity RR Test
+GoodrichHRR <- RunRR(alpha.test, metadata, "obese", "H")
+## Risk Ratio = 0.836
+## CI = 0.592, 1.18
+## p-value = 0.31
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
 Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-GoodBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-GoodHighBFGroup <- as.data.frame(table(test4[c(1:GoodBFHighTotal), 2]))
-GoodLowBFGroup <- as.data.frame(table(test4[c((GoodBFHighTotal + 1):GoodtotalN), 2]))
-group1 <- c(GoodHighBFGroup[2, 2], GoodHighBFGroup[1, 2])
-group2 <- c(GoodLowBFGroup[2, 2], GoodLowBFGroup[1, 2])
-#Group1 (Higher than median), obese = 52 and non-obese = 201
-#Group2 (Lower than median), obese = 51 and non-obese = 203
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-goodrichBFEpi <- epi.2by2(r.test, method="cohort.count")
-goodrichBFMassoc <- goodrichBFEpi$massoc
-goodrichBFRR <- goodrichBFMassoc$RR.strata.score
-goodrichBFRRsig <- goodrichBFMassoc$chisq.strata
-## Risk Ratio = 0.98
-## CI = 0.69, 1.38
-## p-value = 0.894
+GoodrichBFRR <- RunRR(BFRatio, metadata, "obese", "BFRatio")
+## Risk Ratio = 1.02
+## CI = 0.72, 1.43
+## p-value = 0.93
 
 ###########################################################################
 ############ Classification using AUCRF####################################
@@ -756,22 +581,6 @@ Goodrich <- c(goodrichBacter$p.value, goodrichFirm$p.value,
 
 overallPTable <- rbind(overallPTable, Goodrich)
 
-tposH <- c(tposH, GoodLowShannonGroup[2, 2])
-tnegH <- c(tnegH, GoodLowShannonGroup[1, 2])
-cposH <- c(cposH, GoodHighShannonGroup[2, 2])
-cnegH <- c(cnegH, GoodHighShannonGroup[1, 2])
-RRH <- c(RRH, goodrichHRR[1,1])
-lowH <- c(lowH, goodrichHRR[1,2])
-highH <- c(highH, goodrichHRR[1,3])
-
-tposBF <- c(tposBF, GoodLowBFGroup[2, 2])
-tnegBF <- c(tnegBF, GoodLowBFGroup[1, 2])
-cposBF <- c(cposBF, GoodHighBFGroup[2, 2])
-cnegBF <- c(cnegBF, GoodHighBFGroup[1, 2])
-RRBF <- c(RRBF, goodrichBFRR[1,1])
-lowBF <- c(lowBF, goodrichBFRR[1,2])
-highBF <- c(highBF, goodrichBFRR[1,3])
-
 GoodrichData <- as.data.frame(cbind(GoodrichZH, GoodrichZLogBF, GoodrichBMI))
 GoodrichData$Study <- "Goodrich"
 colnames(GoodrichData) <- c("ZH", "ZLogBF", "BMI", "Study")
@@ -781,6 +590,7 @@ rm(GoodLowShannonGroup, GoodHighShannonGroup, goodrichHRR, goodrichBacter,
    goodrichFirm, goodrichBF, goodrichH, goodrichS, goodrichJ, 
    goodrichPERM, goodrichHEpi, GoodrichZH, GoodrichZLogBF, 
    GoodrichBMI, goodrich2, Ross, Goodrich)
+
 
 ########### ESCOBAR ######################################################
 
@@ -903,69 +713,22 @@ escobarPERM <- escobar2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-#Shannon diversity
-
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-##Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-EscototalN <- length(orderedHCat)
-EscoHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-EscoHighShannonGroup <- as.data.frame(table(test3[c(1:EscoHHighTotal), 2]))
-EscoLowShannonGroup <- as.data.frame(table(test3[c((EscoHHighTotal + 1):EscototalN), 2]))
-group1 <- c(EscoHighShannonGroup[2, 2], EscoHighShannonGroup[1, 2])
-group2 <- c(EscoLowShannonGroup[2, 2], EscoLowShannonGroup[1, 2])
-#Group1 (Higher than median), obese = 4 and non-obese = 11
-#Group2 (Lower than median), obese = 6 and non-obese = 9
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group1", "group2")
-
-escobarHEpi <- epi.2by2(r.test, method="cohort.count")
-escobarHMassoc <- escobarHEpi$massoc
-escobarHRR <- escobarHMassoc$RR.strata.score
-escobarHRRsig <- escobarHMassoc$chisq.strata
-## Risk Ratio = 1.00
-## CI = 0.36, 2.75
-## p-value = 1.00
+# Run Shannon Diversity RR Test
+EscobarHRR <- RunRR(alpha.test, edit.metadata2, "obese", "H")
+## Risk Ratio = 1
+## CI = 0.37, 2.70
+## p-value = 1
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
 Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-EscoBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-EscoHighBFGroup <- as.data.frame(table(test4[c(1:EscoBFHighTotal), 2]))
-EscoLowBFGroup <- as.data.frame(table(test4[c((EscoBFHighTotal + 1):EscototalN), 2]))
-group1 <- c(EscoHighBFGroup[2, 2], EscoHighBFGroup[1, 2])
-group2 <- c(EscoLowBFGroup[2, 2], EscoLowBFGroup[1, 2])
-#Group1 (Higher than median), obese = 7 and non-obese = 8
-#Group2 (Lower than median), obese = 3 and non-obese = 12
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-escobarBFEpi <- epi.2by2(r.test, method="cohort.count")
-escobarBFMassoc <- escobarBFEpi$massoc
-escobarBFRR <- escobarBFMassoc$RR.strata.score
-escobarBFRRsig <- escobarBFMassoc$chisq.strata
-## Risk Ratio = 0.43
-## CI = 0.14, 1.35
+EscobarBFRR <- RunRR(BFRatio, edit.metadata2, "obese", "BFRatio")
+## Risk Ratio = 0.429
+## CI = 0.137, 1.23
 ## p-value = 0.121
+
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -1029,22 +792,6 @@ Escobar <- c(escobarBacter$p.value, escobarFirm$p.value,
              escobarJ$p.value, escobarPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Escobar)
-
-tposH <- c(tposH, EscoLowShannonGroup[2, 2])
-tnegH <- c(tnegH, EscoLowShannonGroup[1, 2])
-cposH <- c(cposH, EscoHighShannonGroup[2, 2])
-cnegH <- c(cnegH, EscoHighShannonGroup[1, 2])
-RRH <- c(RRH, escobarHRR[1,1])
-lowH <- c(lowH, escobarHRR[1,2])
-highH <- c(highH, escobarHRR[1,3])
-
-tposBF <- c(tposBF, EscoLowBFGroup[2, 2])
-tnegBF <- c(tnegBF, EscoLowBFGroup[1, 2])
-cposBF <- c(cposBF, EscoHighBFGroup[2, 2])
-cnegBF <- c(cnegBF, EscoHighBFGroup[1, 2])
-RRBF <- c(RRBF, escobarBFRR[1,1])
-lowBF <- c(lowBF, escobarBFRR[1,2])
-highBF <- c(highBF, escobarBFRR[1,3])
 
 EscobarData <- as.data.frame(cbind(EscobarZH, EscobarZLogBF, EscobarBMI))
 EscobarData$Study <- "Escobar"
@@ -1189,71 +936,22 @@ zupancicPERM <- zupancic2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-#Shannon diversity
-
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-
-##Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-ZupatotalN <- length(orderedHCat)
-ZupaHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-ZupaHighShannonGroup <- as.data.frame(table(test3[c(1:ZupaHHighTotal), 2]))
-ZupaLowShannonGroup <- as.data.frame(table(test3[c((ZupaHHighTotal + 1):ZupatotalN), 2]))
-group1 <- c(ZupaHighShannonGroup[2, 2], ZupaHighShannonGroup[1, 2])
-group2 <- c(ZupaLowShannonGroup[2, 2], ZupaLowShannonGroup[1, 2])
-#Group1 (Higher than median), obese = 29 and non-obese = 71
-#Group2 (Lower than median), obese = 42 and non-obese = 58
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-zupancicHEpi <- epi.2by2(r.test, method="cohort.count")
-zupancicHMassoc <- zupancicHEpi$massoc
-zupancicHRR <- zupancicHMassoc$RR.strata.score
-zupancicHRRsig <- zupancicHMassoc$chisq.strata
+# Run Shannon Diversity RR Test
+ZupancicHRR <- RunRR(alpha.test, metadata, "obese", "H")
 ## Risk Ratio = 1.37
-## CI = 0.93, 2.00
+## CI = 0.94, 2.01
 ## p-value = 0.104
-
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
 Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-ZupaBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-ZupaHighBFGroup <- as.data.frame(table(test4[c(1:ZupaBFHighTotal), 2]))
-ZupaLowBFGroup <- as.data.frame(table(test4[c((ZupaBFHighTotal + 1):ZupatotalN), 2]))
-group1 <- c(ZupaHighBFGroup[2, 2], ZupaHighBFGroup[1, 2])
-group2 <- c(ZupaLowBFGroup[2, 2], ZupaLowBFGroup[1, 2])
-#Group1 (Higher than median), obese = 41 and non-obese = 62
-#Group2 (Lower than median), obese = 37 and non-obese = 67
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-zupancicBFEpi <- epi.2by2(r.test, method="cohort.count")
-zupancicBFMassoc <- zupancicBFEpi$massoc
-zupancicBFRR <- zupancicBFMassoc$RR.strata.score
-zupancicBFRRsig <- zupancicBFMassoc$chisq.strata
-## Risk Ratio = 0.97
-## CI = 0.67, 1.41
+ZupancicBFRR <- RunRR(BFRatio, metadata, "obese", "BFRatio")
+## Risk Ratio = 0.972
+## CI = 0.669, 1.41
 ## p-value = 0.883
+
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -1318,21 +1016,6 @@ Zupancic <- c(zupancicBacter$p.value, zupancicFirm$p.value,
 
 overallPTable <- rbind(overallPTable, Zupancic)
 
-tposH <- c(tposH, ZupaLowShannonGroup[2, 2])
-tnegH <- c(tnegH, ZupaLowShannonGroup[1, 2])
-cposH <- c(cposH, ZupaHighShannonGroup[2, 2])
-cnegH <- c(cnegH, ZupaHighShannonGroup[1, 2])
-RRH <- c(RRH, zupancicHRR[1,1])
-lowH <- c(lowH, zupancicHRR[1,2])
-highH <- c(highH, zupancicHRR[1,3])
-
-tposBF <- c(tposBF, ZupaLowBFGroup[2, 2])
-tnegBF <- c(tnegBF, ZupaLowBFGroup[1, 2])
-cposBF <- c(cposBF, ZupaHighBFGroup[2, 2])
-cnegBF <- c(cnegBF, ZupaHighBFGroup[1, 2])
-RRBF <- c(RRBF, zupancicBFRR[1,1])
-lowBF <- c(lowBF, zupancicBFRR[1,2])
-highBF <- c(highBF, zupancicBFRR[1,3])
 
 ZupancicData <- as.data.frame(cbind(ZupancicZH, ZupancicZLogBF, ZupancicBMI))
 ZupancicData$Study <- "Zupancic"
@@ -1454,37 +1137,10 @@ HMPPERM <- HMP2$aov.tab
 ######################################################################################## Relative Risk ###############################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-#Shannon diversity
-
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-
-##Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-HMPtotalN <- length(orderedHCat)
-HMPHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-HMPHighShannonGroup <- as.data.frame(table(test3[c(1:HMPHHighTotal), 2]))
-HMPLowShannonGroup <- as.data.frame(table(test3[c((HMPHHighTotal + 1):HMPtotalN), 2]))
-group1 <- c(HMPHighShannonGroup[2, 2], HMPHighShannonGroup[1, 2])
-group2 <- c(HMPLowShannonGroup[2, 2], HMPLowShannonGroup[1, 2])
-#Group1 (Higher than median), obese = 10 and non-obese = 118
-#Group2 (Lower than median), obese = 16 and non-obese = 112
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group1", "group2")
-
-HMPHEpi <- epi.2by2(r.test, method="cohort.count")
-HMPHMassoc <- HMPHEpi$massoc
-HMPHRR <- HMPHMassoc$RR.strata.score
-HMPHRRsig <- HMPHMassoc$chisq.strata
+# Run Shannon Diversity RR Test
+HMPHRR <- RunRR(alpha.test, select.meta.cat, "obese", "H")
 ## Risk Ratio = 1.60
-## CI = 0.75, 3.39
+## CI = 0.77, 3.35
 ## p-value = 0.214
 
 ##Run the RR for B/F ratio
@@ -1492,33 +1148,11 @@ Bacter = phyla.table.rel.abund$Bacteroidetes
 Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-HMPBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-HMPHighBFGroup <- as.data.frame(table(test4[c(1:HMPBFHighTotal), 2]))
-HMPLowBFGroup <- as.data.frame(table(test4[c((HMPBFHighTotal + 1):HMPtotalN), 2]))
-group1 <- c(HMPHighBFGroup[2, 2], HMPHighBFGroup[1, 2])
-group2 <- c(HMPLowBFGroup[2, 2], HMPLowBFGroup[1, 2])
-#Group1 (Higher than median), obese = 13 and non-obese = 115
-#Group2 (Lower than median), obese = 13 and non-obese = 115
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-
-HMPBFEpi <- epi.2by2(r.test, method="cohort.count")
-HMPBFMassoc <- HMPBFEpi$massoc
-HMPBFRR <- HMPBFMassoc$RR.strata.score
-HMPBFRRsig <- HMPBFMassoc$chisq.strata
+HMPBFRR <- RunRR(BFRatio, select.meta.cat, "obese", "BFRatio")
 ## Risk Ratio = 1.00
-## CI = 0.48, 2.07
-## p-value = 1.00
+## CI = 0.49, 2.04
+## p-value = 1
+
 
 ###########################################################################
 ############ Classification using AUCRF ###################################
@@ -1579,22 +1213,6 @@ HMP <- c(HMPBacter$p.value, HMPFirm$p.value,
          HMPJ$p.value, HMPPERM[1,6])
 
 overallPTable <- rbind(overallPTable, HMP)
-
-tposH <- c(tposH, HMPLowShannonGroup[2, 2])
-tnegH <- c(tnegH, HMPLowShannonGroup[1, 2])
-cposH <- c(cposH, HMPHighShannonGroup[2, 2])
-cnegH <- c(cnegH, HMPHighShannonGroup[1, 2])
-RRH <- c(RRH, HMPHRR[1,1])
-lowH <- c(lowH, HMPHRR[1,2])
-highH <- c(highH, HMPHRR[1,3])
-
-tposBF <- c(tposBF, HMPLowBFGroup[2, 2])
-tnegBF <- c(tnegBF, HMPLowBFGroup[1, 2])
-cposBF <- c(cposBF, HMPHighBFGroup[2, 2])
-cnegBF <- c(cnegBF, HMPHighBFGroup[1, 2])
-RRBF <- c(RRBF, HMPBFRR[1,1])
-lowBF <- c(lowBF, HMPBFRR[1,2])
-highBF <- c(highBF, HMPBFRR[1,3])
 
 
 HMPData <- as.data.frame(cbind(HMPZH, HMPZLogBF, HMPBMI))
@@ -1715,37 +1333,10 @@ WuPERM <- Wu2$aov.tab
 ############ Relative Risk#################################################
 ###########################################################################
 
-#Generate median values and put them into existing alpha.test dataframe
-#Shannon diversity
-
-alpha.test <- within(alpha.test, {shannon.cat = ifelse(H <= median(H), "less", "higher")})
-
-
-##Shannon Diversity
-H.cat <- alpha.test$shannon.cat
-bmi.cat <- as.character(obese)
-test3 <- cbind(H.cat, bmi.cat)
-test3 <- test3[order(H.cat), ]
-orderedHCat <- test3[, 1]
-WutotalN <- length(orderedHCat)
-WuHHighTotal <- length(orderedHCat[orderedHCat=="higher"])
-WuHighShannonGroup <- as.data.frame(table(test3[c(1:WuHHighTotal), 2]))
-WuLowShannonGroup <- as.data.frame(table(test3[c((WuHHighTotal + 1):WutotalN), 2]))
-group1 <- c(WuHighShannonGroup[2, 2], WuHighShannonGroup[1, 2])
-group2 <- c(WuLowShannonGroup[2, 2], WuLowShannonGroup[1, 2])
-#Group1 (Higher than median), obese = 3 and non-obese = 26
-#Group2 (Lower than median), obese = 2 and non-obese = 27
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-WuHEpi <- epi.2by2(r.test, method="cohort.count")
-WuHMassoc <- WuHEpi$massoc
-WuHRR <- WuHMassoc$RR.strata.score
-WuHRRsig <- WuHMassoc$chisq.strata
+# Run Shannon Diversity RR Test
+WuHRR <- RunRR(alpha.test, metadata, "obese", "H")
 ## Risk Ratio = 0.65
-## CI = 0.12, 3.61
+## CI = 0.135, 3.05
 ## p-value = 0.615
 
 ##Run the RR for B/F ratio
@@ -1753,32 +1344,11 @@ Bacter = phyla.table.rel.abund$Bacteroidetes
 Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
-
-BFRatio <- within(BFRatio, {BFRatio.cat = ifelse(BFRatio <= median(BFRatio), "less", "higher")})
-
-BFRatio.cat <- BFRatio$BFRatio.cat
-test4 <- cbind(BFRatio.cat, obese)
-test4 <- test4[order(BFRatio.cat), ]
-orderedBFCat <- test4[, 1]
-WuBFHighTotal <- length(orderedBFCat[orderedBFCat=="higher"])
-WuHighBFGroup <- as.data.frame(table(test4[c(1:WuBFHighTotal), 2]))
-WuLowBFGroup <- as.data.frame(table(test4[c((WuBFHighTotal + 1):WutotalN), 2]))
-group1 <- c(WuHighBFGroup[2, 2], WuHighBFGroup[1, 2])
-group2 <- c(WuLowBFGroup[2, 2], WuLowBFGroup[1, 2])
-#Group1 (Higher than median), obese = 3 and non-obese = 26
-#Group2 (Lower than median), obese = 2 and non-obese = 27
-
-r.test <- rbind(group2, group1)
-colnames(r.test) <- c("Obese", "Not.Obese")
-rownames(r.test) <- c("group2", "group1")
-
-WuBFEpi <- epi.2by2(r.test, method="cohort.count")
-WuBFMassoc <- WuBFEpi$massoc
-WuBFRR <- WuBFMassoc$RR.strata.score
-WuBFRRsig <- WuBFMassoc$chisq.strata
+WuBFRR <- RunRR(BFRatio, metadata, "obese", "BFRatio")
 ## Risk Ratio = 1.45
-## CI = 0.26, 8.11
+## CI = 0.308, 6.95
 ## p-value = 0.668
+
 
 ###########################################################################
 ############ Classification using AUCRF####################################
@@ -1833,22 +1403,6 @@ Wu <- c(WuBacter$p.value, WuFirm$p.value,
         WuJ$p.value, WuPERM[1,6])
 
 overallPTable <- rbind(overallPTable, Wu)
-
-tposH <- c(tposH, WuLowShannonGroup[2, 2])
-tnegH <- c(tnegH, WuLowShannonGroup[1, 2])
-cposH <- c(cposH, WuHighShannonGroup[2, 2])
-cnegH <- c(cnegH, WuHighShannonGroup[1, 2])
-RRH <- c(RRH, WuHRR[1,1])
-lowH <- c(lowH, WuHRR[1,2])
-highH <- c(highH, WuHRR[1,3])
-
-tposBF <- c(tposBF, WuLowBFGroup[2, 2])
-tnegBF <- c(tnegBF, WuLowBFGroup[1, 2])
-cposBF <- c(cposBF, WuHighBFGroup[2, 2])
-cnegBF <- c(cnegBF, WuHighBFGroup[1, 2])
-RRBF <- c(RRBF, WuBFRR[1,1])
-lowBF <- c(lowBF, WuBFRR[1,2])
-highBF <- c(highBF, WuBFRR[1,3])
 
 WuData <- as.data.frame(cbind(WuZH, WuZLogBF, WuBMI))
 WuData$Study <- "Wu"
