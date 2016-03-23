@@ -4,6 +4,9 @@ January 26, 2016
 <br><br>
 
 
+
+
+
 ###In-Depth Overview of Search Strategy:
 
 The inital search strategy included looking for all papers that initially fit under the below NCBI PubMed advanced search criteria.  The terms included in this criteria were that the manuscript had to have "Bacterial Microbiome" and "Obesity, BMI, bmi, obesity" in their manuscript criteria, it was not published more than 10 years ago, they were not review articles, and it contained research on humans only.  The below formula when put into PubMed should recapitulate our initial search on the website.
@@ -49,6 +52,23 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 
 ###Supplemental Results:
 
+
+**Table S1. Summary of P-values for Measurements of Interest for each Individual Study for Obese versus Normal**
+
+
+|    Study    |  Bacteroidetes  |  Firmicutes  |  B/F Ratio  |  Shannon Diversity  |  OTU Richness  |  Evenness  |  Bray Curtis  |
+|:-----------:|:---------------:|:------------:|:-----------:|:-------------------:|:--------------:|:----------:|:-------------:|
+|   Baxter    |      0.20       |     0.61     |    0.19     |        0.07         |      0.04      |    0.13    |     0.06      |
+|    Ross     |      0.20       |     0.38     |    0.22     |        0.28         |      0.25      |    0.38    |     0.82      |
+|  Goodrich   |      0.44       |     0.29     |    0.27     |        0.61         |      0.32      |    0.84    |     0.33      |
+|   Escobar   |      0.06       |     0.13     |    0.08     |        0.95         |      0.23      |    0.62    |     0.07      |
+|  Zupancic   |      0.57       |     0.60     |    0.59     |        0.31         |      0.16      |    0.44    |     0.18      |
+|     HMP     |      0.46       |     0.79     |    0.59     |        0.58         |      0.97      |    0.47    |     0.81      |
+|     Wu      |      0.71       |     0.75     |    0.99     |        0.91         |      0.28      |    0.38    |     0.53      |
+|  Turnbaugh  |      0.80       |     0.86     |    0.79     |        0.12         |      0.05      |    0.17    |     0.09      |
+
+
+
 ![Figure S1](results/figures/suppFigClostridiales.png)\
 
 
@@ -66,7 +86,7 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 **Figure S3: Boxplots of All Ruminococcaceae OTUs Important for Non-Obese and Obese Classification.** A total of 7/8 studies had at least 1 OTU that was classified to Ruminococcaceae  However, overall there was a wide range in direction both between studies and within studies.
 
 
-**Table 1. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
+**Table 2. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
 
 
 |    Study    |  Hypervariable Region  |                                                 Clostridiales OTU Most Prevalent Match                                                 |                                                                                                    Clostridiales OTU Highest Match (Query Cover&#124;Identity)                                                                                                    |                                              Lachnospiraceae OTU Most Prevalent Match                                               |                                                                                                                    Lachnospiraceae OTU Highest Match (Query Cover&#124;Identity)                                                                                                                     |                                                                               Ruminococcaceae OTU Most Prevalent Match                                                                                |                                                                                                                                                                Ruminococcaceae OTU Highest Match (Query Cover&#124;Identity)                                                                                                                                                                 |
@@ -81,15 +101,19 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 |     HMP     |         V3-V5          |                                                          OTU293:7 Clostridium                                                          |                                                                                                            Anaerobacterium chartisolvens (100&#124;91)                                                                                                            |                                                                None                                                                 |                                                                                                                                                 None                                                                                                                                                 |                                                                                         OTU252:10 Clostridium                                                                                         |                                                                                                                                                                                 Clostridium Spp(100&#124;97)                                                                                                                                                                                 |
 
 
-**Table S2. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
+**Table S3. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
 
 
-|  Variable Region  |  Top Similarity Colstridiales (Id &#124; Sim &#124; Gaps)  |  Average Similarity Colstridiales (Id &#124; Sim &#124; Gaps)  |  Top Similarity Lachnospiraceae (Id &#124; Sim &#124; Gaps)  |  Average Similarity Lachnospiraceae (Id &#124; Sim &#124; Gaps)  |  Top Similarity Ruminococcaceae (Id &#124; Sim &#124; Gaps)  |  Average Similarity Ruminococcaceae (Id &#124; Sim &#124; Gaps)  |
-|:-----------------:|:----------------------------------------------------------:|:--------------------------------------------------------------:|:------------------------------------------------------------:|:----------------------------------------------------------------:|:------------------------------------------------------------:|:----------------------------------------------------------------:|
-|    V1-V2 vs V2    |                            None                            |                              None                              |                             TBC                              |                               TBC                                |                             TBC                              |                               TBC                                |
-|       V1-V3       |                45.2 &#124; 45.2 &#124; 46.5                |                  34.6 &#124; 34.6 &#124; 59.4                  |                  40.7 &#124; 40.7 &#124; 50                  |                   37.9 &#124; 37.9 &#124; 52.1                   |                 15.5 &#124; 15.5 &#124; 84.1                 |                   15.2 &#124; 15.2 &#124; 84.1                   |
-|        V4         |                60.9 &#124; 60.9 &#124; 32.8                |                  58.9 &#124; 58.9 &#124; 33.2                  |                 61.3 &#124; 61.3 &#124; 32.8                 |                   59.4 &#124; 59.4 &#124; 33.1                   |                 60.5 &#124; 60.5 &#124; 32.8                 |                   57.5 &#124; 57.5 &#124; 33.2                   |
+|  Variable Region  |  Top Similarity Colstridiales (Id&#124;Gaps)  |  Average Similarity Colstridiales (Id&#124;Gaps)  |  Top Similarity Lachnospiraceae (Id&#124;Gaps)  |  Average Similarity Lachnospiraceae (Id&#124;Gaps)  |  Top Similarity Ruminococcaceae (Id&#124;Gaps)  |  Average Similarity Ruminococcaceae (Id&#124;Gaps)  |
+|:-----------------:|:---------------------------------------------:|:-------------------------------------------------:|:-----------------------------------------------:|:---------------------------------------------------:|:-----------------------------------------------:|:---------------------------------------------------:|
+|    V1-V2 vs V2    |                     None                      |                       None                        |                       TBC                       |                         TBC                         |                       TBC                       |                         TBC                         |
+|       V1-V3       |                50.3&#124;39.1                 |                  48.0&#124;42.4                   |                 40.1&#124;47.9                  |                   35.9&#124;52.5                    |                 30.4&#124;68.4                  |                   29.2&#124;69.1                    |
+|        V4         |                 89.4&#124;2.8                 |                   87.7&#124;2.4                   |                  92.9&#124;0.8                  |                    85.8&#124;5.6                    |                  86.6&#124;0.8                  |                    81.6&#124;6.6                    |
 
+
+![](results/figures/Figure_S4-1.png)\
+
+**Figure 4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
 
 

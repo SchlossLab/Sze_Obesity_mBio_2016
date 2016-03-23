@@ -9,6 +9,15 @@ bibliography: metaAnalysis.obesity.microbiome.bib
 ---
 <br><br>
 
+```{r Loading_data_tables, echo=FALSE, message=FALSE, warning=FALSE}
+
+OverallPValue <- read.csv("results/tables/denovoOverallPTable.csv")
+ShannonRRTable <- read.csv("results/tables/denovoShannonRRTable.csv")
+BFRatioRRTable <- read.csv("results/tables/denovoBFRatioRRTable.csv")
+
+```
+
+
 
 ###In-Depth Overview of Search Strategy:
 
@@ -54,6 +63,31 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 
 ###Supplemental Results:
 
+
+**Table S1. Summary of P-values for Measurements of Interest for each Individual Study for Obese versus Normal**
+
+```{r Table_S1, echo=FALSE, message=FALSE, warning=FALSE}
+
+library(knitr)
+
+Study <- as.character(OverallPValue$X)
+Bacteroidetes <- format(round(OverallPValue$Bacteroidetes, 2), nsmall=2)
+Firmicutes <- format(round(OverallPValue$Firmicutes, 2), nsmall=2)
+BFRatio <- format(round(OverallPValue$BFRatio, 2), nsmall=2)
+Shannon <- format(round(OverallPValue$Shannon, 2), nsmall=2)
+OTURich <- format(round(OverallPValue$OTURich, 2), nsmall=2)
+Evenness <- format(round(OverallPValue$Evenness, 2), nsmall=2)
+BrayC <- format(round(OverallPValue$BrayC, 2), nsmall=2)
+
+tableS1 <- cbind(Study, Bacteroidetes, Firmicutes, BFRatio, Shannon, OTURich, Evenness, BrayC)
+colnames(tableS1) <- c("Study", "Bacteroidetes", "Firmicutes", "B/F Ratio", "Shannon Diversity", "OTU Richness", "Evenness", "Bray Curtis")
+
+kable(tableS1, format = "markdown", align = 'c', padding = 2)
+
+```
+
+
+
 ![Figure S1](results/figures/suppFigClostridiales.png)\
 
 
@@ -71,11 +105,9 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 **Figure S3: Boxplots of All Ruminococcaceae OTUs Important for Non-Obese and Obese Classification.** A total of 7/8 studies had at least 1 OTU that was classified to Ruminococcaceae  However, overall there was a wide range in direction both between studies and within studies.
 
 
-**Table 1. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
+**Table 2. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
 
-```{r Table_S1, echo=FALSE, message=FALSE, warning=FALSE}
-
-library(knitr)
+```{r Table_S2, echo=FALSE, message=FALSE, warning=FALSE}
 
 Study <- c("Wu", "Turnbaugh", "Ross", "Escobar", "Zupancic", "Baxter", "Goodrich", "HMP")
 VariableRegion <- c("V1-V2", "V2", "V1-V3", "V1-V3", "V1-V3", "V4", "V4", "V3-V5")
@@ -88,33 +120,99 @@ RumiHighMatch <- c("Anaerotruncus colihominis(85|95)", "", "Oscillibacter Spp(10
 
 
 
-table1 <- cbind(Study, VariableRegion, ClosMostPrev, ClostHighMatch, LachMostPrev, LachHighMatch, RumiMostPrev, RumiHighMatch)
-colnames(table1) <- c("Study", "Hypervariable Region", "Clostridiales OTU Most Prevalent Match", "Clostridiales OTU Highest Match (Query Cover|Identity)", "Lachnospiraceae OTU Most Prevalent Match", "Lachnospiraceae OTU Highest Match (Query Cover|Identity)", "Ruminococcaceae OTU Most Prevalent Match", "Ruminococcaceae OTU Highest Match (Query Cover|Identity)")
+tableS2 <- cbind(Study, VariableRegion, ClosMostPrev, ClostHighMatch, LachMostPrev, LachHighMatch, RumiMostPrev, RumiHighMatch)
+colnames(tableS2) <- c("Study", "Hypervariable Region", "Clostridiales OTU Most Prevalent Match", "Clostridiales OTU Highest Match (Query Cover|Identity)", "Lachnospiraceae OTU Most Prevalent Match", "Lachnospiraceae OTU Highest Match (Query Cover|Identity)", "Ruminococcaceae OTU Most Prevalent Match", "Ruminococcaceae OTU Highest Match (Query Cover|Identity)")
 
-kable(table1, format = "markdown", align = 'c', padding = 2)
+kable(tableS2, format = "markdown", align = 'c', padding = 2)
 ```
 
 
-**Table S2. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
+**Table S3. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
 
-```{r Table_S2, echo=FALSE, message=FALSE, warning=FALSE}
+```{r Table_S3, echo=FALSE, message=FALSE, warning=FALSE}
 
 VariableRegion <- c("V1-V2 vs V2", "V1-V3", "V4")
 
-TopHitClos <- c("None", "45.2 | 45.2 | 46.5", "60.9 | 60.9 | 32.8")
-AverageClos <- c("None", "34.6 | 34.6 | 59.4", "58.9 | 58.9 | 33.2")
-TopHitLachno <- c("TBC", "40.7 | 40.7 | 50", "61.3 | 61.3 | 32.8")
-AverageLachno <- c("TBC", "37.9 | 37.9 | 52.1", "59.4 | 59.4 | 33.1")
-TopHitRumi <- c("TBC", "15.5 | 15.5 | 84.1", "60.5 | 60.5 | 32.8")
-AverageRumi <- c("TBC", "15.2 | 15.2 | 84.1", "57.5 | 57.5 | 33.2")
+TopHitClos <- c("None", "50.3|39.1", "89.4|2.8")
+AverageClos <- c("None", "48.0|42.4", "87.7|2.4")
+TopHitLachno <- c("TBC", "40.1|47.9", "92.9|0.8")
+AverageLachno <- c("TBC", "35.9|52.5", "85.8|5.6")
+TopHitRumi <- c("TBC", "30.4|68.4", "86.6|0.8")
+AverageRumi <- c("TBC", "29.2|69.1", "81.6|6.6")
 
-table2 <- cbind(VariableRegion, TopHitClos, AverageClos, TopHitLachno, AverageLachno, TopHitRumi, AverageRumi)
-colnames(table2) <- c("Variable Region", "Top Similarity Colstridiales (Id | Sim | Gaps)", "Average Similarity Colstridiales (Id | Sim | Gaps)", "Top Similarity Lachnospiraceae (Id | Sim | Gaps)", "Average Similarity Lachnospiraceae (Id | Sim | Gaps)", "Top Similarity Ruminococcaceae (Id | Sim | Gaps)", "Average Similarity Ruminococcaceae (Id | Sim | Gaps)")
+tableS3 <- cbind(VariableRegion, TopHitClos, AverageClos, TopHitLachno, AverageLachno, TopHitRumi, AverageRumi)
+colnames(tableS3) <- c("Variable Region", "Top Similarity Colstridiales (Id|Gaps)", "Average Similarity Colstridiales (Id|Gaps)", "Top Similarity Lachnospiraceae (Id|Gaps)", "Average Similarity Lachnospiraceae (Id|Gaps)", "Top Similarity Ruminococcaceae (Id|Gaps)", "Average Similarity Ruminococcaceae (Id|Gaps)")
 
-kable(table2, format = "markdown", align = 'c', padding = 2)
+kable(tableS3, format = "markdown", align = 'c', padding = 2)
 
 ```
 
+
+```{r Figure_S4, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+
+library(metafor)
+
+# Shannon Diversity Data for Funnel Plot
+StudyNo <- as.numeric(ShannonRRTable$X)
+Study <- as.character(ShannonRRTable$Study)
+Year <- c("2015", "2015", "2014", "2014", "2012", "2011", "2012", "2009")
+Total <- c("n=172", "n=63", "n=507", "n=30", "n=200", "n=256", "n=63", "n=146")
+tpos <- as.numeric(ShannonRRTable$tposH) #obese in low diversity group
+tneg <- as.numeric(ShannonRRTable$tnegH) #nonobese in low diversity group
+cpos <- as.numeric(ShannonRRTable$cposH) #obese in high diversity group
+cneg <- as.numeric(ShannonRRTable$cnegH) #nonobese in high diversity group
+RR <- as.numeric(ShannonRRTable$RRH)
+low <- as.numeric(ShannonRRTable$lowH)
+high <- as.numeric(ShannonRRTable$highH)
+
+numeric.data <-as.data.frame(cbind(tpos, tneg, cpos, cneg))
+raw.overall <- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
+
+dat <- escalc(measure = "RR", ai = tpos, bi = tneg, ci = cpos, di = cneg, data=raw.overall, append=TRUE)
+k <- length(dat$StudyNo)
+dat.fm <- data.frame(study=factor(rep(1:k, each = 4)))
+dat.fm$grp <- factor(rep(c("T", "T", "C", "C"), k), levels = c("T", "C"))
+dat.fm$out <- factor(rep(c("+", "-", "+", "-"), k), levels = c("+", "-"))
+dat.fm$freq <- with(raw.overall, c(rbind(tpos, tneg, cpos, cneg)))
+
+#Used to generate the RE Model estimate based on all the studies
+res <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", slab=paste(Study, Year, Total, sep=", "), method="REML")
+
+
+# B/F ratio data used to generate Funnel Plot
+StudyNo <- as.numeric(BFRatioRRTable$X)
+Study <- as.character(BFRatioRRTable$Study)
+Year <- c("2015", "2015", "2014", "2014", "2012", "2011", "2012", "2009")
+Total <- c("n=172", "n=63", "n=507", "n=30", "n=200", "n=256", "n=63", "n=146")
+tpos <- as.numeric(BFRatioRRTable$tposBF) #obese in low diversity group
+tneg <- as.numeric(BFRatioRRTable$tnegBF) #nonobese in low diversity group
+cpos <- as.numeric(BFRatioRRTable$cposBF) #obese in high diversity group
+cneg <- as.numeric(BFRatioRRTable$cnegBF) #nonobese in high diversity group
+RR <- as.numeric(BFRatioRRTable$RRBF)
+low <- as.numeric(BFRatioRRTable$lowBF)
+high <- as.numeric(BFRatioRRTable$highBF)
+
+numeric.data <-as.data.frame(cbind(tpos, tneg, cpos, cneg))
+raw.overall <- as.data.frame(cbind(StudyNo, Study,Year, Total, numeric.data))
+
+dat <- escalc(measure = "RR", ai = tpos, bi = tneg, ci = cpos, di = cneg, data=raw.overall, append=TRUE)
+k <- length(dat$StudyNo)
+dat.fm <- data.frame(study=factor(rep(1:k, each = 4)))
+dat.fm$grp <- factor(rep(c("T", "T", "C", "C"), k), levels = c("T", "C"))
+dat.fm$out <- factor(rep(c("+", "-", "+", "-"), k), levels = c("+", "-"))
+dat.fm$freq <- with(raw.overall, c(rbind(tpos, tneg, cpos, cneg)))
+
+#Used to generate the RE Model estimate based on all the studies
+res2 <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", slab=paste(Study, Year, Total, sep=", "), method="REML")
+
+
+# Generate Funnel Plots for supplemental
+par(mfrow=c(1,2))
+funnel(res, main="A")
+funnel(res2, main="B")
+```
+
+**Figure 4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
 
 

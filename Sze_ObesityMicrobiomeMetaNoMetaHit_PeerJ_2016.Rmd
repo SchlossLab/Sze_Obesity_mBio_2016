@@ -42,12 +42,21 @@ ZScoreCombinedData <- read.csv("results/tables/denovoCombinedData.csv")
 ZScoreTurnbaughData <- read.csv("results/tables/denovoTurnbaughData.csv")
 AUCRFData <- read.csv("results/tables/denovoAUCRFDataTable.csv")
 PowerTable <- read.csv("results/tables/denovoPowerTable.csv")
-ModelledPowerH <- read.csv("results/tables/denovoModelledPowerH.csv")
-ModelledPowerBF <- read.csv("results/tables/denovoModelledPowerBF.csv")
+ModelledPower1PerDiff <- read.csv("results/tables/denovoModelled1PerDiff.csv")
+ModelledPower5PerDiff <- read.csv("results/tables/denovoModelled5PerDiff.csv")
+ModelledPower10PerDiff <- read.csv("results/tables/denovoModelled10PerDiff.csv")
+ModelledPower15PerDiff <- read.csv("results/tables/denovoModelled15PerDiff.csv")
+ActualDiff <- read.csv("results/tables/denovoActualDiff.csv")
+PowerModelHRR <- read.csv("results/tables/denovoPowerModelHRR.csv")
+PowerModelBFRR <- read.csv("results/tables/denovoPowerModelBFRR.csv")
+SimulatedN_H <- read.csv("results/tables/denovoSimulatedN_H.csv")
+SimulatedN_BF <- read.csv("results/tables/denovoSimulatedN_BF.csv")
+RRSimNNeeded <- read.csv("results/tables/denovoRRSimNNeeded.csv")
+
 ```
 
 ```{r install_needed_packages, echo=FALSE, message=FALSE, warning=FALSE}
-deps = c("knitr","vegan","epiR","AUCRF","meta","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra", "pwr", "statmod");
+deps = c("knitr","vegan","epiR","AUCRF","metafor","ggplot2", "plyr", "reshape2", "RColorBrewer", "scales", "gridExtra", "pwr", "statmod");
 for (dep in deps){
   if (dep %in% installed.packages()[,"Package"] == FALSE){
     install.packages(as.character(dep), quiet=TRUE);
@@ -271,81 +280,82 @@ kable(table2, format = "markdown", align = 'c', padding = 2)
 ```
 
 
-**Table 3. Summary of P-values for Measurements of Interest for each Individual Study for Obese versus Normal**
-
-
+**Table 3. Summary of Power Calculation Simulations for Shannon Diversity for Non-obese versus Obese**
 
 ```{r Table_3, echo=FALSE, message=FALSE, warning=FALSE}
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
 
-Study <- as.character(OverallPValue$X)
-Bacteroidetes <- format(round(OverallPValue$Bacteroidetes, 3), nsmall=3)
-Firmicutes <- format(round(OverallPValue$Firmicutes, 3), nsmall=3)
-BFRatio <- format(round(OverallPValue$BFRatio, 3), nsmall=3)
-Shannon <- format(round(OverallPValue$Shannon, 3), nsmall=3)
-OTURich <- format(round(OverallPValue$OTURich, 3), nsmall=3)
-Evenness <- format(round(OverallPValue$Evenness, 3), nsmall=3)
-BrayC <- format(round(OverallPValue$BrayC, 3), nsmall=3)
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="")
+ActualDiffH <- format(round(ActualDiff$H, 3), nsmall=3)
+Shannon <- format(round(OverallPValue$Shannon, 2), nsmall=2)
+OneP <- format(round(ModelledPower1PerDiff$H, 3), nsmall=3)
+FiveP <- format(round(ModelledPower5PerDiff$H, 3), nsmall=3)
+TenP <- format(round(ModelledPower10PerDiff$H, 3), nsmall=3)
+FifteenP <- format(round(ModelledPower15PerDiff$H, 3), nsmall=3)
 
-table3 <- cbind(Study, Bacteroidetes, Firmicutes, BFRatio, Shannon, OTURich, Evenness, BrayC)
-colnames(table3) <- c("Study", "Bacteroidetes", "Firmicutes", "B/F Ratio", "Shannon Diversity", "OTU Richness", "Evenness", "Bray Curtis")
+table3 <- cbind(Study, ActualDiffH, Shannon, OneP, FiveP, TenP, FifteenP)
+colnames(table3) <- c("Study (Non-Obese|Obese)", "Actual Percent Difference", "P-value", "Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference")
 
 kable(table3, format = "markdown", align = 'c', padding = 2)
 ```
 
 
-**Table 4. Summary of Power Calculations for Shannon Diversity and B/F ratio for Non-obese versus Obese**
+**Table 4. Summary of Power Calculation Simulations for B/F Ratio for Non-obese versus Obese**
 
 ```{r Table_4, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- c(as.character(PowerTable$Study))
-PowerH <- c(PowerTable$StudyPowerH)
-GroupsOposH <- c(ShannonRRTable$tposH + ShannonRRTable$cposH)
-GroupsNonOposH <- c(ShannonRRTable$tnegH + ShannonRRTable$cnegH)
-GroupsH <- paste(GroupsOposH, "|", GroupsNonOposH, sep="")
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
 
-PowerHRR <- c(PowerTable$StudyPowerHRR)
-GroupsLowH <- c(format(round(ShannonRRTable$tposH / (ShannonRRTable$tposH + ShannonRRTable$tnegH), 1), nsmall=1))
-GroupsHighH <- c(format(round(ShannonRRTable$cposH / (ShannonRRTable$cposH + ShannonRRTable$cnegH), 1), nsmall=1))
-GroupsHRR <- paste(GroupsLowH, "|", GroupsHighH, sep="")
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="") 
+ActualDiffBF <- format(round(ActualDiff$BFratio, 3), nsmall=3)
+BF <- format(round(OverallPValue$BFRatio, 2), nsmall=2)
+OneP <- format(round(ModelledPower1PerDiff$BFratio, 3), nsmall=3)
+FiveP <- format(round(ModelledPower5PerDiff$BFratio, 3), nsmall=3)
+TenP <- format(round(ModelledPower10PerDiff$BFratio, 3), nsmall=3)
+FifteenP <- format(round(ModelledPower15PerDiff$BFratio, 3), nsmall=3)
 
-PowerBF <- c(PowerTable$StudyPowerBF)
-GroupsOposBF <- c(BFRatioRRTable$tposBF + BFRatioRRTable$cposBF)
-GroupsNonOposBF <- c(BFRatioRRTable$tnegBF + BFRatioRRTable$cnegBF)
-GroupsBF <- paste(GroupsOposBF, "|", GroupsNonOposBF, sep="")
-
-PowerBFRR <-c(PowerTable$StudyPowerBFRR)
-GroupsLowBF <- c(format(round(BFRatioRRTable$tposBF / (BFRatioRRTable$tposBF + BFRatioRRTable$tnegBF), 1), nsmall=1))
-GroupsHighBF <- c(format(round(BFRatioRRTable$cposBF / (BFRatioRRTable$cposBF + BFRatioRRTable$cnegBF), 1), nsmall=1))
-GroupsBFRR <- paste(GroupsLowBF, "|", GroupsHighBF, sep="")
-
-table4 <- cbind(Study, PowerH, GroupsH, PowerHRR, GroupsHRR, PowerBF, GroupsBF, PowerBFRR, GroupsBFRR)
-colnames(table4) <- c("Study", "Shannon Diversity Power (%)", "Group n (Obese|Non-Obese)", "Shannon RR Power (%)", "Group Proportion (Low|High)", "B/F Ratio Power (%)", "Group n (Obese|Non-Obese)", "B/F ratio RR (%)", "Group Proportion (Low|High)")
+table4 <- cbind(Study, ActualDiffBF, BF, OneP, FiveP, TenP, FifteenP)
+colnames(table4) <- c("Study (Non-Obese|Obese)", "Actual Percent Difference", "P-value", "Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference")
 
 kable(table4, format = "markdown", align = 'c', padding = 2)
+
+
 ```
 
 
-**Table 5. Summary of Power Calculations Simulations for Shannon Diversity for Non-obese versus Obese**
+**Table 5. Summary of Sample Size Needed Simulations for Shannon Diversity for Non-obese versus Obese**
 
 ```{r Table_5, echo=FALSE, message=FALSE, warning=FALSE}
 
-table5 <- ModelledPowerH[, -1]
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
 
-colnames(table5) <- c("Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference", "Actual % Difference", "Study")
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="") 
+
+NNeeded <- format(round(SimulatedN_H[, -1],0), nsmall=0)
+table5 <- cbind(Study, NNeeded)
+colnames(table5) <- c("Study (Non-Obese|Obese)", "Actual n/Group Needed", "Estimated n/Group for 1% Difference", "Estimated n/Group for 5% Difference", "Estimated n/Group for 10% Difference", "Estimated n/Group for 15% Difference")
+
 
 kable(table5, format = "markdown", align = 'c', padding = 2)
-
-
 ```
 
 
-**Table 6. Summary of Power Calculations Simulations for B/F ratio for Non-obese versus Obese**
+**Table 6. Summary of Sample Size Needed Simulations for B/F Ratio for Non-obese versus Obese**
 
 ```{r Table_6, echo=FALSE, message=FALSE, warning=FALSE}
 
-table6 <- ModelledPowerBF[, -1]
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
 
-colnames(table6) <- c("Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference", "Actual % Difference", "Study")
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="") 
+
+NNeeded <- format(round(SimulatedN_BF[, -1],0), nsmall=0)
+table6 <- cbind(Study, NNeeded)
+colnames(table6) <- c("Study (Non-Obese|Obese)", "Actual n/Group Needed", "Estimated n/Group for 1% Difference", "Estimated n/Group for 5% Difference", "Estimated n/Group for 10% Difference", "Estimated n/Group for 15% Difference")
+
 
 kable(table6, format = "markdown", align = 'c', padding = 2)
 ```
@@ -391,7 +401,7 @@ res <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", s
 RRSDPvalue <- anova.rma(res)
 
 #To create a graph visualize the data
-forest(res, at=log(c(0.3, 1, 5)), atransf=exp, xlab="RR of Obesity in high versus low Shannon diversity based on Median", cex=0.8)
+forest(res, at=log(c(0.3, 1, 5)), atransf=exp, mlab= "Pooled Relative Risk", xlab="RR of Obesity in high versus low Shannon diversity based on Median", cex=0.8)
 par(font=2) #Switch to bold
 
 text(5.6, 10.3, "Relative Risk [95% CI]", pos=2, cex=0.8)
@@ -431,7 +441,7 @@ res2 <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", 
 RRBFPvalue <- anova.rma(res2)
 
 #To create a graph visualize the data
-forest(res2, at=log(c(0.1, 1, 3)), atransf=exp, xlab="RR of Obesity in high versus low B/F ratio based on Median", cex=0.8)
+forest(res2, at=log(c(0.1, 1, 3)), atransf=exp, mlab= "Pooled Relative Risk", xlab="RR of Obesity in high versus low B/F ratio based on Median", cex=0.8)
 par(font=2) #Switch to bold
 
 text(5.6, 10.3, "Relative Risk [95% CI]", pos=2, cex=0.8)
@@ -441,25 +451,12 @@ text(-6.0, 10.3, "Study, Year, and n", pos=4, cex=0.8)
 **Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = `r signif(RRBFPvalue$QMp, 3)`).
 
 
-```{r Figure_4, echo=FALSE, fig.path="results/figures/"}
-par(mfrow=c(1,2))
-funnel(res, main="A")
-funnel(res2, main="B")
-```
-
-**Figure 4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
-
-
-
-
-
-
-```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_4, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
 # Section A
 p1 <- ggplot(group.data.test, aes(obese, ZH))
 p2 <- p1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 p3 <- p2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-p4 <- p3 + xlab("Obese Category") + ylab("Z-score Normalized H")
+p4 <- p3 + xlab("") + ylab("Z-score Normalized H") + scale_x_discrete(breaks=c("No", "Yes"), labels=c("Non-Obese", "Obese"))
 p5 <- p4 + guides(fill=guide_legend(title="Obese")) + theme(legend.title = element_text(size=8, face="bold"))
 p6 <- p5 + theme(axis.line=element_line(colour="black"),
                  panel.grid.major = element_blank(),
@@ -472,7 +469,7 @@ p7 <- p6 + ggtitle('A') + theme(plot.title=element_text(hjust=0, face="bold", si
 q1 <- ggplot(group.data.test, aes(BMI.class, ZH))
 q2 <- q1 + geom_boxplot(aes(fill = BMI.class)) + scale_fill_brewer(palette="Set1")
 q3 <- q2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-q4 <- q3 + xlab("BMI Classification") + ylab("Z-score Normalized H")
+q4 <- q3 + xlab("") + ylab("Z-score Normalized H")
 q5 <- q4 + guides(fill=guide_legend(title="BMI Class")) + theme(legend.title = element_text(size=8, face="bold"))
 q6 <- q5 + theme(axis.line=element_line(colour="black"),
                  panel.grid.major = element_blank(),
@@ -485,7 +482,8 @@ q7 <- q6 + ggtitle('B') + theme(plot.title=element_text(hjust=0, face="bold", si
 bf1 <- ggplot(group.data.test, aes(obese, ZLogBF))
 bf2 <- bf1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 bf3 <- bf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-bf4 <- bf3 + xlab("Obese Category") + ylab("Z-score Normalized Log B/F Ratio")
+bf4 <- bf3 + xlab("") + ylab("Z-score Normalized Log B/F Ratio") + 
+  scale_x_discrete(breaks=c("No", "Yes"), labels=c("Non-Obese", "Obese"))
 bf5 <- bf4 + guides(fill=guide_legend(title="Obese")) + theme(legend.title = element_text(size=8, face="bold"))
 bf6 <- bf5 + theme(axis.line=element_line(colour="black"),
                    panel.grid.major = element_blank(),
@@ -498,7 +496,7 @@ bf7 <- bf6 + ggtitle('C') + theme(plot.title=element_text(hjust=0, face="bold", 
 qbf1 <- ggplot(group.data.test, aes(BMI.class, ZLogBF))
 qbf2 <- qbf1 + geom_boxplot(aes(fill = BMI.class)) + scale_fill_brewer(palette="Set1")
 qbf3 <- qbf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-qbf4 <- qbf3 + xlab("BMI Classification") + ylab("Z-score Normalized Log B/F Ratio")
+qbf4 <- qbf3 + xlab("") + ylab("Z-score Normalized Log B/F Ratio")
 qbf5 <- qbf4 + guides(fill=guide_legend(title="BMI Class")) + theme(legend.title = element_text(size=8, face="bold"))
 qbf6 <- qbf5 + theme(axis.line=element_line(colour="black"),
                      panel.grid.major = element_blank(),
@@ -511,7 +509,7 @@ grid.arrange(p7, q7, bf7, qbf7)
 ```
 
 
-**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = `r length(which(group.data.test$obese == "No"))`) and obese groups (n = `r length(which(group.data.test$obese == "Yes"))`) (P-value = `r signif(combZHTtest$p.value, 3)`). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are `r length(which(group.data.test$BMI.class == "Lean"))`, `r length(which(group.data.test$BMI.class == "Overweight"))`, `r length(which(group.data.test$BMI.class == "Obese"))` respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = `r signif(combZHTukeyFinal[3, 4], 3)`) but no difference between lean and obese group (P-value = `r signif(combZHTukeyFinal[2, 4], 3)`). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = `r length(which(group.data.test$obese == "No"))`) and obese (n = `r length(which(group.data.test$obese == "Yes"))`) group based on B/F ratio (P-value = `r signif(combZLogBFTtest$p.value, 3)`). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are `r length(which(group.data.test$BMI.class == "Lean"))`, `r length(which(group.data.test$BMI.class == "Overweight"))`, `r length(which(group.data.test$BMI.class == "Obese"))` respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = `r signif(combZLogBFANOVA[1, 5], 3)`).
+**Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = `r length(which(group.data.test$obese == "No"))`) and obese groups (n = `r length(which(group.data.test$obese == "Yes"))`) (P-value = `r signif(combZHTtest$p.value, 3)`). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are `r length(which(group.data.test$BMI.class == "Lean"))`, `r length(which(group.data.test$BMI.class == "Overweight"))`, `r length(which(group.data.test$BMI.class == "Obese"))` respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = `r signif(combZHTukeyFinal[3, 4], 3)`) but no difference between lean and obese group (P-value = `r signif(combZHTukeyFinal[2, 4], 3)`). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = `r length(which(group.data.test$obese == "No"))`) and obese (n = `r length(which(group.data.test$obese == "Yes"))`) group based on B/F ratio (P-value = `r signif(combZLogBFTtest$p.value, 3)`). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are `r length(which(group.data.test$BMI.class == "Lean"))`, `r length(which(group.data.test$BMI.class == "Overweight"))`, `r length(which(group.data.test$BMI.class == "Obese"))` respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = `r signif(combZLogBFANOVA[1, 5], 3)`).
 
 
 

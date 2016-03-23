@@ -163,66 +163,64 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 |  Turnbaugh  |  Observational  |                Adult twins and mothers from Missouri                 |     Yes     |  Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI  |
 
 
-**Table 3. Summary of P-values for Measurements of Interest for each Individual Study for Obese versus Normal**
+**Table 3. Summary of Power Calculation Simulations for Shannon Diversity for Non-obese versus Obese**
 
 
+|  Study (Non-Obese&#124;Obese)  |  Actual Percent Difference  |  P-value  |  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |
+|:------------------------------:|:---------------------------:|:---------:|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|
+|      Baxter (125&#124;47)      |            5.327            |   0.07    |                0.073                |                0.607                |                0.994                 |                1.000                 |
+|       Ross (25&#124;38)        |            5.813            |   0.28    |                0.056                |                0.199                |                0.603                 |                0.915                 |
+|    Goodrich (404&#124;103)     |            1.153            |   0.61    |                0.105                |                0.928                |                1.000                 |                1.000                 |
+|      Escobar (20&#124;10)      |            0.479            |   0.95    |                0.054                |                0.155                |                0.466                 |                0.802                 |
+|     Zupancic (129&#124;71)     |            1.565            |   0.31    |                0.064                |                0.424                |                0.943                 |                1.000                 |
+|       HMP (230&#124;26)        |            3.125            |   0.58    |                0.053                |                0.141                |                0.415                 |                0.745                 |
+|         Wu (58&#124;5)         |            1.750            |   0.91    |                0.051                |                0.084                |                0.189                 |                0.363                 |
+|     Turnbaugh (47&#124;99)     |            3.624            |   0.12    |                0.079                |                0.700                |                0.999                 |                1.000                 |
 
 
-|    Study    |  Bacteroidetes  |  Firmicutes  |  B/F Ratio  |  Shannon Diversity  |  OTU Richness  |  Evenness  |  Bray Curtis  |
-|:-----------:|:---------------:|:------------:|:-----------:|:-------------------:|:--------------:|:----------:|:-------------:|
-|   Baxter    |      0.202      |    0.607     |    0.192    |        0.065        |     0.039      |   0.125    |     0.064     |
-|    Ross     |      0.204      |    0.380     |    0.221    |        0.285        |     0.249      |   0.383    |     0.823     |
-|  Goodrich   |      0.435      |    0.290     |    0.270    |        0.614        |     0.324      |   0.836    |     0.326     |
-|   Escobar   |      0.056      |    0.131     |    0.082    |        0.948        |     0.231      |   0.619    |     0.074     |
-|  Zupancic   |      0.567      |    0.602     |    0.592    |        0.311        |     0.161      |   0.441    |     0.179     |
-|     HMP     |      0.459      |    0.786     |    0.586    |        0.577        |     0.965      |   0.467    |     0.811     |
-|     Wu      |      0.712      |    0.751     |    0.990    |        0.909        |     0.280      |   0.380    |     0.533     |
-|  Turnbaugh  |      0.805      |    0.859     |    0.789    |        0.116        |     0.055      |   0.175    |     0.095     |
+**Table 4. Summary of Power Calculation Simulations for B/F Ratio for Non-obese versus Obese**
 
 
-**Table 4. Summary of Power Calculations for Shannon Diversity and B/F ratio for Non-obese versus Obese**
+|  Study (Non-Obese&#124;Obese)  |  Actual Percent Difference  |  P-value  |  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |
+|:------------------------------:|:---------------------------:|:---------:|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|
+|      Baxter (125&#124;47)      |            7.217            |   0.19    |                0.050                |                0.061                |                0.096                 |                0.155                 |
+|       Ross (25&#124;38)        |           13.721            |   0.22    |                0.050                |                0.060                |                0.090                 |                0.141                 |
+|    Goodrich (404&#124;103)     |           13.376            |   0.27    |                0.051                |                0.069                |                0.129                 |                0.231                 |
+|      Escobar (20&#124;10)      |           29.596            |   0.08    |                0.050                |                0.052                |                0.057                 |                0.065                 |
+|     Zupancic (129&#124;71)     |            0.864            |   0.59    |                0.050                |                0.061                |                0.095                 |                0.153                 |
+|       HMP (230&#124;26)        |           19.839            |   0.59    |                0.050                |                0.052                |                0.059                 |                0.071                 |
+|         Wu (58&#124;5)         |           17.895            |   0.99    |                0.050                |                0.051                |                0.053                 |                0.057                 |
+|     Turnbaugh (47&#124;99)     |            8.730            |   0.79    |                0.051                |                0.063                |                0.103                 |                0.171                 |
 
 
-|    Study    |  Shannon Diversity Power (%)  |  Group n (Obese&#124;Non-Obese)  |  Shannon RR Power (%)  |  Group Proportion (Low&#124;High)  |  B/F Ratio Power (%)  |  Group n (Obese&#124;Non-Obese)  |  B/F ratio RR (%)  |  Group Proportion (Low&#124;High)  |
-|:-----------:|:-----------------------------:|:--------------------------------:|:----------------------:|:----------------------------------:|:---------------------:|:--------------------------------:|:------------------:|:----------------------------------:|
-|   Baxter    |              59               |           47&#124;125            |          6.1           |            0.3&#124;0.3            |          9.1          |           47&#124;125            |        6.1         |            0.3&#124;0.3            |
-|    Ross     |             21.9              |            38&#124;25            |          12.6          |            0.7&#124;0.5            |         12.5          |            38&#124;25            |        9.6         |            0.6&#124;0.6            |
-|  Goodrich   |             11.8              |           103&#124;404           |          17.7          |            0.2&#124;0.2            |         18.3          |           103&#124;404           |        5.9         |            0.2&#124;0.2            |
-|   Escobar   |              4.1              |            10&#124;20            |          1.6           |            0.3&#124;0.3            |          9.3          |            10&#124;20            |        18.5        |            0.2&#124;0.5            |
-|  Zupancic   |              8.7              |           71&#124;129            |          29.7          |            0.4&#124;0.3            |          6.5          |            71&#124;99            |        2.8         |            0.5&#124;0.4            |
-|     HMP     |              9.4              |           26&#124;230            |          18.8          |            0.1&#124;0.1            |          3.1          |           26&#124;230            |        2.9         |            0.1&#124;0.1            |
-|     Wu      |               1               |            5&#124;58             |          2.7           |            0.1&#124;0.1            |          0.7          |            5&#124;58             |        2.1         |            0.1&#124;0.1            |
-|  Turnbaugh  |             42.7              |            99&#124;47            |          10.2          |            0.7&#124;0.6            |           8           |            99&#124;47            |        3.1         |            0.7&#124;0.7            |
+**Table 5. Summary of Sample Size Needed Simulations for Shannon Diversity for Non-obese versus Obese**
 
 
-**Table 5. Summary of Power Calculations Simulations for Shannon Diversity for Non-obese versus Obese**
+|  Study (Non-Obese&#124;Obese)  |  Actual n/Group Needed  |  Estimated n/Group for 1% Difference  |  Estimated n/Group for 5% Difference  |  Estimated n/Group for 10% Difference  |  Estimated n/Group for 15% Difference  |
+|:------------------------------:|:-----------------------:|:-------------------------------------:|:-------------------------------------:|:--------------------------------------:|:--------------------------------------:|
+|      Baxter (125&#124;47)      |           95            |                 2666                  |                  108                  |                   28                   |                   13                   |
+|       Ross (25&#124;38)        |           138           |                 4646                  |                  187                  |                   47                   |                   22                   |
+|    Goodrich (404&#124;103)     |          2061           |                 2739                  |                  110                  |                   28                   |                   13                   |
+|      Escobar (20&#124;10)      |          12098          |                 2782                  |                  112                  |                   29                   |                   13                   |
+|     Zupancic (129&#124;71)     |          2325           |                 5691                  |                  229                  |                   58                   |                   26                   |
+|       HMP (230&#124;26)        |          1224           |                 11940                 |                  479                  |                  120                   |                   54                   |
+|         Wu (58&#124;5)         |          1988           |                 6089                  |                  244                  |                   62                   |                   28                   |
+|     Turnbaugh (47&#124;99)     |           153           |                 2001                  |                  81                   |                   21                   |                   10                   |
 
 
-|  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |  Actual % Difference  |    Study    |
-|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|:---------------------:|:-----------:|
-|                 6.5                 |                56.3                 |                 99.3                 |                100.0                 |          5.3          |   Baxter    |
-|                 5.1                 |                24.5                 |                 68.1                 |                 96.3                 |          5.8          |    Ross     |
-|                 9.2                 |                88.2                 |                100.0                 |                100.0                 |          1.2          |  Goodrich   |
-|                 4.6                 |                13.1                 |                 36.4                 |                 66.6                 |          0.5          |   Escobar   |
-|                 6.3                 |                33.9                 |                 87.1                 |                 99.7                 |          1.6          |  Zupancic   |
-|                 6.1                 |                22.9                 |                 67.0                 |                 95.5                 |          3.1          |     HMP     |
-|                 4.8                 |                 8.6                 |                 20.6                 |                 39.6                 |          1.8          |     Wu      |
-|                 7.3                 |                50.4                 |                 97.6                 |                100.0                 |          3.6          |  Turnbaugh  |
+**Table 6. Summary of Sample Size Needed Simulations for B/F Ratio for Non-obese versus Obese**
 
 
-**Table 6. Summary of Power Calculations Simulations for B/F ratio for Non-obese versus Obese**
-
-
-|  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |  Actual % Difference  |    Study    |
-|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|:---------------------:|:-----------:|
-|                 5.3                 |                13.2                 |                 37.6                 |                 69.3                 |          7.2          |   Baxter    |
-|                 4.3                 |                 7.8                 |                 17.1                 |                 32.1                 |         13.7          |    Ross     |
-|                 4.8                 |                22.4                 |                 68.1                 |                 97.3                 |         13.4          |  Goodrich   |
-|                 4.1                 |                 6.2                 |                 9.6                  |                 16.4                 |         29.6          |   Escobar   |
-|                 5.6                 |                 9.9                 |                 20.2                 |                 38.7                 |          0.9          |  Zupancic   |
-|                 5.0                 |                 8.1                 |                 14.9                 |                 29.6                 |         19.8          |     HMP     |
-|                 4.2                 |                 5.6                 |                 6.9                  |                 10.2                 |         17.9          |     Wu      |
-|                 5.6                 |                11.2                 |                 34.6                 |                 64.6                 |          8.7          |  Turnbaugh  |
+|  Study (Non-Obese&#124;Obese)  |  Actual n/Group Needed  |  Estimated n/Group for 1% Difference  |  Estimated n/Group for 5% Difference  |  Estimated n/Group for 10% Difference  |  Estimated n/Group for 15% Difference  |
+|:------------------------------:|:-----------------------:|:-------------------------------------:|:-------------------------------------:|:--------------------------------------:|:--------------------------------------:|
+|      Baxter (125&#124;47)      |          2622           |                136508                 |                 5461                  |                  1366                  |                  608                   |
+|       Ross (25&#124;38)        |           361           |                 67872                 |                 2716                  |                  680                   |                  303                   |
+|    Goodrich (404&#124;103)     |          1083           |                193522                 |                 7742                  |                  1936                  |                  861                   |
+|      Escobar (20&#124;10)      |           196           |                171133                 |                 6846                  |                  1712                  |                  762                   |
+|     Zupancic (129&#124;71)     |         247937          |                185192                 |                 7409                  |                  1853                  |                  824                   |
+|       HMP (230&#124;26)        |          1124           |                442111                 |                 17685                 |                  4422                  |                  1966                  |
+|         Wu (58&#124;5)         |           791           |                252925                 |                 10118                 |                  2530                  |                  1125                  |
+|     Turnbaugh (47&#124;99)     |          1446           |                110137                 |                 4406                  |                  1102                  |                  490                   |
 
 
 
@@ -248,17 +246,8 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 ![](results/figures/Figure_4-1.png)\
 
-**Figure 4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
-
-
-
-
-
-![](results/figures/Figure_5-1.png)\
-
-
-**Figure 5: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.0972). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.16) but no difference between lean and obese group (P-value = 0.512). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.632). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.56).
+**Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.0972). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.16) but no difference between lean and obese group (P-value = 0.512). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.632). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.56).
 
 
 
