@@ -35,8 +35,8 @@ for(i in 1:8){
 BFActualNeededN <- rep(0, 8)
 
 for(i in 1:8){
-  cohensD <- (SummaryStatsByObeseGroup$MeanNonObeseBF[i] -  
-                SummaryStatsByObeseGroup$MeanObeseBF[i]) / 
+  cohensD <- abs((SummaryStatsByObeseGroup$MeanNonObeseBF[i] -  
+                SummaryStatsByObeseGroup$MeanObeseBF[i])) / 
     SummaryStatsByStudy$sdBF[i]  
   # This needs to change based on study
   
@@ -131,7 +131,7 @@ for(i in 1:8){
 
 ########## FIFTEEN PERCENT #####################################################
 
-FifteenPercentDiff <- SummaryStatsByStudy$averageStudyH * 0.10
+FifteenPercentDiff <- SummaryStatsByStudy$averageStudyH * 0.15
 HFifteenPer <- rep(0, 8)
 
 for(i in 1:8){
@@ -144,7 +144,7 @@ for(i in 1:8){
 }
 
 
-FifteenPercentDiff <- SummaryStatsByStudy$averageStudyBF * 0.10
+FifteenPercentDiff <- SummaryStatsByStudy$averageStudyBF * 0.15
 BFratioFifteenPer <- rep(0, 8)
 
 for(i in 1:8){
