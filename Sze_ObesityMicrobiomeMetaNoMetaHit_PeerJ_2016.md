@@ -90,6 +90,18 @@ The final forest plot that we used for this analysis investigated how the differ
 
 Using the third approach with Z-score normalization we found that there was a significant difference in the Shannon diversity between the obese and non-obese group (P-value = 0.00493) [Figure 5A]. Further there was also a significant difference in this normalized Shannon diversity value when the data was split between the three BMI groups (P-value = 0.03826) [Figure 5B]. Using a Tukey post hoc test this difference was driven by the overweight versus the obese group (P-value = 0.03945). However, in contrast to this result we found that the B/F ratio, using the Z-score normalization, was not significant different between obese and non-obese individuals (P-value = 0.4516) [Figure 5C]. Additionally, we did not observe a difference when the individuals were separated by BMI groups (P-value = 0.3317) [Figure 5D].
 
+Using a small (0.2), medium (0.5), and large (0.8) cohen value we estimated the power of the combined data set as well as the average cohen value from across studies for Shannon Diversity (0.06) and BF ratio (0.01).  
+
+small effect for combined data power calculation:
+0.92  
+medium effect for combined data power calculation:
+1.00  
+large effect for combined data power calculation:
+1.00  
+average effect for all Shannon Diversity:
+0.17  
+average effect for all BF ratio:
+0.05  
 
 *******
 ##### Discussion:
