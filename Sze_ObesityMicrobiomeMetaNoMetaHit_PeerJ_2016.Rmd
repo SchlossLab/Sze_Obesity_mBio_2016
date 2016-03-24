@@ -51,8 +51,7 @@ PowerModelHRR <- read.csv("results/tables/denovoPowerModelHRR.csv")
 PowerModelBFRR <- read.csv("results/tables/denovoPowerModelBFRR.csv")
 SimulatedN_H <- read.csv("results/tables/denovoSimulatedN_H.csv")
 SimulatedN_BF <- read.csv("results/tables/denovoSimulatedN_BF.csv")
-RRSimNNeededH <- read.csv("results/tables/denovoRRSimNNeededH.csv")
-RRSimNNeededBF <- read.csv("results/tables/denovoRRSimNNeededBF.csv")
+RRSimNNeeded <- read.csv("results/tables/denovoRRSimNNeeded.csv")
 
 ```
 
@@ -148,16 +147,18 @@ We followed the Preferred Reporting Items for Systematic Reviews and Meta-Analys
 
 ***Sequence Analysis Pipeline***
 All sequence data were publicly available and were downloaded from the NCBI Sequence Read Archive, the European Nucleotide Archive, or the investigators' personal website (https://gordonlab.wustl.edu/TurnbaughSE\_10\_09/STM\_2009.html). The nine studies used 454 [@turnbaugh_core_2009; @zupancic_analysis_2012; @ross_16s_2015; @escobar_gut_2014; @wu_linking_2011;   
-@human_microbiome_project_consortium_structure_2012] or Illumina sequencing [@goodrich_human_2014; Baxter]. All of these studies used amplification-based 16S rRNA gene sequencing. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@human_microbiome_project_consortium_structure_2012], and V4 [@goodrich_human_2014] regions. For those studies where multiple regions were sequenced,  we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009; 
+@human_microbiome_project_consortium_structure_2012] or Illumina sequencing [@goodrich_human_2014; Baxter]. All of these studies used amplification-based 16S rRNA gene sequencing. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@human_microbiome_project_consortium_structure_2012], and V4 [@goodrich_human_2014] regions. For those studies where multiple regions were sequenced,  we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009;
 @human_microbiome_project_consortium_structure_2012]. We processed the 16S rRNA gene sequence data as described in the original studies. The taxonomic data from the metagenomic shotgun sequence data were obtained using Metaphlan2 [@truong_metaphlan2_2015]. A detailed and reproducible description of how the data were processed can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_PeerJ_2016/.
 
 
 ***Data Analysis***
 We performed the analysis using R (`r paste0(R.Version()$major,'.', R.Version()$minor)`). We split the overall analysis into three general strategies. In the first strategy we followed the approach employed by Finucane et al [-@finucane_taxonomic_2014] and Walters et al [-@walters_meta-analyses_2014] where each study was re-analyzed separately to identify associations between BMI and the relative abundance of Bacteroidetes and Firmicutes, the ratio of Bacteroidetes and Firmicutes relative abundances (B/F), Shannon diversity, and number of OTUs. A two-tailed Wilcoxon test was performed for comparison for non-obese and obese individuals. We also measured the Spearman correlation coefficient between each metric and the actual BMI value. Next, we compared the community structure from non-obese and obese individuals using PERMANOVA analysis of Bray-Curtis distance matrices. This analysis was performed using the vegan R package. Finally, we used the AUCRF R package to implement a Random Forest analysis to identify the best OTUs and alpha-diversity metrics for distinguish non-obese and obese individuals.
 
-In the second strategy, we pooled the relative risk (RR) values for each study. For each study we partitioned the subjects into a low or high group depending on whether their diversity or B/F was below or above the median value for the study. The RR was then calculated as the ratio of the number of obese individuals in the low group to the number of obese individuals in the high group. We then performed a Fisher exact-test to test whether the RR was significantly different from 1.0 using the epiR (v0.9-6.9) and metafor (v1.9-8) packages. Finally, we assessed the potential publication bias in the diversity and B/F analyses using a funnel plot.
+In the second strategy, we pooled the relative risk (RR) values for each study. For each study we partitioned the subjects into a low or high group depending on whether their diversity or B/F was below or above the median value for the study. The RR was then calculated as the ratio of the number of obese individuals in the low group to the number of obese individuals in the high group. We then performed a Fisher exact-test to test whether the RR was significantly different from 1.0 using the epiR (v0.9-6.9)[@citation] and metafor (v1.9-8)[@citation] packages. Finally, we assessed the potential publication bias in the diversity and B/F analyses using a funnel plot.
 
 In the third strategy, we normalized the diversity and B/F data within each study and pooled the normalized data across studies. We applied a Z-score normalization to the Shannon diversity data and log-transformed B/F data within each study to have a mean of zero and standard deviation of one. We then pooled Z-scores across studies and used a two-tailed T-test on the values to test for a significant difference in Z-scores among non-obese and obese individuals. To assess differences between the lean, overweight, and obese BMI categories we used ANOVA with a Tukey post hoc test. We also measured the Spearman correlation coefficient between the Z-scores for each metric and BMI values.
+
+We performed power analyses to assess the ability to detect varying effect sizes for the observed study designs. We also predicted the number of individuals required to observe a power of 80% when non-obese and obese individuals were equally represented in the study. Power calculations assumed the data were normally distributed. Since the observed data were not always normally distributed, the observed power is probably overestimated and the number of required subjects is probably underestimated. We used Fisher's exact test to calculate power for relative risk data. **To make comparisons of power calculations across studies meaningful, we assumed the proportion of obese individuals was consistent and used the proportion of obese individuals across all studies.** Power analyses were performed using the statmod [@citation] and pwr [@citation] R packages.
 
 
 ## Results:
@@ -248,22 +249,17 @@ Sex <- paste(demographics$females, "|", demographics$males)
 Ancestry <- as.character(format(round(
   demographics$ancestry*100, 2), nsmall = 2))
 
-ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
-ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
-
-ObBreakdown <- paste(ContTotal, " | ", ObeseTotal, sep="")
-
 BMI <- paste(demographics$meanBMI, " (", demographics$SDBMI, ")", sep="")
 
 Min <- as.character(demographics$minBMI)
 
 Max <- as.character(demographics$maxBMI)
 
-table1 <- cbind(Study, AgeTable, Sex, Ancestry, ObBreakdown, BMI, Min, Max)
-table1[table1=="NA" | table1=="NA | NA" | table1=="NA (NA)" | 
+table1 <- cbind(Study, AgeTable, Sex, Ancestry, BMI, Min, Max)
+table1[table1=="NA" | table1=="NA | NA" | table1=="NA (NA)" |
          table1=="      NA"] <- "Not Available"
 
-colnames(table1) <- c("Study", "Age (SD)", "Sex (F|M)", "European Ancestry (%)", "Obese (No|Yes)", "BMI (SD)", "Min BMI","Max BMI")
+colnames(table1) <- c("Study", "Age (SD)", "Sex (F|M)", "European Ancestry (%)", "BMI (SD)", "Min BMI","Max BMI")
 
 kable(table1, format = "markdown", align = 'c', padding = 2)
 
@@ -298,25 +294,86 @@ kable(table2, format = "markdown", align = 'c', padding = 2)
 ```
 
 
+**Table 3. Summary of Power Calculation Simulations for Shannon Diversity for Non-obese versus Obese**
+
+```{r Table_3, echo=FALSE, message=FALSE, warning=FALSE}
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
+
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="")
+ActualDiffH <- format(round(ActualDiff$H, 3), nsmall=3)
+Shannon <- format(round(OverallPValue$Shannon, 2), nsmall=2)
+OneP <- format(round(ModelledPower1PerDiff$H, 3), nsmall=3)
+FiveP <- format(round(ModelledPower5PerDiff$H, 3), nsmall=3)
+TenP <- format(round(ModelledPower10PerDiff$H, 3), nsmall=3)
+FifteenP <- format(round(ModelledPower15PerDiff$H, 3), nsmall=3)
+
+table3 <- cbind(Study, ActualDiffH, Shannon, OneP, FiveP, TenP, FifteenP)
+colnames(table3) <- c("Study (Non-Obese|Obese)", "Actual Percent Difference", "P-value", "Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference")
+
+kable(table3, format = "markdown", align = 'c', padding = 2)
+```
+
+
+**Table 4. Summary of Power Calculation Simulations for B/F Ratio for Non-obese versus Obese**
+
+```{r Table_4, echo=FALSE, message=FALSE, warning=FALSE}
+
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
+
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="")
+ActualDiffBF <- format(round(ActualDiff$BFratio, 3), nsmall=3)
+BF <- format(round(OverallPValue$BFRatio, 2), nsmall=2)
+OneP <- format(round(ModelledPower1PerDiff$BFratio, 3), nsmall=3)
+FiveP <- format(round(ModelledPower5PerDiff$BFratio, 3), nsmall=3)
+TenP <- format(round(ModelledPower10PerDiff$BFratio, 3), nsmall=3)
+FifteenP <- format(round(ModelledPower15PerDiff$BFratio, 3), nsmall=3)
+
+table4 <- cbind(Study, ActualDiffBF, BF, OneP, FiveP, TenP, FifteenP)
+colnames(table4) <- c("Study (Non-Obese|Obese)", "Actual Percent Difference", "P-value", "Estimated Power for 1% Difference", "Estimated Power for 5% Difference", "Estimated Power for 10% Difference", "Estimated Power for 15% Difference")
+
+kable(table4, format = "markdown", align = 'c', padding = 2)
+
+
+```
+
+
+**Table 5. Summary of Sample Size Needed Simulations for Shannon Diversity for Non-obese versus Obese**
 
 ```{r Table_5, echo=FALSE, message=FALSE, warning=FALSE}
 
-source("code/MakeFiguresCode.R")
-grid.arrange(a2, b2, nrow=2)
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
 
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="")
+
+NNeeded <- format(round(SimulatedN_H[, -1],0), nsmall=0)
+table5 <- cbind(Study, NNeeded)
+colnames(table5) <- c("Study (Non-Obese|Obese)", "Actual n/Group Needed", "Estimated n/Group for 1% Difference", "Estimated n/Group for 5% Difference", "Estimated n/Group for 10% Difference", "Estimated n/Group for 15% Difference")
+
+
+kable(table5, format = "markdown", align = 'c', padding = 2)
 ```
-**Figure 5. Summary of Power and Sample Size Simulations for Shannon Diversity for Non-obese versus Obese**
 
 
-
+**Table 6. Summary of Sample Size Needed Simulations for B/F Ratio for Non-obese versus Obese**
 
 ```{r Table_6, echo=FALSE, message=FALSE, warning=FALSE}
 
-grid.arrange(c2, d2, nrow=2)
+ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
+ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
+
+Study <- paste(as.character(PowerTable$Study), " (", ContTotal, "|", ObeseTotal, ")", sep="")
+
+NNeeded <- format(round(SimulatedN_BF[, -1],0), nsmall=0)
+table6 <- cbind(Study, NNeeded)
+colnames(table6) <- c("Study (Non-Obese|Obese)", "Actual n/Group Needed", "Estimated n/Group for 1% Difference", "Estimated n/Group for 5% Difference", "Estimated n/Group for 10% Difference", "Estimated n/Group for 15% Difference")
 
 
+kable(table6, format = "markdown", align = 'c', padding = 2)
 ```
-**Figure 6. Summary of Power and Sample Size Simulations for Bacteroidetes/Firmicutes Ratio for Non-obese versus Obese**
+
 
 
 *******
@@ -414,7 +471,7 @@ p1 <- ggplot(group.data.test, aes(obese, ZH))
 p2 <- p1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 p3 <- p2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
 p4 <- p3 + xlab("") + ylab("Z-score Normalized H") + scale_x_discrete(breaks=c("No", "Yes"), labels=c("Non-Obese", "Obese"))
-p5 <- p4 + guides(fill=FALSE)
+p5 <- p4 + guides(fill=guide_legend(title="Obese")) + theme(legend.title = element_text(size=8, face="bold"))
 p6 <- p5 + theme(axis.line=element_line(colour="black"),
                  panel.grid.major = element_blank(),
                  panel.grid.minor = element_blank(),
@@ -422,23 +479,47 @@ p6 <- p5 + theme(axis.line=element_line(colour="black"),
                  panel.background = element_blank())
 p7 <- p6 + ggtitle('A') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
-
 # Section B
+q1 <- ggplot(group.data.test, aes(BMI.class, ZH))
+q2 <- q1 + geom_boxplot(aes(fill = BMI.class)) + scale_fill_brewer(palette="Set1")
+q3 <- q2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
+q4 <- q3 + xlab("") + ylab("Z-score Normalized H")
+q5 <- q4 + guides(fill=guide_legend(title="BMI Class")) + theme(legend.title = element_text(size=8, face="bold"))
+q6 <- q5 + theme(axis.line=element_line(colour="black"),
+                 panel.grid.major = element_blank(),
+                 panel.grid.minor = element_blank(),
+                 panel.border = element_blank(),
+                 panel.background = element_blank())
+q7 <- q6 + ggtitle('B') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
+
+# Section C
 bf1 <- ggplot(group.data.test, aes(obese, ZLogBF))
 bf2 <- bf1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
 bf3 <- bf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
-bf4 <- bf3 + xlab("") + ylab("Z-score Normalized Log B/F Ratio") + 
+bf4 <- bf3 + xlab("") + ylab("Z-score Normalized Log B/F Ratio") +
   scale_x_discrete(breaks=c("No", "Yes"), labels=c("Non-Obese", "Obese"))
-bf5 <- bf4 + guides(fill=FALSE)
+bf5 <- bf4 + guides(fill=guide_legend(title="Obese")) + theme(legend.title = element_text(size=8, face="bold"))
 bf6 <- bf5 + theme(axis.line=element_line(colour="black"),
                    panel.grid.major = element_blank(),
                    panel.grid.minor = element_blank(),
                    panel.border = element_blank(),
                    panel.background = element_blank())
-bf7 <- bf6 + ggtitle('B') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
+bf7 <- bf6 + ggtitle('C') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
+# Section D
+qbf1 <- ggplot(group.data.test, aes(BMI.class, ZLogBF))
+qbf2 <- qbf1 + geom_boxplot(aes(fill = BMI.class)) + scale_fill_brewer(palette="Set1")
+qbf3 <- qbf2 + theme(axis.text=element_text(size=8), axis.title=element_text(size=10, face="bold"))
+qbf4 <- qbf3 + xlab("") + ylab("Z-score Normalized Log B/F Ratio")
+qbf5 <- qbf4 + guides(fill=guide_legend(title="BMI Class")) + theme(legend.title = element_text(size=8, face="bold"))
+qbf6 <- qbf5 + theme(axis.line=element_line(colour="black"),
+                     panel.grid.major = element_blank(),
+                     panel.grid.minor = element_blank(),
+                     panel.border = element_blank(),
+                     panel.background = element_blank())
+qbf7 <- qbf6 + ggtitle('D') + theme(plot.title=element_text(hjust=0, face="bold", size=20))
 
-grid.arrange(p7, bf7, ncol=2)
+grid.arrange(p7, q7, bf7, qbf7)
 ```
 
 
