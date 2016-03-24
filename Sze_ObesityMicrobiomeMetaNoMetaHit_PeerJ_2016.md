@@ -36,7 +36,7 @@ Phone: 734-936-2951
 
 **Methods:** To identify datasets that we included in the meta analysis we followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines we winnowed an initial set of 196 studies that tested the microbiome-obesity association hypothesis down to 8 studies that fit our criteria. We applied three analysis pipelines to the data from each study. First, we tested the association between community structure and diversity and the Bacteroides to Firmicutes ratio (B/F) with the subjects' body mass index (BMI) treated as a continuous or categorical value. We also used the random forest machine learning algorithm to identify community features that would allow us to to predict whether a person was obese. Second, we pooled the relative risk (RR) ratio of being obese based on characteristics of the microbiome for each study and tested for an association between RR and community diversity and B/F. Finally, we normalized the community diversity and B/F values within each dataset and pooled the data to test for an association with obesity.
 
-**Results:** When we considered each dataset in isolation, there were no significant differences (P > 0.05) in B/F between non-obese and obese individuals. Only one diversity measure (OTU richness (N=1)) was significantly different between non-obese and obese individuals (P<0.05). With individual studies, random forest was effective at identifying features within the datasets for differentiating between non-obese and obese individuals (mean AUC: 0.79; s.d.=0.08). In 7/8 of the studies an OTU related to the Ruminococcaceae family was important in classification; however, the direction of the association varied between studies. When we pooled the results across studies, there was a significant difference in RR of obesity based on Shannon diversity (RR = 1.16, CI = 1.01-1.34, P-value = 0.04) but not B/F ratio (RR = 0.98, CI = 0.85-1.13, P-value = 0.81). Finally, when we normalized the Shannon diversity data and pooled studies there was a significant difference between non-obese and obese individuals (difference in mean z-score = 0.10; P = 0.10). Similar to RR there was no significant difference in the normalized B/F ratio between non-obese and obese individuals (difference in mean z-score = 0.03; P = 0.63).
+**Results:** When we considered each dataset in isolation, there were no significant differences (P > 0.05) in B/F between non-obese and obese individuals. Only one diversity measure (OTU richness (N=1)) was significantly different between non-obese and obese individuals (P<0.05). With individual studies, random forest was effective at identifying features within the datasets for differentiating between non-obese and obese individuals (mean AUC: 0.78; s.d.=0.08). In 7/8 of the studies an OTU related to the Ruminococcaceae family was important in classification; however, the direction of the association varied between studies. When we pooled the results across studies, there was a significant difference in RR of obesity based on Shannon diversity (RR = 1.16, CI = 1.01-1.34, P-value = 0.04) but not B/F ratio (RR = 0.98, CI = 0.85-1.13, P-value = 0.81). Finally, when we normalized the Shannon diversity data and pooled studies there was a significant difference between non-obese and obese individuals (difference in mean z-score = 0.06; P = 0.33). Similar to RR there was no significant difference in the normalized B/F ratio between non-obese and obese individuals (difference in mean z-score = 0.04; P = 0.44).
 
 **Conclusion:** We show that by pooling the results of many individual studies we can test the generalizability of the microbiome. Our meta-analysis supports the  hypothesis that there is a difference between non-obese and obese individuals in Shannon diversity and B/F ratio, but that the effect sizes are small.
 
@@ -75,7 +75,7 @@ In the third strategy, we normalized the diversity and B/F data within each stud
 ***Separate Analysis***
 We used the categorical variable of obese or non-obese to analyze each data set separately for significant correlations to Bacteroidetes, Firmicutes, Bacteroidetes/Firmicute (B/F) ratio, Shannon diversity, OTU richness, evenness, and the Bray-Curtis distance matrix which was a similar approach taken by two previous reviews [@walters_meta-analyses_2014; @finucane_taxonomic_2014]. Using a P-value cutoff for significance as less than 0.05 we found a total of 1 significant result for Shannon diversity, 2 significant results for OTU richness, and 1 signficant result for the Bray-Curtis distance matrix. There were no significant results for Bacteroidetes, Firmicutes, or the B/F ratio. The full summary of the exact P-values for each respective study and variable tested can be found in table 3.
 
-Next we investigated how well the OTUs in each study were able to classify obese and non-obese individuals using the random forest algorithm. We found that the average Out Of Bag (OOB) Area Under the Curve (AUC) was 0.79 +/- 0.08. We found that the total range for the total number of variables used for the classification ranged from 3 (Ross and Escobar) to 40 (Zupancic). The total number of trees and node size was standardized to 1000 and 20 respectively for each data set. One aspect we found surprising was that there was very little overlap in the variables used by the random forest algorithm for the classification of obese and non-obese individuals by study. The three most common variables was for an OTU that could be classified to the family Ruminococcaceae (7/8 studies), an OTU that could be classified to the family Lachnospiraceae (6/8 studies), Clostridiales (6/8) and Shannon diversity metric (5/8 studies).
+Next we investigated how well the OTUs in each study were able to classify obese and non-obese individuals using the random forest algorithm. We found that the average Out Of Bag (OOB) Area Under the Curve (AUC) was 0.78 +/- 0.08. We found that the total range for the total number of variables used for the classification ranged from 3 (Ross and Escobar) to 40 (Zupancic). The total number of trees and node size was standardized to 1000 and 20 respectively for each data set. One aspect we found surprising was that there was very little overlap in the variables used by the random forest algorithm for the classification of obese and non-obese individuals by study. The three most common variables was for an OTU that could be classified to the family Ruminococcaceae (7/8 studies), an OTU that could be classified to the family Lachnospiraceae (6/8 studies), Clostridiales (6/8) and Shannon diversity metric (5/8 studies).
 
 
 ***Classical Pooled Meta-analysis***
@@ -145,16 +145,16 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
 
-|    Study    |    Age (SD)     |  Sex (F&#124;M)  |  European Ancestry (%)  |    BMI (SD)     |  Min BMI  |  Max BMI  |
-|:-----------:|:---------------:|:----------------:|:-----------------------:|:---------------:|:---------:|:---------:|
-|   Baxter    |  54.29 ( 9.93)  |  111 &#124; 61   |          88.00          |  26.96 (5.33)   |   17.53   |   46.88   |
-|    Ross     |  57.03 (11.16)  |   48 &#124; 15   |          0.00           |  31.63 (5.27)   |   22.1    |   47.9    |
-|  Goodrich   |  61.48 ( 8.94)  |   505 &#124; 2   |           NA            |  26.35 (4.92)   |   16.17   |   44.83   |
-|   Escobar   |  38.10 (11.08)  |   14 &#124; 16   |          0.00           |  27.44 (4.51)   |   19.5    |   37.6    |
-|  Zupancic   |  46.74 (13.05)  |  113 &#124; 87   |         100.00          |  27.69 (5.28)   |   18.2    |   51.1    |
-|     HMP     |  26.14 ( 5.01)  |  127 &#124; 129  |          82.81          |  24.14 (3.41)   |    19     |    34     |
-|     Wu      |  26.36 ( 9.05)  |   34 &#124; 29   |           NA            |  24.33 (4.71)   |   14.04   |   41.29   |
-|  Turnbaugh  |  21-32 (   NA)  |  Not Available   |          51.00          |  Not Available  |    NA     |    NA     |
+|    Study    |    Age (SD)     |  Sex (F&#124;M)  |  European Ancestry (%)  |  Obese (No&#124;Yes)  |    BMI (SD)     |  Min BMI  |  Max BMI  |
+|:-----------:|:---------------:|:----------------:|:-----------------------:|:---------------------:|:---------------:|:---------:|:---------:|
+|   Baxter    |  54.29 ( 9.93)  |  111 &#124; 61   |          88.00          |     125 &#124; 47     |  26.96 (5.33)   |   17.53   |   46.88   |
+|    Ross     |  57.03 (11.16)  |   48 &#124; 15   |          0.00           |     25 &#124; 38      |  31.63 (5.27)   |   22.1    |   47.9    |
+|  Goodrich   |  61.48 ( 8.94)  |   505 &#124; 2   |           NA            |    404 &#124; 103     |  26.35 (4.92)   |   16.17   |   44.83   |
+|   Escobar   |  38.10 (11.08)  |   14 &#124; 16   |          0.00           |     20 &#124; 10      |  27.44 (4.51)   |   19.5    |   37.6    |
+|  Zupancic   |  46.74 (13.05)  |  113 &#124; 87   |         100.00          |     129 &#124; 71     |  27.69 (5.28)   |   18.2    |   51.1    |
+|     HMP     |  26.14 ( 5.01)  |  127 &#124; 129  |          82.81          |     230 &#124; 26     |  24.14 (3.41)   |    19     |    34     |
+|     Wu      |  26.36 ( 9.05)  |   34 &#124; 29   |           NA            |      58 &#124; 5      |  24.33 (4.71)   |   14.04   |   41.29   |
+|  Turnbaugh  |  21-32 (   NA)  |  Not Available   |          51.00          |     47 &#124; 99      |  Not Available  |    NA     |    NA     |
 
 * For Turnbaugh only BMI group information was provided and only an age range was given.
 
@@ -175,65 +175,15 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 |  Turnbaugh  |  Observational  |                Adult twins and mothers from Missouri                 |     Yes     |  Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI  |
 
 
-**Table 3. Summary of Power Calculation Simulations for Shannon Diversity for Non-obese versus Obese**
+
+![](Sze_ObesityMicrobiomeMetaNoMetaHit_PeerJ_2016_files/figure-html/Table_5-1.png)\
+**Figure 5. Summary of Power and Sample Size Simulations for Shannon Diversity for Non-obese versus Obese**
 
 
-|  Study (Non-Obese&#124;Obese)  |  Actual Percent Difference  |  P-value  |  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |
-|:------------------------------:|:---------------------------:|:---------:|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|
-|      Baxter (125&#124;47)      |            5.327            |   0.07    |                0.073                |                0.607                |                0.994                 |                1.000                 |
-|       Ross (25&#124;38)        |            5.813            |   0.28    |                0.056                |                0.199                |                0.603                 |                0.915                 |
-|    Goodrich (404&#124;103)     |            1.153            |   0.61    |                0.105                |                0.928                |                1.000                 |                1.000                 |
-|      Escobar (20&#124;10)      |            0.479            |   0.95    |                0.054                |                0.155                |                0.466                 |                0.802                 |
-|     Zupancic (129&#124;71)     |            1.565            |   0.31    |                0.064                |                0.424                |                0.943                 |                1.000                 |
-|       HMP (230&#124;26)        |            3.125            |   0.58    |                0.053                |                0.141                |                0.415                 |                0.745                 |
-|         Wu (58&#124;5)         |            1.750            |   0.91    |                0.051                |                0.084                |                0.189                 |                0.363                 |
-|     Turnbaugh (47&#124;99)     |            3.624            |   0.12    |                0.079                |                0.700                |                0.999                 |                1.000                 |
 
 
-**Table 4. Summary of Power Calculation Simulations for B/F Ratio for Non-obese versus Obese**
-
-
-|  Study (Non-Obese&#124;Obese)  |  Actual Percent Difference  |  P-value  |  Estimated Power for 1% Difference  |  Estimated Power for 5% Difference  |  Estimated Power for 10% Difference  |  Estimated Power for 15% Difference  |
-|:------------------------------:|:---------------------------:|:---------:|:-----------------------------------:|:-----------------------------------:|:------------------------------------:|:------------------------------------:|
-|      Baxter (125&#124;47)      |            7.217            |   0.19    |                0.050                |                0.061                |                0.096                 |                0.155                 |
-|       Ross (25&#124;38)        |           13.721            |   0.22    |                0.050                |                0.060                |                0.090                 |                0.141                 |
-|    Goodrich (404&#124;103)     |           13.376            |   0.27    |                0.051                |                0.069                |                0.129                 |                0.231                 |
-|      Escobar (20&#124;10)      |           29.596            |   0.08    |                0.050                |                0.052                |                0.057                 |                0.065                 |
-|     Zupancic (129&#124;71)     |            0.864            |   0.59    |                0.050                |                0.061                |                0.095                 |                0.153                 |
-|       HMP (230&#124;26)        |           19.839            |   0.59    |                0.050                |                0.052                |                0.059                 |                0.071                 |
-|         Wu (58&#124;5)         |           17.895            |   0.99    |                0.050                |                0.051                |                0.053                 |                0.057                 |
-|     Turnbaugh (47&#124;99)     |            8.730            |   0.79    |                0.051                |                0.063                |                0.103                 |                0.171                 |
-
-
-**Table 5. Summary of Sample Size Needed Simulations for Shannon Diversity for Non-obese versus Obese**
-
-
-|  Study (Non-Obese&#124;Obese)  |  Actual n/Group Needed  |  Estimated n/Group for 1% Difference  |  Estimated n/Group for 5% Difference  |  Estimated n/Group for 10% Difference  |  Estimated n/Group for 15% Difference  |
-|:------------------------------:|:-----------------------:|:-------------------------------------:|:-------------------------------------:|:--------------------------------------:|:--------------------------------------:|
-|      Baxter (125&#124;47)      |           95            |                 2666                  |                  108                  |                   28                   |                   13                   |
-|       Ross (25&#124;38)        |           138           |                 4646                  |                  187                  |                   47                   |                   22                   |
-|    Goodrich (404&#124;103)     |          2061           |                 2739                  |                  110                  |                   28                   |                   13                   |
-|      Escobar (20&#124;10)      |          12098          |                 2782                  |                  112                  |                   29                   |                   13                   |
-|     Zupancic (129&#124;71)     |          2325           |                 5691                  |                  229                  |                   58                   |                   26                   |
-|       HMP (230&#124;26)        |          1224           |                 11940                 |                  479                  |                  120                   |                   54                   |
-|         Wu (58&#124;5)         |          1988           |                 6089                  |                  244                  |                   62                   |                   28                   |
-|     Turnbaugh (47&#124;99)     |           153           |                 2001                  |                  81                   |                   21                   |                   10                   |
-
-
-**Table 6. Summary of Sample Size Needed Simulations for B/F Ratio for Non-obese versus Obese**
-
-
-|  Study (Non-Obese&#124;Obese)  |  Actual n/Group Needed  |  Estimated n/Group for 1% Difference  |  Estimated n/Group for 5% Difference  |  Estimated n/Group for 10% Difference  |  Estimated n/Group for 15% Difference  |
-|:------------------------------:|:-----------------------:|:-------------------------------------:|:-------------------------------------:|:--------------------------------------:|:--------------------------------------:|
-|      Baxter (125&#124;47)      |          2622           |                136508                 |                 5461                  |                  1366                  |                  608                   |
-|       Ross (25&#124;38)        |           361           |                 67872                 |                 2716                  |                  680                   |                  303                   |
-|    Goodrich (404&#124;103)     |          1083           |                193522                 |                 7742                  |                  1936                  |                  861                   |
-|      Escobar (20&#124;10)      |           196           |                171133                 |                 6846                  |                  1712                  |                  762                   |
-|     Zupancic (129&#124;71)     |         247937          |                185192                 |                 7409                  |                  1853                  |                  824                   |
-|       HMP (230&#124;26)        |          1124           |                442111                 |                 17685                 |                  4422                  |                  1966                  |
-|         Wu (58&#124;5)         |           791           |                252925                 |                 10118                 |                  2530                  |                  1125                  |
-|     Turnbaugh (47&#124;99)     |          1446           |                110137                 |                 4406                  |                  1102                  |                  490                   |
-
+![](Sze_ObesityMicrobiomeMetaNoMetaHit_PeerJ_2016_files/figure-html/Table_6-1.png)\
+**Figure 6. Summary of Power and Sample Size Simulations for Bacteroidetes/Firmicutes Ratio for Non-obese versus Obese**
 
 
 *******
@@ -248,18 +198,18 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 
 ![](results/figures/Figure_2-1.png)\
 
-**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.16 for the low diversity group (P-value = 0.161).
+**Figure 2: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity.**  Groups were divided for each study on high and low Shannon Diversity groups based on the median for that study. The overall pooled relative risk was 1.16 for the low diversity group (P-value = 0.455).
 
 
 ![](results/figures/Figure_3-1.png)\
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.454).
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low B/F ratio groups based on the median for that specific study. The overall pooled relative risk was 0.98 for the low diversity group (P-value = 0.232).
 
 
 ![](results/figures/Figure_4-1.png)\
 
 
-**Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.0972). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.16) but no difference between lean and obese group (P-value = 0.512). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.632). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.56).
+**Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.328). **B)** Z-score Normalized Shannon Diversity by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. Using an ANOVA with tukey post-hoc testing there was a significant diference between the overweight and obese group (P-value = 0.428) but no difference between lean and obese group (P-value = 0.866). **C)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.444). **D)** Z-score Normalized B/F Ratio by BMI Group. Total n for lean, overweight, and obese groups are 536, 502, 399 respectively. There was no significant difference between any of the three groups based on ANOVA with Tukey post-hoc testing (P-value = 0.626).
 
 
 

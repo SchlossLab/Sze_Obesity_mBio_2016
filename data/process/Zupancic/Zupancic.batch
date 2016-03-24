@@ -14,3 +14,4 @@ cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classi
 make.shared(list=current, count=current, label=0.03)
 classify.otu(list=current, count=current, taxonomy=current, label=0.03)
 count.groups()
+sub.sample(shared=current, size=1192)
