@@ -172,21 +172,29 @@ write.csv(SimulatedN_BF, "results/tables/denovoSimulatedN_BF.csv")
 ####################### Estimation of n for percent differences
 ####################### Between two proportions (ACTUAL)
 
+# First need to calculate the base proportions
+TreatmentProportionH <- (ShannonRRTable$tposH)/(ShannonRRTable$tposH + 
+                                                 ShannonRRTable$tnegH)
+
+ControlProportionH <- (ShannonRRTable$cposH)/(ShannonRRTable$cposH + 
+                                              ShannonRRTable$cnegH)
+
+TreatmentProportionBF <- (BFRatioRRTable$tposBF)/(BFRatioRRTable$tposBF + 
+                                                  BFRatioRRTable$tnegBF)
+
+ControlProportionBF <- (BFRatioRRTable$cposBF)/(BFRatioRRTable$cposBF + 
+                                               BFRatioRRTable$cnegBF)
+
+
 # Shannon Diversity
 # Calculate the Effect size (h)
+# Calculate Simulated N for each data set
 
 effectSize <- rep(0, 8)
-for(i in 1:8){
-  TotalTreatment <- ShannonRRTable$tposH[i] + ShannonRRTable$tnegH[i]
-  ControlTreatment <- ShannonRRTable$cposH[i] + ShannonRRTable$cnegH[i]
-  
-  effectSize[i] <- ES.h(ShannonRRTable$tposH[i]/TotalTreatment, 
-                        ShannonRRTable$cposH[i]/ControlTreatment)
-}
-
-# Calculate Simulated N for each data set 
 RRActSimNH <- rep(0, 8)
 for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionH[i], 
+                        TreatmentProportionH[i])
   try(
   RRActSimNH[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
                                power=0.8, alternative = "two.sided")$n)
@@ -194,24 +202,158 @@ for(i in 1:8){
 
 # BF Ratio
 # Calculate the Effect size (h)
+# Calculate Simulated N for each data set 
 
 effectSize <- rep(0, 8)
-for(i in 1:8){
-  TotalTreatment <- BFRatioRRTable$tposBF[i] + BFRatioRRTable$tnegBF[i]
-  ControlTreatment <- BFRatioRRTable$cposBF[i] + BFRatioRRTable$cnegBF[i]
-  
-  effectSize[i] <- ES.h(BFRatioRRTable$tposBF[i]/TotalTreatment, 
-                        BFRatioRRTable$cposBF[i]/ControlTreatment)
-}
-
-# Calculate Simulated N for each data set 
 RRActSimNBF <- rep(0, 8)
 for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionBF[i], 
+                        TreatmentProportionBF[i])
   try(
     RRActSimNBF[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
                               power=0.8, alternative = "two.sided")$n)
 }
 
-RRSimNNeeded <- cbind(RRActSimNH, RRActSimNBF)
-rownames(RRSimNNeeded) <- Study
-write.csv(RRSimNNeeded, "results/tables/denovoRRSimNNeeded.csv")
+
+####################### Between two proportions 1% difference
+
+# Shannon Diversity
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set
+
+effectSize <- rep(0, 8)
+RROnePercentNH <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionH[i], 
+                        ControlProportionH[i] + 0.01)
+  try(
+    RROnePercentNH[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                 power=0.8, alternative = "two.sided")$n)
+}
+
+# BF Ratio
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set 
+
+effectSize <- rep(0, 8)
+RROnePercentNBF <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionBF[i], 
+                        ControlProportionBF[i] + 0.01)
+  try(
+    RROnePercentNBF[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                  power=0.8, alternative = "two.sided")$n)
+}
+
+
+
+
+####################### Between two proportions 5% difference
+
+# Shannon Diversity
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set
+
+effectSize <- rep(0, 8)
+RRFivePercentNH <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionH[i], 
+                        ControlProportionH[i] + 0.05)
+  try(
+    RRFivePercentNH[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                 power=0.8, alternative = "two.sided")$n)
+}
+
+# BF Ratio
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set 
+
+effectSize <- rep(0, 8)
+RRFivePercentNBF <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionBF[i], 
+                        ControlProportionBF[i] + 0.05)
+  try(
+    RRFivePercentNBF[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                  power=0.8, alternative = "two.sided")$n)
+}
+
+
+####################### Between two proportions 10% difference
+
+# Shannon Diversity
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set
+
+effectSize <- rep(0, 8)
+RRTenPercentNH <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionH[i], 
+                        ControlProportionH[i] + 0.10)
+  try(
+    RRTenPercentNH[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                      power=0.8, alternative = "two.sided")$n)
+}
+
+# BF Ratio
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set 
+
+effectSize <- rep(0, 8)
+RRTenPercentNBF <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionBF[i], 
+                        ControlProportionBF[i] + 0.10)
+  try(
+    RRTenPercentNBF[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                       power=0.8, alternative = "two.sided")$n)
+}
+
+
+####################### Between two proportions 15% difference
+
+# Shannon Diversity
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set
+
+effectSize <- rep(0, 8)
+RRFifteenPercentNH <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionH[i], 
+                        ControlProportionH[i] + 0.15)
+  try(
+    RRFifteenPercentNH[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                     power=0.8, alternative = "two.sided")$n)
+}
+
+# BF Ratio
+# Calculate the Effect size (h)
+# Calculate Simulated N for each data set 
+
+effectSize <- rep(0, 8)
+RRFifteenPercentNBF <- rep(0, 8)
+for(i in 1:8){
+  effectSize[i] <- ES.h(ControlProportionBF[i], 
+                        ControlProportionBF[i] + 0.15)
+  try(
+    RRFifteenPercentNBF[i] <- pwr.2p.test(h=abs(effectSize[i]), sig.level=0.05, 
+                                      power=0.8, alternative = "two.sided")$n)
+}
+
+
+############ Write Data Tables to file ###################################
+
+RRSimNNeededH <- cbind(RRActSimNH, RROnePercentNH, RRFivePercentNH, 
+                       RRTenPercentNH, RRFifteenPercentNH)
+rownames(RRSimNNeededH) <- Study
+write.csv(RRSimNNeededH, "results/tables/denovoRRSimNNeededH.csv")
+
+RRSimNNeededBF <- cbind(RRActSimNBF, RROnePercentNBF, RRFivePercentNBF, 
+                       RRTenPercentNBF, RRFifteenPercentNBF)
+rownames(RRSimNNeededBF) <- Study
+write.csv(RRSimNNeededBF, "results/tables/denovoRRSimNNeededBF.csv")
+
+
+
+
+

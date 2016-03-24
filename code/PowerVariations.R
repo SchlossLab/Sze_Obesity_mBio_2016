@@ -428,22 +428,33 @@ write.csv(ActualDiff, "results/tables/denovoActualDiff.csv")
 ## used for the control group and the treatment group would vary by:
 ## 1%, 5%, 10%, 15%
 
+# Create base proportion based on data for control group
+# Vary the obese proportion by 1, 5, 10, 15 percent
+
+BasePropotionsH <- (ShannonRRTable$cposH)/(ShannonRRTable$cposH + 
+                                            ShannonRRTable$cnegH)
+
+BasePropotionsBF <- (BFRatioRRTable$cposBF)/(BFRatioRRTable$cposBF + 
+                                              BFRatioRRTable$cnegBF)
 #One percent
 
 OnePercentHRR <- rep(0, 8)
+
 for(i in 1:8){
-  OnePercentHRR[i] <- power.fisher.test(0.38, 0.39, 
-                              ShannonRRTable$tnegH[i] + ShannonRRTable$cnegH[i], 
-                              ShannonRRTable$tposH[i] + ShannonRRTable$cposH[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
+  OnePercentHRR[i] <- power.fisher.test(BasePropotionsH[i], 
+                                        BasePropotionsH[i] + 0.01, 
+                            ShannonRRTable$cposH[i] + ShannonRRTable$cnegH[i], 
+                            ShannonRRTable$tposH[i] + ShannonRRTable$tnegH[i], 
+                            alpha=0.05, nsim=1000, alternative="two.sided")
 }
 
 OnePercentBFRR <- rep(0, 8)
 for(i in 1:8){
-  OnePercentBFRR[i] <- power.fisher.test(0.38, 0.39, 
-                              BFRatioRRTable$tnegBF[i] + BFRatioRRTable$cnegBF[i], 
-                              BFRatioRRTable$tposBF[i] + BFRatioRRTable$cposBF[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
+  OnePercentBFRR[i] <- power.fisher.test(BasePropotionsBF[i], 
+                                        BasePropotionsBF[i] + 0.01, 
+                            BFRatioRRTable$cposBF[i] + BFRatioRRTable$cnegBF[i], 
+                            BFRatioRRTable$tposBF[i] + BFRatioRRTable$tnegBF[i], 
+                            alpha=0.05, nsim=1000, alternative="two.sided")
 }
 
 
@@ -451,37 +462,41 @@ for(i in 1:8){
 
 FivePercentHRR <- rep(0, 8)
 for(i in 1:8){
-  FivePercentHRR[i] <- power.fisher.test(0.38, 0.43, 
-                              ShannonRRTable$tnegH[i] + ShannonRRTable$cnegH[i], 
-                              ShannonRRTable$tposH[i] + ShannonRRTable$cposH[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
-}
+  FivePercentHRR[i] <- power.fisher.test(BasePropotionsH[i], 
+                        BasePropotionsH[i] + 0.05, 
+                        ShannonRRTable$cposH[i] + ShannonRRTable$cnegH[i], 
+                        ShannonRRTable$tposH[i] + ShannonRRTable$tnegH[i], 
+                        alpha=0.05, nsim=1000, alternative="two.sided")
+  }
 
 FivePercentBFRR <- rep(0, 8)
 for(i in 1:8){
-  FivePercentBFRR[i] <- power.fisher.test(0.38, 0.43, 
-                              BFRatioRRTable$tnegBF[i] + BFRatioRRTable$cnegBF[i], 
-                              BFRatioRRTable$tposBF[i] + BFRatioRRTable$cposBF[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
-}
+  FivePercentBFRR[i] <- power.fisher.test(BasePropotionsBF[i], 
+                          BasePropotionsBF[i] + 0.05, 
+                          BFRatioRRTable$cposBF[i] + BFRatioRRTable$cnegBF[i], 
+                          BFRatioRRTable$tposBF[i] + BFRatioRRTable$tnegBF[i], 
+                          alpha=0.05, nsim=1000, alternative="two.sided")
+  }
 
 
 #Ten percent
 
 TenPercentHRR <- rep(0, 8)
 for(i in 1:8){
-  TenPercentHRR[i] <- power.fisher.test(0.38, 0.48, 
-                              ShannonRRTable$tnegH[i] + ShannonRRTable$cnegH[i], 
-                              ShannonRRTable$tposH[i] + ShannonRRTable$cposH[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
+  TenPercentHRR[i] <- power.fisher.test(BasePropotionsH[i], 
+                          BasePropotionsH[i] + 0.10, 
+                          ShannonRRTable$cposH[i] + ShannonRRTable$cnegH[i], 
+                          ShannonRRTable$tposH[i] + ShannonRRTable$tnegH[i], 
+                          alpha=0.05, nsim=1000, alternative="two.sided")
 }
 
 TenPercentBFRR <- rep(0, 8)
 for(i in 1:8){
-  TenPercentBFRR[i] <- power.fisher.test(0.38, 0.48, 
-                              BFRatioRRTable$tnegBF[i] + BFRatioRRTable$cnegBF[i], 
-                              BFRatioRRTable$tposBF[i] + BFRatioRRTable$cposBF[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
+  TenPercentBFRR[i] <- power.fisher.test(BasePropotionsBF[i], 
+                          BasePropotionsBF[i] + 0.10, 
+                          BFRatioRRTable$cposBF[i] + BFRatioRRTable$cnegBF[i], 
+                          BFRatioRRTable$tposBF[i] + BFRatioRRTable$tnegBF[i], 
+                          alpha=0.05, nsim=1000, alternative="two.sided")
 }
 
 
@@ -489,19 +504,21 @@ for(i in 1:8){
 
 FifteenPercentHRR <- rep(0, 8)
 for(i in 1:8){
-  FifteenPercentHRR[i] <- power.fisher.test(0.38, 0.53, 
-                              ShannonRRTable$tnegH[i] + ShannonRRTable$cnegH[i], 
-                              ShannonRRTable$tposH[i] + ShannonRRTable$cposH[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
+  FifteenPercentHRR[i] <- power.fisher.test(BasePropotionsH[i], 
+                          BasePropotionsH[i] + 0.15, 
+                          ShannonRRTable$cposH[i] + ShannonRRTable$cnegH[i], 
+                          ShannonRRTable$tposH[i] + ShannonRRTable$tnegH[i], 
+                          alpha=0.05, nsim=1000, alternative="two.sided")
 }
 
 FifteenPercentBFRR <- rep(0, 8)
 for(i in 1:8){
-  FifteenPercentBFRR[i] <- power.fisher.test(0.38, 0.53, 
-                              BFRatioRRTable$tnegBF[i] + BFRatioRRTable$cnegBF[i], 
-                              BFRatioRRTable$tposBF[i] + BFRatioRRTable$cposBF[i], 
-                              alpha=0.05, nsim=1000, alternative="two.sided")
-}
+  FifteenPercentBFRR[i] <- power.fisher.test(BasePropotionsBF[i], 
+                          BasePropotionsBF[i] + 0.15, 
+                          BFRatioRRTable$cposBF[i] + BFRatioRRTable$cnegBF[i], 
+                          BFRatioRRTable$tposBF[i] + BFRatioRRTable$tnegBF[i], 
+                          alpha=0.05, nsim=1000, alternative="two.sided")
+  }
 
 
 ##Actual Percent differences

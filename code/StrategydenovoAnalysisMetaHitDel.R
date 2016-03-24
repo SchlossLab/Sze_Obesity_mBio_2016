@@ -1778,7 +1778,8 @@ rm(WuBacter, WuFirm, WuBF, WuH, WuS, WuJ, WuPERM, WuZH, WuZLogBF,
 ############ Preparing Data Tables for Analysis ###########################
 ###########################################################################
 
-microbiome <- read.table("data/process/Turnbaugh/TurnbaughSub.shared", header=T)
+microbiome <- read.table("data/process/Turnbaugh/TurnbaughGoodSub.shared", 
+                         header=T)
 microbiome <- EditTable(microbiome, 2, delRange=c(1:3))
 metadata <- read.csv("data/process/Turnbaugh/turnbaugh.metadata.csv")
 metadata <- EditTable(metadata, 4, delRange=4)
@@ -1795,8 +1796,8 @@ rm(keep1)
 alpha.test <- makeAlphaTable(microbiome)
 
 #Get phyla information
-phyla.table <- MakePhylaTable(microbiome, "data/process/Turnbaugh/phyla.csv", 
-                              csv = T)
+phyla.table <- MakePhylaTable(microbiome, 
+                              "data/process/Turnbaugh/taxonomyKey.txt")
 
 #combine phyla that are not that abundant
 phyla.table$other <- apply(phyla.table[, c("Fusobacteria", "Synergistetes", "TM7", 
@@ -1821,7 +1822,7 @@ bmi <- metadata$BMI.category
 
 ##Test BMI versus alpha diversity and phyla
 
-turnbaughH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.1162
+turnbaughH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.9699
 MeanNonObeseH <- c(MeanNonObeseH, 
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
@@ -1833,7 +1834,7 @@ SDObeseH <- c(SDObeseH,
 averageStudyH <- c(averageStudyH, mean(alpha.test$H))
 sdH <- c(sdH, sd(alpha.test$H))
 
-turnbaughS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.05479
+turnbaughS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.5436
 MeanNonObeseS <- c(MeanNonObeseS, 
                    mean(alpha.test$S[which(metadata$obese == "No")]))
 MeanObeseS <- c(MeanObeseS, 
@@ -1845,7 +1846,7 @@ SDObeseS <- c(SDObeseS,
 averageStudyS <- c(averageStudyS, mean(alpha.test$S))
 sdS <- c(sdS, sd(alpha.test$S))
 
-turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.1748
+turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.8834
 MeanNonObeseJ <- c(MeanNonObeseJ, 
                    mean(alpha.test$J[which(metadata$obese == "No")]))
 MeanObeseJ <- c(MeanObeseJ, 
@@ -1888,9 +1889,9 @@ SDNonObeseBF <- c(SDNonObeseBF, sd(BFratio[which(metadata$obese == "No")]))
 SDObeseBF <- c(SDObeseBF, sd(BFratio[which(metadata$obese == "Yes")]))
 sdBF <- c(sdBF, sd(BFratio))
 
-turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.8048
-turnbaughFirm <- wilcox.test(firm ~ obese) #P-value=0.8587
-turnbaughBF <- wilcox.test(BFratio ~ obese) #P-value=0.7886
+turnbaughBacter <- wilcox.test(bacter ~ obese) #P-value=0.5675
+turnbaughFirm <- wilcox.test(firm ~ obese) #P-value=0.9366
+turnbaughBF <- wilcox.test(BFratio ~ obese) #P-value=0.6241
 
 ###########################################################################
 ############ NMDS and PERMANOVA Analysis###################################
@@ -1899,7 +1900,7 @@ turnbaughBF <- wilcox.test(BFratio ~ obese) #P-value=0.7886
 set.seed(3)
 turnbaugh2 <- adonis(microbiome ~ obese, permutations=1000)
 turnbaughPERM <- turnbaugh2$aov.tab
-#PERMANOVA=0.09491, pseudo-F=1.2114
+#PERMANOVA=0.7502, pseudo-F=0.82789
 
 ###########################################################################
 ############ Relative Risk#################################################
@@ -1907,9 +1908,9 @@ turnbaughPERM <- turnbaugh2$aov.tab
 
 # Run Shannon Diversity RR Test
 TurnbaughHRR <- RunRR(alpha.test, metadata, "obese", "H")
-## Risk Ratio = 1.11
-## CI = 0.883, 1.4
-## p-value = 0.376
+## Risk Ratio = 0.98
+## CI = 0.779, 1.23
+## p-value = 0.859
 
 ##Run the RR for B/F ratio
 Bacter = phyla.table.rel.abund$Bacteroidetes
@@ -1917,9 +1918,9 @@ Firm = phyla.table.rel.abund$Firmicutes
 BFRatio = Bacter/Firm
 BFRatio <- as.data.frame(BFRatio)
 TurnbaughBFRR <- RunRR(BFRatio, metadata, "obese", "BFRatio")
-## Risk Ratio = 1.02
-## CI = 0.812, 1.28
-## p-value = 0.859
+## Risk Ratio = 1.11
+## CI = 0.88, 1.40
+## p-value = 0.376
 
 
 ###########################################################################
