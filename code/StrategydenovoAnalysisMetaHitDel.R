@@ -7,6 +7,7 @@ library(statmod)
 library(vegan)
 library(epiR)
 library(AUCRF)
+library(pROC)
 source("code/UsedFunctions.R")
 
 ############# BAXTER ######################################################
@@ -158,7 +159,6 @@ set.seed(3)
 baxterAUCfit <- AUCRF(obese ~ ., data=testset, ntree=1000, nodesize=20)
 baxAUC <- baxterAUCfit$`OOB-AUCopt`
 baxKopt <- baxterAUCfit$Kopt
-
 
 ###########################################################################
 ############ Z-score Data Preparation ###################################

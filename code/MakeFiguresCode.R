@@ -55,7 +55,8 @@ a2 <- a1 + geom_jitter(aes(colour = Legend), size=5, alpha=7/10,
            panel.grid.major = element_blank(),
            panel.grid.minor = element_blank(),
            panel.border = element_blank(),
-           panel.background = element_blank()) + 
+           panel.background = element_blank(), 
+           legend.key = element_rect(fill = "white")) + 
   geom_vline(aes(xintercept=ActualDiffH[1], colour=Legend[1]), 
                 linetype="dashed") + 
   geom_vline(aes(xintercept=ActualDiffH[2], colour=Legend[2]), 
@@ -114,8 +115,9 @@ b2 <- b1 + geom_jitter(aes(colour = Study), size=5, alpha=7/10,
                               panel.grid.major = element_blank(),
                               panel.grid.minor = element_blank(),
                               panel.border = element_blank(),
-                              panel.background = element_blank()) + 
-  ylim(0, 5) + 
+                              panel.background = element_blank(), 
+                              legend.position="none") + 
+  ylim(0, 5) +  
   geom_hline(aes(yintercept=LogActualNNeededH[1], colour=Study[1]), 
              linetype="dashed") + 
   geom_hline(aes(yintercept=LogActualNNeededH[2], colour=Study[2]), 
@@ -182,7 +184,8 @@ c2 <- c1 + geom_jitter(aes(colour = Legend), size=5, alpha=7/10,
                               panel.grid.major = element_blank(),
                               panel.grid.minor = element_blank(),
                               panel.border = element_blank(),
-                              panel.background = element_blank()) + 
+                              panel.background = element_blank(), 
+                              legend.key = element_rect(fill = "white")) + 
   geom_vline(aes(xintercept=ActualDiffBF[1], colour=Legend[1]), 
              linetype="dashed") + 
   geom_vline(aes(xintercept=ActualDiffBF[2], colour=Legend[2]), 
@@ -245,7 +248,8 @@ d2 <- d1 + geom_jitter(aes(colour = Study), size=5, alpha=7/10,
                               panel.grid.major = element_blank(),
                               panel.grid.minor = element_blank(),
                               panel.border = element_blank(),
-                              panel.background = element_blank()) + 
+                              panel.background = element_blank(), 
+                              legend.position="none") + 
   ylim(0, 7.5) + 
   geom_hline(aes(yintercept=LogActualNNeededBF[1], colour=Study[1]), 
              linetype="dashed") + 
