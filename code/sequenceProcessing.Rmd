@@ -637,8 +637,9 @@ This is the very famous twin study of the microbiome and obesity.  The other two
 ```{r, engine='bash', eval=FALSE}
 grep -e '^>' V2.fasta > test.fasta  
 sed 's/>//' test.fasta > test2.fasta    
-sed 's/\s.*$//' test2.fasta > test3.fasta  
-paste -d" " test2.fasta test3.fasta > V2.groups''
+sed 's/\s.*$//' test2.fasta > test3.fasta
+sed 's/.*_//' test3.fasta > test4.fasta
+paste -d"\t" test3.fasta test4.fasta > V2.groups''
 ```
 
 Once we have a groups file we can just create a batch file and put it into mothur to run and come back when it is completed.

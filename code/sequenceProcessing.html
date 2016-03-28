@@ -593,8 +593,9 @@ mnt/EXT/Schloss-data/bin/mothur Wu.batch</code></pre>
 <p>This is the very famous twin study of the microbiome and obesity. The other two re-analysis articles <span class="citation">(Finucane et al. 2014; Walters, Xu, and Knight 2014)</span> also use this data set. The raw data is not avialable on the SRA but you can download a fasta file for either the V2 or V6 16S rRNA gene <a href="https://gordonlab.wustl.edu/NatureTwins_2008/TurnbaughNature_11_30_08.html">here</a>. We used the V2 region. For the most part it was relatively straight forward. The code used and instruction are below:</p>
 <pre class="bash"><code>grep -e '^&gt;' V2.fasta &gt; test.fasta  
 sed 's/&gt;//' test.fasta &gt; test2.fasta    
-sed 's/\s.*$//' test2.fasta &gt; test3.fasta  
-paste -d&quot; &quot; test2.fasta test3.fasta &gt; V2.groups''</code></pre>
+sed 's/\s.*$//' test2.fasta &gt; test3.fasta
+sed 's/.*_//' test3.fasta &gt; test4.fasta
+paste -d&quot;\t&quot; test3.fasta test4.fasta &gt; V2.groups''</code></pre>
 <p>Once we have a groups file we can just create a batch file and put it into mothur to run and come back when it is completed.</p>
 <pre class="bash"><code>mnt/EXT/Schloss-data/bin/mothur Turnbaugh.batch</code></pre>
 <div class="references">
