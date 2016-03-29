@@ -65,7 +65,7 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 |  Zupancic   |      0.57       |     0.60     |    0.59     |        0.31         |      0.16      |    0.44    |     0.18      |
 |     HMP     |      0.46       |     0.79     |    0.59     |        0.58         |      0.97      |    0.47    |     0.81      |
 |     Wu      |      0.71       |     0.75     |    0.99     |        0.91         |      0.28      |    0.38    |     0.53      |
-|  Turnbaugh  |      0.80       |     0.86     |    0.79     |        0.12         |      0.05      |    0.17    |     0.09      |
+|  Turnbaugh  |      0.57       |     0.94     |    0.62     |        0.97         |      0.54      |    0.88    |     0.75      |
 
 
 
@@ -113,8 +113,34 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 
 ![](results/figures/Figure_S4-1.png)\
 
-**Figure 4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
+**Figure S4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
+
+![](results/figures/Figure_S5-1.png)\
+
+**Figure S5. Summary of Power and Sample Size Simulations for OTU Richness (S) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+
+![](results/figures/Figure_S6-1.png)\
+
+**Figure S6. Summary of Power and Sample Size Simulations for Evenness (J) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+
+
+![](results/figures/Figure_S7-1.png)\
+
+**Figure S7. Summary of Power and Sample Size Simulations for Bacteroidetes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+
+![](results/figures/Figure_S8-1.png)\
+
+**Figure S8. Summary of Power and Sample Size Simulations for Firmicutes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+
+
+![](results/figures/Figure_S9-1.png)\
+
+**Figure S9. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on Shannon Diversity**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+
+![](results/figures/Figure_S10-1.png)\
+
+**Figure S10. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on B/F Ratio**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
 *******
