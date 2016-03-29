@@ -2058,9 +2058,12 @@ lowH <- c(BaxterHRR$lowCI, RossHRR$lowCI, GoodrichHRR$lowCI, EscobarHRR$lowCI,
 highH <- c(BaxterHRR$highCI, RossHRR$highCI, GoodrichHRR$highCI, 
            EscobarHRR$highCI, ZupancicHRR$highCI, HMPHRR$highCI, WuHRR$highCI, 
            TurnbaughHRR$highCI)
+pValueH <- c(BaxterHRR$pValue, RossHRR$pValue, GoodrichHRR$pValue, 
+           EscobarHRR$pValue, ZupancicHRR$pValue, HMPHRR$pValue, WuHRR$pValue, 
+           TurnbaughHRR$pValue)
 
 ShannonRRTable <- as.data.frame(cbind(tposH, tnegH, cposH, cnegH, 
-                                      RRH, lowH, highH))
+                                      RRH, lowH, highH, pValueH))
 ShannonRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Turnbaugh")
 write.csv(ShannonRRTable, "results/tables/denovoShannonRRTable.csv")
@@ -2086,8 +2089,12 @@ highBF <- c(BaxterBFRR$highCI, RossBFRR$highCI, GoodrichBFRR$highCI,
             EscobarBFRR$highCI, ZupancicBFRR$highCI, HMPBFRR$highCI, 
             WuBFRR$highCI, TurnbaughBFRR$highCI)
 
+pValueBF <- c(BaxterBFRR$pValue, RossBFRR$pValue, GoodrichBFRR$pValue, 
+           EscobarBFRR$pValue, ZupancicBFRR$pValue, HMPBFRR$pValue, 
+           WuBFRR$pValue, TurnbaughBFRR$pValue)
+
 BFRatioRRTable <- as.data.frame(cbind(tposBF, tnegBF, cposBF, cnegBF, RRBF, 
-                                      lowBF, highBF))
+                                      lowBF, highBF, pValueBF))
 BFRatioRRTable$Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", 
                           "HMP", "Wu", "Turnbaugh")
 write.csv(BFRatioRRTable, "results/tables/denovoBFRatioRRTable.csv")
