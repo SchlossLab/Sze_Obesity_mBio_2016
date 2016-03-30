@@ -2,7 +2,35 @@
 Marc Sze  
 January 26, 2016  
 #### **Preamble**  
-Each study is brought up one at a time.  This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study.  You will also need the latest version of mothur, SRA Toolkit, and Python 3+ installed on your system.  There are also a few reference files that you will need.  The first is the [SILVA reference](http://www.mothur.org/wiki/Silva_reference_files) database and the second is the [RDP database](http://www.mothur.org/wiki/RDP_reference_files) of which we used release 102 and version 9 respectively.  In general, we tried to keep as close as possible to the Schloss SOP for processsing sequence reads for either 454 or the MiSeq.  Most of the differences between the SOP as written and what was performed involved the use of flowgrams.  Most of the data in the SRA were stored in the Fastq format and this step was not possible.  The batch files can be found in the data/process directory under the respective study directory.
+Each study is brought up one at a time.  This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study.  You will also need the latest version of mothur, SRA Toolkit, and Python 3+ installed on your system.  There are also a few reference files that you will need.  The first is the [SILVA reference](http://www.mothur.org/wiki/Silva_reference_files) database and the second is the [RDP database](http://www.mothur.org/wiki/RDP_reference_files) of which we used release 102 and version 9 respectively.  In general, we tried to keep as close as possible to the Schloss SOP for processsing sequence reads for either 454 or the MiSeq.  Most of the differences between the SOP as written and what was performed involved the use of flowgrams.  Most of the data in the SRA were stored in the Fastq format and this step was not possible.  The batch files can be found in the data/process directory under the respective study directory.  Our specific server used a PBS script for job submission and an example of it can be found below.  If you want to copy it simply save it as a .pbs file.  
+
+
+```bash
+#!/bin/sh
+#PBS -l nodes=1:ppn=8,mem=44gb
+#PBS -l walltime=500:00:00
+#PBS -j oe
+#PBS -m abe
+#PBS -V
+#PBS -M email@location.com
+#PBS -q first
+
+echo "ncpus-2.pbs"
+cat $PBS_NODEFILE
+qstat -f $PBS_JOBID
+
+cd $PBS_O_WORKDIR
+
+NCPUS=`wc -l $PBS_NODEFILE | awk '{print $1}'`
+
+/mnt/EXT/Schloss-data/bin/mothur Turnbaugh1.batch
+
+echo "qsub working directory absolute is"
+echo $PBS_O_WORKDIR
+exit 0
+
+```
+
 <br>
 <br>
 

@@ -70,7 +70,31 @@ img {
 
 <div id="preamble" class="section level4">
 <h4><strong>Preamble</strong></h4>
-<p>Each study is brought up one at a time. This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study. You will also need the latest version of mothur, SRA Toolkit, and Python 3+ installed on your system. There are also a few reference files that you will need. The first is the <a href="http://www.mothur.org/wiki/Silva_reference_files">SILVA reference</a> database and the second is the <a href="http://www.mothur.org/wiki/RDP_reference_files">RDP database</a> of which we used release 102 and version 9 respectively. In general, we tried to keep as close as possible to the Schloss SOP for processsing sequence reads for either 454 or the MiSeq. Most of the differences between the SOP as written and what was performed involved the use of flowgrams. Most of the data in the SRA were stored in the Fastq format and this step was not possible. The batch files can be found in the data/process directory under the respective study directory. <br> <br></p>
+<p>Each study is brought up one at a time. This recount starts from time of download all the way to generation of the final shared file used for the meta-analysis in the study. You will also need the latest version of mothur, SRA Toolkit, and Python 3+ installed on your system. There are also a few reference files that you will need. The first is the <a href="http://www.mothur.org/wiki/Silva_reference_files">SILVA reference</a> database and the second is the <a href="http://www.mothur.org/wiki/RDP_reference_files">RDP database</a> of which we used release 102 and version 9 respectively. In general, we tried to keep as close as possible to the Schloss SOP for processsing sequence reads for either 454 or the MiSeq. Most of the differences between the SOP as written and what was performed involved the use of flowgrams. Most of the data in the SRA were stored in the Fastq format and this step was not possible. The batch files can be found in the data/process directory under the respective study directory. Our specific server used a PBS script for job submission and an example of it can be found below. If you want to copy it simply save it as a .pbs file.</p>
+<pre class="bash"><code>#!/bin/sh
+#PBS -l nodes=1:ppn=8,mem=44gb
+#PBS -l walltime=500:00:00
+#PBS -j oe
+#PBS -m abe
+#PBS -V
+#PBS -M email@location.com
+#PBS -q first
+
+echo &quot;ncpus-2.pbs&quot;
+cat $PBS_NODEFILE
+qstat -f $PBS_JOBID
+
+cd $PBS_O_WORKDIR
+
+NCPUS=`wc -l $PBS_NODEFILE | awk '{print $1}'`
+
+/mnt/EXT/Schloss-data/bin/mothur Turnbaugh1.batch
+
+echo &quot;qsub working directory absolute is&quot;
+echo $PBS_O_WORKDIR
+exit 0
+</code></pre>
+<p><br> <br></p>
 <div id="baxter-et-al.-2016" class="section level5">
 <h5><strong>Baxter et al. 2016:</strong></h5>
 <p>This data set consisted of controls without colorectal cancer (CRC) and those with CRC. The sequence reads of only the controls who did not have CRC were obtained directly from the first author since the data was generated within the Schloss lab. However, the sequences can be found on the SRA under the accession number SRP062005. Only the raw 16S sequence reads for normal controls were processed from the Sequence Read Archive (SRA) and subsequently used in the analysis. So here we go…. <br> <br> I’m sure a smarter person could seperate the specific files that are normal only but I’m lazy and we had the storage space so I downloaded the entire data set.<br /><br></p>
