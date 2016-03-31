@@ -345,6 +345,7 @@ j1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo,
 k1 <- ggBaseBox(HMPmicrobiome, HMPDemo, "Otu000293", "HMP", log=TRUE)
 l1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00191", "Wu", log=TRUE)
 
+pdf("results/figures/suppFigClostridiales.pdf")
 png("results/figures/suppFigClostridiales.png")
 grid.arrange(a1, b1, c1, d1, e1, f1, g1, h1, i1, h1, j1, k1, l1)
 dev.off()
@@ -382,6 +383,7 @@ l1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00229", "Wu", log=TRUE)
 m1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00005", "Wu", log=TRUE)
 n1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00067", "Wu", log=TRUE)
 
+pdf("results/figures/suppFigLachno.pdf")
 png("results/figures/suppFigLachno.png")
 grid.arrange(a1, b1, c1, d1, e1, f1, g1, h1, i1, h1, j1, k1, l1, m1, n1)
 dev.off()
@@ -420,6 +422,7 @@ k1 <- ggBaseBox(ZupancicMicrobiome, ZupancicDemo,
 l1 <- ggBaseBox(HMPmicrobiome, HMPDemo, "Otu000252", "HMP", log=TRUE)
 m1 <- ggBaseBox(WuMicrobiome, WuDemo, "Otu00123", "Wu", log=TRUE)
 
+pdf("results/figures/suppFigRumi.pdf")
 png("results/figures/suppFigRumi.png")
 grid.arrange(a1, b1, c1, d1, e1, f1, g1, h1, i1, h1, j1, k1, l1, m1)
 dev.off()

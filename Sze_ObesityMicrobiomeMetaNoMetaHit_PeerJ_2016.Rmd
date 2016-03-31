@@ -313,7 +313,7 @@ kable(table2, format = "markdown", align = 'c', padding = 2)
 **Figure 1: PRISMA Flow Diagram of Total Records Searched.**  This was adapted from:  Moher D, Liberati A, Tetzlaff J, Altman DG, The PRISMA Group (2009). Preferred Reporting Items for Systematic Reviews and Meta-Analyses: The PRISMA Statement. PLoS Med 6(7): e1000097. doi:10.1371/journal.pmed1000097.
 
 
-```{r Figure_2, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_2, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 combinedData <- read.csv("results/tables/ROCcombinedData.csv", stringsAsFactors = FALSE)
 
 diag <- data.frame(x=seq(1, 0), y = seq(0, 1))
@@ -340,7 +340,7 @@ rocPlot + geom_line(aes(group=Study, color=Study)) +
 
 
 
-```{r Figure_3, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_3, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(HRRG1, BFRRG1, ncol=2)
 
@@ -349,7 +349,7 @@ grid.arrange(HRRG1, BFRRG1, ncol=2)
 **Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B/F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was `r format(round(10^test3R$LogFC[1],2), nsmall=2)` with a P-value of `r format(round(RRSDPvalue$QMp, 2), nsmall=2)`.  **B)** The overall pooled relative risk for the B/F ratio was  `r format(round(10^test3BF$LogFC[1],2), nsmall=2)` with a P-value of `r format(round(RRBFPvalue$QMp, 2), nsmall=2)`.
 
 
-```{r Figure_4, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_4, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 # Section A
 p1 <- ggplot(group.data.test, aes(obese, ZH))
 p2 <- p1 + geom_boxplot(aes(fill = obese)) + scale_fill_brewer(palette="Set1")
@@ -386,7 +386,7 @@ grid.arrange(p7, bf7, ncol=2)
 **Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = `r length(which(group.data.test$obese == "No"))`) and obese groups (n = `r length(which(group.data.test$obese == "Yes"))`) (P-value = `r signif(combZHTtest$p.value, 3)`). **B)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = `r length(which(group.data.test$obese == "No"))`) and obese (n = `r length(which(group.data.test$obese == "Yes"))`) group based on B/F ratio (P-value = `r signif(combZLogBFTtest$p.value, 3)`).
 
 
-```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 source("code/MakeFiguresCode.R")
 
@@ -399,7 +399,7 @@ grid.arrange(a2, b2, nrow=2)
 
 
 
-```{r Figure_6, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_6, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 
 grid.arrange(c2, d2, nrow=2)
