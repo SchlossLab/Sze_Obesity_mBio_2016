@@ -1,11 +1,9 @@
 ---
-title: "Looking for a Signal in the Noise: Revisiting Obesity and the microbiome"
+title: "Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome"
 output:
   html_document:
     keep_md: yes
-  word_document:
-    reference_docx: manuscript_template.docx
-bibliography: metaAnalysis.obesity.microbiome.bib
+bibliography: submission/references.bib
 ---
 
 Marc A Sze<sup>1</sup> and Patrick D Schloss<sup>1</sup>

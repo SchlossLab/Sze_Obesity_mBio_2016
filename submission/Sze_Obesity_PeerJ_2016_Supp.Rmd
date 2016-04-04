@@ -1,13 +1,13 @@
 ---
-title: "Bacterial Microbiome and Obesity Meta-analysis Supplemental"
-author: "Marc Sze"
-date: "January 26, 2016"
+title: "Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome"
 output:
   html_document:
     keep_md: yes
-bibliography: metaAnalysis.obesity.microbiome.bib
+bibliography: submission/references.bib
 ---
-<br><br>
+
+Marc A Sze<sup>1</sup> and Patrick D Schloss<sup>1</sup>
+
 
 ```{r Loading_data_tables, echo=FALSE, message=FALSE, warning=FALSE}
 
