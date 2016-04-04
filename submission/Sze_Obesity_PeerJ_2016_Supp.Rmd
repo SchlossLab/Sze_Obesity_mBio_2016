@@ -148,7 +148,7 @@ kable(tableS3, format = "markdown", align = 'c', padding = 2)
 ```
 
 
-```{r Figure_S4, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S4, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 library(metafor)
 
@@ -210,12 +210,13 @@ res2 <- rma(ai=tpos, bi=tneg, ci=cpos, di=cneg, data=raw.overall, measure="RR", 
 par(mfrow=c(1,2))
 funnel(res, main="A")
 funnel(res2, main="B")
+
 ```
 
 **Figure S4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
 
-```{r Figure_S5, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S5, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 source("code/MakeFiguresCodeSupplemental.R")
 library(gridExtra)
@@ -229,7 +230,7 @@ grid.arrange(s2, sn2, nrow=2)
 
 **Figure S5. Summary of Power and Sample Size Simulations for OTU Richness (S) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-```{r Figure_S6, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S6, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(j2, jn2, nrow=2)
 
@@ -239,14 +240,14 @@ grid.arrange(j2, jn2, nrow=2)
 **Figure S6. Summary of Power and Sample Size Simulations for Evenness (J) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
-```{r Figure_S7, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S7, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(b2, bn2, nrow=2)
 ```
 
 **Figure S7. Summary of Power and Sample Size Simulations for Bacteroidetes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-```{r Figure_S8, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S8, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(f2, fn2, nrow=2)
 ```
@@ -254,14 +255,14 @@ grid.arrange(f2, fn2, nrow=2)
 **Figure S8. Summary of Power and Sample Size Simulations for Firmicutes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
-```{r Figure_S9, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S9, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(RRH2, HRRn2, nrow=2)
 ```
 
 **Figure S9. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on Shannon Diversity**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-```{r Figure_S10, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/"}
+```{r Figure_S10, echo=FALSE, message=FALSE, warning=FALSE, fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(RRBF2, BFRRn2, nrow=2)
 ```

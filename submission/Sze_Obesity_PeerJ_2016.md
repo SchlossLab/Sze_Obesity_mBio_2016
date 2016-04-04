@@ -64,6 +64,7 @@ All sequence data were publicly available and were downloaded from the NCBI Sequ
 
 
 ***Data Analysis***
+<<<<<<< HEAD:submission/Sze_Obesity_PeerJ_2016.md
 We performed the analysis using R (3.2.2). We split the overall analysis into three general strategies. In the first strategy we followed the approach employed by Finucane et al [-@finucane_taxonomic_2014] and Walters et al [-@walters_meta-analyses_2014] where each study was re-analyzed separately to identify associations between BMI and the relative abundance of Bacteroidetes and Firmicutes, the ratio of Bacteroidetes and Firmicutes relative abundances (B/F), Shannon diversity, and number of OTUs. A two-tailed Wilcoxon test was performed for comparison for non-obese and obese individuals. We also measured the Spearman correlation coefficient between each metric and the actual BMI value. Next, we compared the community structure from non-obese and obese individuals using PERMANOVA analysis of Bray-Curtis distance matrices. This analysis was performed using the vegan R package. Finally, we used the AUCRF (v1.1) R package to implement a Random Forest analysis to identify the best OTUs and alpha-diversity metrics for distinguish non-obese and obese individuals.  To generate Receiver Operater Characteristic (ROC) curves we used the pROC (v1.8) R package.  A bonferroni adujusted p-value was used to assess differences between each study.
 
 In the second strategy, we pooled the relative risk (RR) values for each study. For each study we partitioned the subjects into a low or high group depending on whether their diversity or B/F was below or above the median value for the study. The RR was then calculated as the ratio of the number of obese individuals in the low group to the number of obese individuals in the high group. We then performed a Fisher exact-test to test whether the RR was significantly different from 1.0 using the epiR (v0.9-6.9) and metafor (v1.9-8) packages. Finally, we assessed the potential publication bias in the diversity and B/F analyses using a funnel plot.
@@ -182,32 +183,32 @@ The authors would like to thank Nielson Baxter for his help and suggestions duri
 **Figure 1: PRISMA Flow Diagram of Total Records Searched.**  This was adapted from:  Moher D, Liberati A, Tetzlaff J, Altman DG, The PRISMA Group (2009). Preferred Reporting Items for Systematic Reviews and Meta-Analyses: The PRISMA Statement. PLoS Med 6(7): e1000097. doi:10.1371/journal.pmed1000097.
 
 
-![](results/figures/Figure_2-1.png)\
+![](results/figures/Figure_2-1.pdf)\
 
 **Figure 2: Receiver Operating Characteristic Curve of the Random Forest Analysis of Each Study.** After adjusting for multiple comparisons there was no significant difference between any of the 8 studies examined (P-value > 0.05).  
 
 
 
 
-![](results/figures/Figure_3-1.png)\
+![](results/figures/Figure_3-1.pdf)\
 
 **Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B/F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was 1.14 with a P-value of 0.45.  **B)** The overall pooled relative risk for the B/F ratio was  1.22 with a P-value of 0.23.
 
 
-![](results/figures/Figure_4-1.png)\
+![](results/figures/Figure_4-1.pdf)\
 
 
 **Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 1038) and obese groups (n = 399) (P-value = 0.328). **B)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 1038) and obese (n = 399) group based on B/F ratio (P-value = 0.444).
 
 
-![](results/figures/Figure_5-1.png)\
+![](results/figures/Figure_5-1.pdf)\
 
 **Figure 5. Summary of Power and Sample Size Simulations for Shannon Diversity for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
 
 
-![](results/figures/Figure_6-1.png)\
+![](results/figures/Figure_6-1.pdf)\
 
 **Figure 6. Summary of Power and Sample Size Simulations for Bacteroidetes/Firmicutes Ratio for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 

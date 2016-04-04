@@ -111,34 +111,34 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 |        V4         |                 89.4&#124;2.8                 |                   87.7&#124;2.4                   |                  92.9&#124;0.8                  |                    85.8&#124;5.6                    |                  86.6&#124;0.8                  |                    81.6&#124;6.6                    |
 
 
-![](results/figures/Figure_S4-1.png)\
+![](results/figures/Figure_S4-1.pdf)\
 
 **Figure S4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
 
-![](results/figures/Figure_S5-1.png)\
+![](results/figures/Figure_S5-1.pdf)\
 
 **Figure S5. Summary of Power and Sample Size Simulations for OTU Richness (S) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-![](results/figures/Figure_S6-1.png)\
+![](results/figures/Figure_S6-1.pdf)\
 
 **Figure S6. Summary of Power and Sample Size Simulations for Evenness (J) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
-![](results/figures/Figure_S7-1.png)\
+![](results/figures/Figure_S7-1.pdf)\
 
 **Figure S7. Summary of Power and Sample Size Simulations for Bacteroidetes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-![](results/figures/Figure_S8-1.png)\
+![](results/figures/Figure_S8-1.pdf)\
 
 **Figure S8. Summary of Power and Sample Size Simulations for Firmicutes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
-![](results/figures/Figure_S9-1.png)\
+![](results/figures/Figure_S9-1.pdf)\
 
 **Figure S9. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on Shannon Diversity**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-![](results/figures/Figure_S10-1.png)\
+![](results/figures/Figure_S10-1.pdf)\
 
 **Figure S10. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on B/F Ratio**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
