@@ -11,3 +11,7 @@ data/*/*
 mothur*logfile
 *temp*
 *.docx
+
+
+head.batch
+tail.batch
