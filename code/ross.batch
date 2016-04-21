@@ -3,15 +3,15 @@ DIR=data/ross
 
 rm -f $DIR/*.sra
 
-# Now since there was no sff file provided in this data set even though it is a 454 
-# data set (I found this out when I tried to run the command -> sff-dump *.sra). We 
+# Now since there was no sff file provided in this data set even though it is a 454
+# data set (I found this out when I tried to run the command -> sff-dump *.sra). We
 # have to use the fastq function of the SRA Tool kit. Because of this difference
-# there are a few changes in this processing versus the standardized mothur 454 
-# protocol. First, instead of the sff.info() command we have to use the fastq.info() 
+# there are a few changes in this processing versus the standardized mothur 454
+# protocol. First, instead of the sff.info() command we have to use the fastq.info()
 # command. Second, and perhaps more importantly, because we don't have the sff file
 # we have to use the quality scores. We used the author specified defaults of
-# qwindowaverage=25 and qwindowsize=50. It should also be noted that we had maxambig=5 
-# and maxhomop=8. Since the data come seperated already we do not need an oligo file 
+# qwindowaverage=25 and qwindowsize=50. It should also be noted that we had maxambig=5
+# and maxhomop=8. Since the data come seperated already we do not need an oligo file
 # and all we have to do is loop the mothur trim.seqs command.
 
 
@@ -35,7 +35,7 @@ grep '^>' $DIR/ross.fasta | cut -c 2- > $DIR/header.txt
 
 sed 's/\..*//g' $DIR/header.txt > $DIR/group.txt
 paste --delimiters='\t' $DIR/header.txt $DIR/group.txt > $DIR/ross.groups
- 
+
 rm -f $DIR/*.sra $DIR/*.fastq $DIR/*.scrap.* $DIR/*.trim.* $DIR/SRR*fasta $DIR/SRR*qual $DIR/header.txt $DIR/group.txt
 
 
@@ -52,10 +52,27 @@ mothur "#unique.seqs(fasta=$DIR/ross.fasta);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
 	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
-	count.groups();
-	sub.sample(shared=current, size=1723);
-	dist.shared(shared=current, subsample=1723, calc=braycurtis, iters=100);"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);"
 
 
+R -e "source('code/ross.R')"
 
+mothur "#sub.sample(shared=data/ross/ross.shared, label=0.03, size=1723);
+				dist.shared(shared=data/ross/ross.shared, calc=braycurtis, label=0.03, subsample=1723, iters=100, processors=8);
+				summary.single(shared=data/ross/ross.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1723)"
+
+mv data/ross/*taxonomy data/ross/ross.taxonomy
+
+rm data/ross/*rabund
+rm data/ross/*map
+rm data/ross/*unique*
+rm data/ross/*names
+rm data/ross/*groups
+rm data/ross/*count_table
+rm data/ross/*unique*
+rm data/ross/*filter
+rm data/ross/*fasta
+
+rm data/ross/ross.braycurtis.0.03.lt.dist
+rm data/ross/ross.braycurtis.0.03.lt.std.dist
+rm data/ross/ross.groups.summary
