@@ -61,9 +61,9 @@ $(REFS)/trainset14_032015.% :
 
 # Get Baxter study data from project repository...
 data/baxter/baxter.braycurtis.0.03.lt.ave.dist\
-	data/baxter/baxter.groups.ave-std.summary
-	data/baxter/baxter.0.03.subsample.shared
-	data/baxter/baxter.metadata
+	data/baxter/baxter.groups.ave-std.summary\
+	data/baxter/baxter.0.03.subsample.shared\
+	data/baxter/baxter.metadata\
 	data/baxter/baxter.taxonomy : code/baxter.batch code/baxter.R
 	bash code/baxter.batch
 
@@ -78,9 +78,9 @@ data/hmp/hmp.0.03.subsample.shared\
 
 # Get Ross study data and process through mothur
 data/ross/ross.braycurtis.0.03.lt.ave.dist\
-	data/ross/ross.groups.ave-std.summary
-	data/ross/ross.0.03.subsample.shared
-	data/ross/ross.metadata
+	data/ross/ross.groups.ave-std.summary\
+	data/ross/ross.0.03.subsample.shared\
+	data/ross/ross.metadata\
 	data/ross/ross.taxonomy : code/ross.batch code/ross.R
 	bash code/ross.batch
 
