@@ -1,17 +1,275 @@
-count.seqs(name=combined.names, group=combined.groups)
-align.seqs(fasta=combined.unique.fasta, reference=silva.bacteria.fasta)
-screen.seqs(fasta=combined.unique.align, count=combined.count_table, end=6458, optimize=start, criteria=95, minlength=200, maxhomop=8, processors=8)
-summary.seqs(fasta=current, count=current)
-filter.seqs(fasta=current, vertical=T, trump=.)
-unique.seqs(fasta=current, count=current)
-pre.cluster(fasta=current, count=current, diffs=2)
-chimera.uchime(fasta=current, count=current, dereplicate=t)
-remove.seqs(fasta=current, accnos=current)
-summary.seqs(fasta=current, count=current)
-classify.seqs(fasta=current, count=current, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80, processors=8)
-remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15)
-make.shared(list=current, count=current, label=0.03)
-classify.otu(list=current, count=current, taxonomy=current, label=0.03)
-count.groups()
-sub.sample(shared=current, size=1192)
+#!bash
+
+DIR=data/zupancic
+
+rm -f $DIR/*.sra
+
+# This data set consisted of normal individuals from an Amish community living 
+# in Lancaster County, Pennsylvania.  The paper for this data set can be found 
+# [here](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.00430526).
+# The project accession number in the SRA is SRP002465.  We can download the 
+# entire data set again with the code mentioned above but with a few 
+# substitutions.  Here we go......
+#
+# Now this data set included the sff files so we can use sffinfo function and 
+# start from the very start of the mothur 454 pipleine.  However, to keep things
+# consistent we will keep with the fastq approach that we have been using from 
+# the previous data sets.
+
+
+rm $DIR/*.fasta
+rm $DIR/*.groups
+
+
+wget -r -q -np -nd -k -P $DIR ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/SRP/SRP002/SRP002465/
+
+for sample in $DIR/*.sra
+do
+  fastq-dump $sample -O $DIR
+  fastq=${sample//sra/fastq}
+
+  mothur "#fastq.info(fastq=$fastq); trim.seqs(fasta=current, qfile=current, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50, flip=T, processors=8)"
+done
+
+
+
+cat $DIR/SRR050550*.trim.fasta $DIR/SRR050551*.trim.fasta $DIR/SRR050806*.trim.fasta $DIR/SRR050807*.trim.fasta > $DIR/p0_s1.fasta
+cat $DIR/SRR050558*.trim.fasta $DIR/SRR050559*.trim.fasta $DIR/SRR050814*.trim.fasta $DIR/SRR050815*.trim.fasta $DIR/SRR050732*.trim.fasta $DIR/SRR050733*.trim.fasta > $DIR/p10_s1.fasta
+cat $DIR/SRR050808*.trim.fasta $DIR/SRR050809*.trim.fasta $DIR/SRR050552*.trim.fasta $DIR/SRR050553*.trim.fasta > $DIR/p100_s1.fasta
+cat $DIR/SRR050724*.trim.fasta $DIR/SRR050725*.trim.fasta > $DIR/p103_s1.fasta
+cat $DIR/SRR050452*.trim.fasta $DIR/SRR050453*.trim.fasta $DIR/SRR050650*.trim.fasta $DIR/SRR050651*.trim.fasta > $DIR/p115_s1.fasta
+cat $DIR/SRR050456*.trim.fasta $DIR/SRR050457*.trim.fasta > $DIR/p118_s1.fasta
+cat $DIR/SRR050556*.trim.fasta $DIR/SRR050557*.trim.fasta $DIR/SRR050812*.trim.fasta $DIR/SRR050813*.trim.fasta > $DIR/p108_s1.fasta
+cat $DIR/SRR050560*.trim.fasta $DIR/SRR050561*.trim.fasta $DIR/SRR050816*.trim.fasta $DIR/SRR050817*.trim.fasta > $DIR/p111_s1.fasta
+cat $DIR/SRR050644*.trim.fasta $DIR/SRR050645*.trim.fasta > $DIR/p112_s1.fasta
+cat $DIR/SRR050648*.trim.fasta $DIR/SRR050649*.trim.fasta > $DIR/p114_s1.fasta
+cat $DIR/SRR050652*.trim.fasta $DIR/SRR050653*.trim.fasta > $DIR/p119_s1.fasta
+cat $DIR/SRR050728*.trim.fasta $DIR/SRR050729*.trim.fasta > $DIR/p105_s1.fasta
+cat $DIR/SRR050554*.trim.fasta $DIR/SRR050555*.trim.fasta $DIR/SRR050810*.trim.fasta $DIR/SRR050811*.trim.fasta > $DIR/p106_s1.fasta
+cat $DIR/SRR050458*.trim.fasta $DIR/SRR050459*.trim.fasta > $DIR/p120_s1.fasta
+cat $DIR/SRR050464*.trim.fasta $DIR/SRR050465*.trim.fasta > $DIR/p124_s1.fasta
+cat $DIR/SRR050466*.trim.fasta $DIR/SRR050467*.trim.fasta > $DIR/p125_s1.fasta
+cat $DIR/SRR050470*.trim.fasta $DIR/SRR050471*.trim.fasta > $DIR/p129_s1.fasta
+cat $DIR/SRR050472*.trim.fasta $DIR/SRR050473*.trim.fasta > $DIR/p130_s1.fasta
+cat $DIR/SRR050476*.trim.fasta $DIR/SRR050477*.trim.fasta > $DIR/p133_s1.fasta
+cat $DIR/SRR050478*.trim.fasta $DIR/SRR050479*.trim.fasta > $DIR/p134_s1.fasta
+cat $DIR/SRR050482*.trim.fasta $DIR/SRR050483*.trim.fasta > $DIR/p136_s1.fasta
+cat $DIR/SRR050484*.trim.fasta $DIR/SRR050485*.trim.fasta > $DIR/p137_s1.fasta
+cat $DIR/SRR050488*.trim.fasta $DIR/SRR050489*.trim.fasta > $DIR/p140_s1.fasta
+cat $DIR/SRR050490*.trim.fasta $DIR/SRR050491*.trim.fasta > $DIR/p142_s1.fasta
+cat $DIR/SRR050494*.trim.fasta $DIR/SRR050495*.trim.fasta > $DIR/p148_s1.fasta
+cat $DIR/SRR050496*.trim.fasta $DIR/SRR050497*.trim.fasta > $DIR/p149_s1.fasta
+cat $DIR/SRR050500*.trim.fasta $DIR/SRR050501*.trim.fasta > $DIR/p151_s1.fasta
+cat $DIR/SRR050502*.trim.fasta $DIR/SRR050503*.trim.fasta > $DIR/p152_s1.fasta
+cat $DIR/SRR050522*.trim.fasta $DIR/SRR050523*.trim.fasta > $DIR/p36_s1.fasta
+cat $DIR/SRR050528*.trim.fasta $DIR/SRR050529*.trim.fasta > $DIR/p42_s1.fasta
+cat $DIR/SRR050564*.trim.fasta $DIR/SRR050565*.trim.fasta $DIR/SRR050820*.trim.fasta $DIR/SRR050821*.trim.fasta > $DIR/p14_s1.fasta
+cat $DIR/SRR050568*.trim.fasta $DIR/SRR050569*.trim.fasta $DIR/SRR050824*.trim.fasta $DIR/SRR050825*.trim.fasta > $DIR/p17_s1.fasta
+cat $DIR/SRR050572*.trim.fasta $DIR/SRR050573*.trim.fasta $DIR/SRR050828*.trim.fasta $DIR/SRR050829*.trim.fasta > $DIR/p20_s1.fasta
+cat $DIR/SRR050576*.trim.fasta $DIR/SRR050577*.trim.fasta $DIR/SRR050832*.trim.fasta $DIR/SRR050833*.trim.fasta > $DIR/p3_s1.fasta
+cat $DIR/SRR050580*.trim.fasta $DIR/SRR050581*.trim.fasta $DIR/SRR050764*.trim.fasta $DIR/SRR050765*.trim.fasta $DIR/SRR050836*.trim.fasta $DIR/SRR050837*.trim.fasta > $DIR/p48_s1.fasta
+cat $DIR/SRR050584*.trim.fasta $DIR/SRR050585*.trim.fasta $DIR/SRR050586*.trim.fasta $DIR/SRR050587*.trim.fasta $DIR/SRR050840*.trim.fasta $DIR/SRR050841*.trim.fasta > $DIR/p4_s1.fasta
+cat $DIR/SRR050736*.trim.fasta $DIR/SRR050737*.trim.fasta > $DIR/p13_s1.fasta
+cat $DIR/SRR050582*.trim.fasta $DIR/SRR050583*.trim.fasta $DIR/SRR050766*.trim.fasta $DIR/SRR050767*.trim.fasta $DIR/SRR050838*.trim.fasta $DIR/SRR050839*.trim.fasta > $DIR/p49_s1.fasta
+cat $DIR/SRR050588*.trim.fasta $DIR/SRR050589*.trim.fasta $DIR/SRR050842*.trim.fasta $DIR/SRR050843*.trim.fasta > $DIR/p50_s1.fasta
+cat $DIR/SRR050592*.trim.fasta $DIR/SRR050593*.trim.fasta $DIR/SRR050846*.trim.fasta $DIR/SRR050847*.trim.fasta > $DIR/p54_s1.fasta
+cat $DIR/SRR050594*.trim.fasta $DIR/SRR050595*.trim.fasta $DIR/SRR050848*.trim.fasta $DIR/SRR050849*.trim.fasta > $DIR/p55_s1.fasta
+cat $DIR/SRR050598*.trim.fasta $DIR/SRR050599*.trim.fasta $DIR/SRR050852*.trim.fasta $DIR/SRR050853*.trim.fasta > $DIR/p57_s1.fasta
+cat $DIR/SRR050600*.trim.fasta $DIR/SRR050601*.trim.fasta $DIR/SRR050854*.trim.fasta $DIR/SRR050855*.trim.fasta > $DIR/p61_s1.fasta
+cat $DIR/SRR050604*.trim.fasta $DIR/SRR050605*.trim.fasta $DIR/SRR050858*.trim.fasta $DIR/SRR050859*.trim.fasta > $DIR/p64_s1.fasta
+cat $DIR/SRR050606*.trim.fasta $DIR/SRR050607*.trim.fasta $DIR/SRR050860*.trim.fasta $DIR/SRR050861*.trim.fasta > $DIR/p6_s1.fasta
+cat $DIR/SRR050610*.trim.fasta $DIR/SRR050611*.trim.fasta $DIR/SRR050864*.trim.fasta $DIR/SRR050865*.trim.fasta > $DIR/p79_s1.fasta
+cat $DIR/SRR050612*.trim.fasta $DIR/SRR050613*.trim.fasta $DIR/SRR050866*.trim.fasta $DIR/SRR050867*.trim.fasta > $DIR/p7_s1.fasta
+cat $DIR/SRR050616*.trim.fasta $DIR/SRR050617*.trim.fasta $DIR/SRR050870*.trim.fasta $DIR/SRR050871*.trim.fasta > $DIR/p82_s1.fasta
+cat $DIR/SRR050626*.trim.fasta $DIR/SRR050627*.trim.fasta $DIR/SRR050882*.trim.fasta $DIR/SRR050883*.trim.fasta > $DIR/p8_s1.fasta
+cat $DIR/SRR050666*.trim.fasta $DIR/SRR050667*.trim.fasta > $DIR/p24_s1.fasta
+cat $DIR/SRR050668*.trim.fasta $DIR/SRR050669*.trim.fasta > $DIR/p25_s1.fasta
+cat $DIR/SRR050672*.trim.fasta $DIR/SRR050673*.trim.fasta > $DIR/p27_s1.fasta
+cat $DIR/SRR050674*.trim.fasta $DIR/SRR050675*.trim.fasta > $DIR/p37_s1.fasta
+cat $DIR/SRR050678*.trim.fasta $DIR/SRR050679*.trim.fasta > $DIR/p39_s1.fasta
+cat $DIR/SRR050680*.trim.fasta $DIR/SRR050681*.trim.fasta > $DIR/p43_s1.fasta
+cat $DIR/SRR050602*.trim.fasta $DIR/SRR050603*.trim.fasta $DIR/SRR050686*.trim.fasta $DIR/SRR050687*.trim.fasta $DIR/SRR050856*.trim.fasta $DIR/SRR050857*.trim.fasta > $DIR/p63_s1.fasta
+cat $DIR/SRR050690*.trim.fasta $DIR/SRR050691*.trim.fasta $DIR/SRR050782*.trim.fasta $DIR/SRR050783*.trim.fasta > $DIR/p69_s1.fasta
+cat $DIR/SRR050696*.trim.fasta $DIR/SRR050697*.trim.fasta $DIR/SRR050788*.trim.fasta $DIR/SRR050789*.trim.fasta > $DIR/p72_s1.fasta
+cat $DIR/SRR050702*.trim.fasta $DIR/SRR050703*.trim.fasta $DIR/SRR050796*.trim.fasta $DIR/SRR050797*.trim.fasta > $DIR/p77_s1.fasta
+cat $DIR/SRR050742*.trim.fasta $DIR/SRR050743*.trim.fasta > $DIR/p22_s1.fasta
+cat $DIR/SRR050746*.trim.fasta $DIR/SRR050747*.trim.fasta > $DIR/p29_s1.fasta
+cat $DIR/SRR050752*.trim.fasta $DIR/SRR050753*.trim.fasta > $DIR/p33_s1.fasta
+cat $DIR/SRR050754*.trim.fasta $DIR/SRR050755*.trim.fasta > $DIR/p38_s1.fasta
+cat $DIR/SRR050758*.trim.fasta $DIR/SRR050759*.trim.fasta > $DIR/p41_s1.fasta
+cat $DIR/SRR050578*.trim.fasta $DIR/SRR050579*.trim.fasta $DIR/SRR050760*.trim.fasta $DIR/SRR050761*.trim.fasta $DIR/SRR050834*.trim.fasta $DIR/SRR050835*.trim.fasta > $DIR/p46_s1.fasta
+cat $DIR/SRR050772*.trim.fasta $DIR/SRR050773*.trim.fasta > $DIR/p62_s1.fasta
+cat $DIR/SRR050688*.trim.fasta $DIR/SRR050689*.trim.fasta $DIR/SRR050780*.trim.fasta $DIR/SRR050781*.trim.fasta > $DIR/p68_s1.fasta
+cat $DIR/SRR050698*.trim.fasta $DIR/SRR050699*.trim.fasta $DIR/SRR050790*.trim.fasta $DIR/SRR050791*.trim.fasta > $DIR/p73_s1.fasta
+cat $DIR/SRR050794*.trim.fasta $DIR/SRR050795*.trim.fasta > $DIR/p75_s1.fasta
+cat $DIR/SRR050570*.trim.fasta $DIR/SRR050571*.trim.fasta $DIR/SRR050826*.trim.fasta $DIR/SRR050827*.trim.fasta > $DIR/p18_s1.fasta
+cat $DIR/SRR050504*.trim.fasta $DIR/SRR050505*.trim.fasta > $DIR/p153_s1.fasta
+cat $DIR/SRR050506*.trim.fasta $DIR/SRR050507*.trim.fasta > $DIR/p154_s1.fasta
+cat $DIR/SRR050510*.trim.fasta $DIR/SRR050511*.trim.fasta > $DIR/p156_s1.fasta
+cat $DIR/SRR050512*.trim.fasta $DIR/SRR050513*.trim.fasta > $DIR/p158_s1.fasta
+cat $DIR/SRR050518*.trim.fasta $DIR/SRR050519*.trim.fasta > $DIR/p161_s1.fasta
+cat $DIR/SRR050620*.trim.fasta $DIR/SRR050621*.trim.fasta $DIR/SRR050876*.trim.fasta $DIR/SRR050877*.trim.fasta > $DIR/p86_s1.fasta
+cat $DIR/SRR050622*.trim.fasta $DIR/SRR050623*.trim.fasta $DIR/SRR050800*.trim.fasta $DIR/SRR050801*.trim.fasta $DIR/SRR050878*.trim.fasta $DIR/SRR050879*.trim.fasta > $DIR/p87_s1.fasta
+cat $DIR/SRR050628*.trim.fasta $DIR/SRR050629*.trim.fasta $DIR/SRR050884*.trim.fasta $DIR/SRR050885*.trim.fasta > $DIR/p90_s1.fasta
+cat $DIR/SRR050630*.trim.fasta $DIR/SRR050631*.trim.fasta $DIR/SRR050886*.trim.fasta $DIR/SRR050887*.trim.fasta > $DIR/p91_s1.fasta
+cat $DIR/SRR050634*.trim.fasta $DIR/SRR050635*.trim.fasta $DIR/SRR050890*.trim.fasta $DIR/SRR050891*.trim.fasta > $DIR/p95_s1.fasta
+cat $DIR/SRR050636*.trim.fasta $DIR/SRR050637*.trim.fasta $DIR/SRR050892*.trim.fasta $DIR/SRR050893*.trim.fasta > $DIR/p97_s1.fasta
+cat $DIR/SRR050720*.trim.fasta $DIR/SRR050721*.trim.fasta > $DIR/p98_s1.fasta
+cat $DIR/SRR050608*.trim.fasta $DIR/SRR050609*.trim.fasta $DIR/SRR050862*.trim.fasta $DIR/SRR050863*.trim.fasta > $DIR/p78_s1.fasta
+cat $DIR/SRR050872*.trim.fasta $DIR/SRR050873*.trim.fasta > $DIR/p83_s1.fasta
+cat $DIR/SRR050624*.trim.fasta $DIR/SRR050625*.trim.fasta $DIR/SRR050880*.trim.fasta $DIR/SRR050881*.trim.fasta > $DIR/p88_s1.fasta
+cat $DIR/SRR050638*.trim.fasta $DIR/SRR050639*.trim.fasta $DIR/SRR050894*.trim.fasta $DIR/SRR050895*.trim.fasta > $DIR/p99_s1.fasta
+cat $DIR/SRR095005*.trim.fasta $DIR/SRR095006*.trim.fasta $DIR/SRR095053*.trim.fasta $DIR/SRR095054*.trim.fasta $DIR/SRR095125*.trim.fasta $DIR/SRR095126*.trim.fasta > $DIR/177.fasta
+cat $DIR/SRR095007*.trim.fasta $DIR/SRR095008*.trim.fasta $DIR/SRR095055*.trim.fasta $DIR/SRR095056*.trim.fasta $DIR/SRR095101*.trim.fasta $DIR/SRR095102*.trim.fasta > $DIR/186.fasta
+cat $DIR/SRR095011*.trim.fasta $DIR/SRR095012*.trim.fasta $DIR/SRR095059*.trim.fasta $DIR/SRR095060*.trim.fasta > $DIR/211.fasta
+cat $DIR/SRR095013*.trim.fasta $DIR/SRR095014*.trim.fasta $DIR/SRR095061*.trim.fasta $DIR/SRR095062*.trim.fasta > $DIR/213.fasta
+cat $DIR/SRR095017*.trim.fasta $DIR/SRR095018*.trim.fasta $DIR/SRR095065*.trim.fasta $DIR/SRR095066*.trim.fasta > $DIR/224.fasta
+cat $DIR/SRR095021*.trim.fasta $DIR/SRR095022*.trim.fasta $DIR/SRR095069*.trim.fasta $DIR/SRR095070*.trim.fasta $DIR/SRR095105*.trim.fasta $DIR/SRR095106*.trim.fasta > $DIR/238.fasta
+cat $DIR/SRR095001*.trim.fasta $DIR/SRR095002*.trim.fasta $DIR/SRR095047*.trim.fasta $DIR/SRR095048*.trim.fasta > $DIR/102.fasta
+cat $DIR/SRR095009*.trim.fasta $DIR/SRR095010*.trim.fasta $DIR/SRR095057*.trim.fasta $DIR/SRR095058*.trim.fasta > $DIR/208.fasta
+cat $DIR/SRR095095*.trim.fasta $DIR/SRR095096*.trim.fasta > $DIR/168.fasta
+cat $DIR/SRR095099*.trim.fasta $DIR/SRR095100*.trim.fasta > $DIR/179.fasta
+cat $DIR/SRR095107*.trim.fasta $DIR/SRR095108*.trim.fasta > $DIR/259.fasta
+cat $DIR/SRR095109*.trim.fasta $DIR/SRR095110*.trim.fasta $DIR/SRR095147*.trim.fasta $DIR/SRR095148*.trim.fasta > $DIR/283.fasta
+cat $DIR/SRR095133*.trim.fasta $DIR/SRR095134*.trim.fasta > $DIR/116.fasta
+cat $DIR/SRR095135*.trim.fasta $DIR/SRR095136*.trim.fasta > $DIR/126.fasta
+cat $DIR/SRR095139*.trim.fasta $DIR/SRR095140*.trim.fasta > $DIR/162.fasta
+cat $DIR/SRR095141*.trim.fasta $DIR/SRR095142*.trim.fasta > $DIR/269.fasta
+cat $DIR/SRR095145*.trim.fasta $DIR/SRR095146*.trim.fasta > $DIR/275.fasta
+cat $DIR/SRR095149*.trim.fasta $DIR/SRR095150*.trim.fasta > $DIR/297.fasta
+cat $DIR/SRR095253*.trim.fasta $DIR/SRR095254*.trim.fasta > $DIR/128.fasta
+cat $DIR/SRR095257*.trim.fasta $DIR/SRR095258*.trim.fasta > $DIR/157.fasta
+cat $DIR/SRR095261*.trim.fasta $DIR/SRR095262*.trim.fasta > $DIR/169.fasta
+cat $DIR/SRR095269*.trim.fasta $DIR/SRR095270*.trim.fasta > $DIR/212.fasta
+cat $DIR/SRR095273*.trim.fasta $DIR/SRR095274*.trim.fasta > $DIR/226.fasta
+cat $DIR/SRR095275*.trim.fasta $DIR/SRR095276*.trim.fasta > $DIR/242.fasta
+cat $DIR/SRR095369*.trim.fasta $DIR/SRR095370*.trim.fasta $DIR/SRR095456*.trim.fasta $DIR/SRR095457*.trim.fasta > $DIR/107.fasta
+cat $DIR/SRR095371*.trim.fasta $DIR/SRR095372*.trim.fasta > $DIR/113.fasta
+cat $DIR/SRR095375*.trim.fasta $DIR/SRR095376*.trim.fasta $DIR/SRR095424*.trim.fasta $DIR/SRR095425*.trim.fasta > $DIR/11.fasta
+cat $DIR/SRR095377*.trim.fasta $DIR/SRR095378*.trim.fasta $DIR/SRR095434*.trim.fasta $DIR/SRR095435*.trim.fasta > $DIR/219.fasta
+cat $DIR/SRR095381*.trim.fasta $DIR/SRR095382*.trim.fasta $DIR/SRR095482*.trim.fasta $DIR/SRR095483*.trim.fasta > $DIR/12.fasta
+cat $DIR/SRR095373*.trim.fasta $DIR/SRR095374*.trim.fasta $DIR/SRR095387*.trim.fasta $DIR/SRR095388*.trim.fasta > $DIR/13.fasta
+cat $DIR/SRR095393*.trim.fasta $DIR/SRR095394*.trim.fasta $DIR/SRR095610*.trim.fasta $DIR/SRR095611*.trim.fasta > $DIR/150.fasta
+cat $DIR/SRR095395*.trim.fasta $DIR/SRR095396*.trim.fasta $DIR/SRR095492*.trim.fasta $DIR/SRR095493*.trim.fasta > $DIR/156.fasta
+cat $DIR/SRR095401*.trim.fasta $DIR/SRR095402*.trim.fasta $DIR/SRR095458*.trim.fasta $DIR/SRR095459*.trim.fasta > $DIR/287.fasta
+cat $DIR/SRR095412*.trim.fasta $DIR/SRR095413*.trim.fasta $DIR/SRR095440*.trim.fasta $DIR/SRR095441*.trim.fasta > $DIR/192.fasta
+cat $DIR/SRR095414*.trim.fasta $DIR/SRR095415*.trim.fasta $DIR/SRR095430*.trim.fasta $DIR/SRR095431*.trim.fasta > $DIR/217.fasta
+cat $DIR/SRR095418*.trim.fasta $DIR/SRR095419*.trim.fasta $DIR/SRR095438*.trim.fasta $DIR/SRR095439*.trim.fasta > $DIR/1.fasta
+cat $DIR/SRR095420*.trim.fasta $DIR/SRR095421*.trim.fasta $DIR/SRR095598*.trim.fasta $DIR/SRR095599*.trim.fasta > $DIR/201.fasta
+cat $DIR/SRR095428*.trim.fasta $DIR/SRR095429*.trim.fasta $DIR/SRR095452*.trim.fasta $DIR/SRR095453*.trim.fasta > $DIR/216.fasta
+cat $DIR/SRR095436*.trim.fasta $DIR/SRR095437*.trim.fasta $DIR/SRR095502*.trim.fasta $DIR/SRR095503*.trim.fasta > $DIR/230.fasta
+cat $DIR/SRR095379*.trim.fasta $DIR/SRR095380*.trim.fasta $DIR/SRR095460*.trim.fasta $DIR/SRR095461*.trim.fasta > $DIR/289.fasta
+cat $DIR/SRR095442*.trim.fasta $DIR/SRR095443*.trim.fasta $DIR/SRR095466*.trim.fasta $DIR/SRR095467*.trim.fasta > $DIR/2.fasta
+cat $DIR/SRR095426*.trim.fasta $DIR/SRR095427*.trim.fasta $DIR/SRR095532*.trim.fasta $DIR/SRR095533*.trim.fasta > $DIR/214.fasta
+cat $DIR/SRR095391*.trim.fasta $DIR/SRR095392*.trim.fasta $DIR/SRR095620*.trim.fasta $DIR/SRR095621*.trim.fasta > $DIR/14.fasta
+cat $DIR/SRR095031*.trim.fasta $DIR/SRR095032*.trim.fasta $DIR/SRR095079*.trim.fasta $DIR/SRR095080*.trim.fasta > $DIR/392.fasta
+cat $DIR/SRR095033*.trim.fasta $DIR/SRR095034*.trim.fasta $DIR/SRR095081*.trim.fasta $DIR/SRR095082*.trim.fasta $DIR/SRR095121*.trim.fasta $DIR/SRR095122*.trim.fasta > $DIR/397.fasta
+cat $DIR/SRR095037*.trim.fasta $DIR/SRR095038*.trim.fasta $DIR/SRR095085*.trim.fasta $DIR/SRR095086*.trim.fasta $DIR/SRR095123*.trim.fasta $DIR/SRR095124*.trim.fasta > $DIR/453.fasta
+cat $DIR/SRR095027*.trim.fasta $DIR/SRR095028*.trim.fasta $DIR/SRR095075*.trim.fasta $DIR/SRR095076*.trim.fasta > $DIR/327.fasta
+cat $DIR/SRR095111*.trim.fasta $DIR/SRR095112*.trim.fasta > $DIR/313.fasta
+cat $DIR/SRR095115*.trim.fasta $DIR/SRR095116*.trim.fasta > $DIR/323.fasta
+cat $DIR/SRR095119*.trim.fasta $DIR/SRR095120*.trim.fasta > $DIR/388.fasta
+cat $DIR/SRR095155*.trim.fasta $DIR/SRR095156*.trim.fasta > $DIR/333.fasta
+cat $DIR/SRR095159*.trim.fasta $DIR/SRR095160*.trim.fasta > $DIR/358.fasta
+cat $DIR/SRR095161*.trim.fasta $DIR/SRR095162*.trim.fasta > $DIR/381.fasta
+cat $DIR/SRR095167*.trim.fasta $DIR/SRR095168*.trim.fasta > $DIR/459.fasta
+cat $DIR/SRR095169*.trim.fasta $DIR/SRR095170*.trim.fasta > $DIR/46.fasta
+cat $DIR/SRR095173*.trim.fasta $DIR/SRR095174*.trim.fasta > $DIR/481.fasta
+cat $DIR/SRR095175*.trim.fasta $DIR/SRR095176*.trim.fasta $DIR/SRR095177*.trim.fasta $DIR/SRR095178*.trim.fasta $DIR/SRR095179*.trim.fasta $DIR/SRR095180*.trim.fasta $DIR/SRR095181*.trim.fasta $DIR/SRR095182*.trim.fasta $DIR/SRR095183*.trim.fasta $DIR/SRR095184*.trim.fasta > $DIR/482.fasta
+cat $DIR/SRR095185*.trim.fasta $DIR/SRR095186*.trim.fasta $DIR/SRR095187*.trim.fasta $DIR/SRR095188*.trim.fasta $DIR/SRR095189*.trim.fasta $DIR/SRR095190*.trim.fasta $DIR/SRR095191*.trim.fasta $DIR/SRR095192*.trim.fasta $DIR/SRR095193*.trim.fasta $DIR/SRR095194*.trim.fasta $DIR/SRR095195*.trim.fasta $DIR/SRR095196*.trim.fasta $DIR/SRR095197*.trim.fasta $DIR/SRR095198*.trim.fasta $DIR/SRR095199*.trim.fasta $DIR/SRR095200*.trim.fasta > $DIR/49.fasta
+cat $DIR/SRR095283*.trim.fasta $DIR/SRR095284*.trim.fasta > $DIR/354.fasta
+cat $DIR/SRR095291*.trim.fasta $DIR/SRR095292*.trim.fasta > $DIR/406.fasta
+cat $DIR/SRR095293*.trim.fasta $DIR/SRR095294*.trim.fasta > $DIR/416.fasta
+cat $DIR/SRR095299*.trim.fasta $DIR/SRR095300*.trim.fasta > $DIR/444.fasta
+cat $DIR/SRR095301*.trim.fasta $DIR/SRR095302*.trim.fasta > $DIR/44.fasta
+cat $DIR/SRR095307*.trim.fasta $DIR/SRR095308*.trim.fasta $DIR/SRR095309*.trim.fasta $DIR/SRR095310*.trim.fasta $DIR/SRR095311*.trim.fasta $DIR/SRR095312*.trim.fasta $DIR/SRR095313*.trim.fasta $DIR/SRR095314*.trim.fasta $DIR/SRR095315*.trim.fasta $DIR/SRR095316*.trim.fasta $DIR/SRR095317*.trim.fasta $DIR/SRR095318*.trim.fasta $DIR/SRR095319*.trim.fasta $DIR/SRR095320*.trim.fasta > $DIR/488.fasta
+cat $DIR/SRR095321*.trim.fasta $DIR/SRR095322*.trim.fasta $DIR/SRR095323*.trim.fasta $DIR/SRR095324*.trim.fasta $DIR/SRR095325*.trim.fasta $DIR/SRR095326*.trim.fasta $DIR/SRR095327*.trim.fasta $DIR/SRR095328*.trim.fasta $DIR/SRR095329*.trim.fasta $DIR/SRR095330*.trim.fasta $DIR/SRR095331*.trim.fasta $DIR/SRR095332*.trim.fasta $DIR/SRR095333*.trim.fasta $DIR/SRR095334*.trim.fasta $DIR/SRR095335*.trim.fasta $DIR/SRR095336*.trim.fasta $DIR/SRR095337*.trim.fasta $DIR/SRR095338*.trim.fasta $DIR/SRR095339*.trim.fasta $DIR/SRR095340*.trim.fasta $DIR/SRR095341*.trim.fasta $DIR/SRR095342*.trim.fasta $DIR/SRR095343*.trim.fasta $DIR/SRR095344*.trim.fasta $DIR/SRR095345*.trim.fasta $DIR/SRR095346*.trim.fasta $DIR/SRR095347*.trim.fasta $DIR/SRR095348*.trim.fasta $DIR/SRR095349*.trim.fasta $DIR/SRR095350*.trim.fasta $DIR/SRR095351*.trim.fasta $DIR/SRR095352*.trim.fasta $DIR/SRR095353*.trim.fasta $DIR/SRR095354*.trim.fasta $DIR/SRR095355*.trim.fasta $DIR/SRR095356*.trim.fasta $DIR/SRR095357*.trim.fasta $DIR/SRR095358*.trim.fasta $DIR/SRR095359*.trim.fasta $DIR/SRR095360*.trim.fasta $DIR/SRR095361*.trim.fasta $DIR/SRR095362*.trim.fasta > $DIR/50.fasta
+cat $DIR/SRR095403*.trim.fasta $DIR/SRR095404*.trim.fasta $DIR/SRR095572*.trim.fasta $DIR/SRR095573*.trim.fasta $DIR/SRR095574*.trim.fasta $DIR/SRR095575*.trim.fasta $DIR/SRR095576*.trim.fasta $DIR/SRR095577*.trim.fasta > $DIR/48.fasta
+cat $DIR/SRR095405*.trim.fasta $DIR/SRR095406*.trim.fasta $DIR/SRR095560*.trim.fasta $DIR/SRR095561*.trim.fasta > $DIR/473.fasta
+cat $DIR/SRR095432*.trim.fasta $DIR/SRR095433*.trim.fasta $DIR/SRR095540*.trim.fasta $DIR/SRR095541*.trim.fasta > $DIR/445.fasta
+cat $DIR/SRR095446*.trim.fasta $DIR/SRR095447*.trim.fasta $DIR/SRR095514*.trim.fasta $DIR/SRR095515*.trim.fasta > $DIR/395.fasta
+cat $DIR/SRR095450*.trim.fasta $DIR/SRR095451*.trim.fasta $DIR/SRR095550*.trim.fasta $DIR/SRR095551*.trim.fasta > $DIR/463.fasta
+cat $DIR/SRR095454*.trim.fasta $DIR/SRR095455*.trim.fasta $DIR/SRR095518*.trim.fasta $DIR/SRR095519*.trim.fasta > $DIR/401.fasta
+cat $DIR/SRR095470*.trim.fasta $DIR/SRR095471*.trim.fasta $DIR/SRR095500*.trim.fasta $DIR/SRR095501*.trim.fasta > $DIR/367.fasta
+cat $DIR/SRR095448*.trim.fasta $DIR/SRR095449*.trim.fasta $DIR/SRR095472*.trim.fasta $DIR/SRR095473*.trim.fasta > $DIR/308.fasta
+cat $DIR/SRR095476*.trim.fasta $DIR/SRR095477*.trim.fasta $DIR/SRR095478*.trim.fasta $DIR/SRR095479*.trim.fasta > $DIR/316.fasta
+cat $DIR/SRR095486*.trim.fasta $DIR/SRR095487*.trim.fasta > $DIR/346.fasta
+cat $DIR/SRR095490*.trim.fasta $DIR/SRR095491*.trim.fasta $DIR/SRR095568*.trim.fasta $DIR/SRR095569*.trim.fasta > $DIR/349.fasta
+cat $DIR/SRR095494*.trim.fasta $DIR/SRR095495*.trim.fasta $DIR/SRR095548*.trim.fasta $DIR/SRR095549*.trim.fasta > $DIR/352.fasta
+cat $DIR/SRR095480*.trim.fasta $DIR/SRR095481*.trim.fasta $DIR/SRR095504*.trim.fasta $DIR/SRR095505*.trim.fasta > $DIR/373.fasta
+cat $DIR/SRR095383*.trim.fasta $DIR/SRR095384*.trim.fasta $DIR/SRR095508*.trim.fasta $DIR/SRR095509*.trim.fasta > $DIR/376.fasta
+cat $DIR/SRR095522*.trim.fasta $DIR/SRR095523*.trim.fasta > $DIR/410.fasta
+cat $DIR/SRR095524*.trim.fasta $DIR/SRR095525*.trim.fasta > $DIR/411.fasta
+cat $DIR/SRR095528*.trim.fasta $DIR/SRR095529*.trim.fasta $DIR/SRR095542*.trim.fasta $DIR/SRR095543*.trim.fasta > $DIR/424.fasta
+cat $DIR/SRR095530*.trim.fasta $DIR/SRR095531*.trim.fasta $DIR/SRR095536*.trim.fasta $DIR/SRR095537*.trim.fasta > $DIR/427.fasta
+cat $DIR/SRR095534*.trim.fasta $DIR/SRR095535*.trim.fasta $DIR/SRR095538*.trim.fasta $DIR/SRR095539*.trim.fasta > $DIR/429.fasta
+cat $DIR/SRR095546*.trim.fasta $DIR/SRR095547*.trim.fasta $DIR/SRR095590*.trim.fasta $DIR/SRR095591*.trim.fasta > $DIR/455.fasta
+cat $DIR/SRR095516*.trim.fasta $DIR/SRR095517*.trim.fasta $DIR/SRR095556*.trim.fasta $DIR/SRR095557*.trim.fasta > $DIR/398.fasta
+cat $DIR/SRR095564*.trim.fasta $DIR/SRR095565*.trim.fasta $DIR/SRR095633*.trim.fasta $DIR/SRR095634*.trim.fasta > $DIR/475.fasta
+cat $DIR/SRR095474*.trim.fasta $DIR/SRR095475*.trim.fasta $DIR/SRR095570*.trim.fasta $DIR/SRR095571*.trim.fasta > $DIR/483.fasta
+cat $DIR/SRR095562*.trim.fasta $DIR/SRR095563*.trim.fasta $DIR/SRR095600*.trim.fasta $DIR/SRR095601*.trim.fasta > $DIR/474.fasta
+cat $DIR/SRR050450*.trim.fasta $DIR/SRR050451*.trim.fasta $DIR/SRR095255*.trim.fasta $DIR/SRR095256*.trim.fasta > $DIR/p113_s1.fasta
+cat $DIR/SRR050516*.trim.fasta $DIR/SRR050517*.trim.fasta $DIR/SRR095289*.trim.fasta $DIR/SRR095290*.trim.fasta > $DIR/p160_s1.fasta
+cat $DIR/SRR050574*.trim.fasta $DIR/SRR050575*.trim.fasta $DIR/SRR095297*.trim.fasta $DIR/SRR095298*.trim.fasta > $DIR/p34_s1.fasta
+cat $DIR/SRR095019*.trim.fasta $DIR/SRR095020*.trim.fasta $DIR/SRR095067*.trim.fasta $DIR/SRR095068*.trim.fasta > $DIR/234.fasta
+cat $DIR/SRR095039*.trim.fasta $DIR/SRR095040*.trim.fasta $DIR/SRR095087*.trim.fasta $DIR/SRR095088*.trim.fasta > $DIR/59.fasta
+cat $DIR/SRR095041*.trim.fasta $DIR/SRR095042*.trim.fasta $DIR/SRR095089*.trim.fasta $DIR/SRR095090*.trim.fasta > $DIR/66.fasta
+cat $DIR/SRR095045*.trim.fasta $DIR/SRR095046*.trim.fasta $DIR/SRR095093*.trim.fasta $DIR/SRR095094*.trim.fasta > $DIR/84.fasta
+cat $DIR/SRR050566*.trim.fasta $DIR/SRR050567*.trim.fasta $DIR/SRR095051*.trim.fasta $DIR/SRR095052*.trim.fasta $DIR/SRR095097*.trim.fasta $DIR/SRR095098*.trim.fasta > $DIR/p15_s1.fasta
+cat $DIR/SRR095113*.trim.fasta $DIR/SRR095114*.trim.fasta $DIR/SRR095151*.trim.fasta $DIR/SRR095152*.trim.fasta > $DIR/p58_s1.fasta
+cat $DIR/SRR095129*.trim.fasta $DIR/SRR095130*.trim.fasta > $DIR/523.fasta
+cat $DIR/SRR095165*.trim.fasta $DIR/SRR095166*.trim.fasta > $DIR/423.fasta
+cat $DIR/SRR095201*.trim.fasta $DIR/SRR095202*.trim.fasta $DIR/SRR095203*.trim.fasta $DIR/SRR095204*.trim.fasta $DIR/SRR095205*.trim.fasta $DIR/SRR095206*.trim.fasta $DIR/SRR095207*.trim.fasta $DIR/SRR095208*.trim.fasta $DIR/SRR095209*.trim.fasta $DIR/SRR095210*.trim.fasta $DIR/SRR095211*.trim.fasta $DIR/SRR095212*.trim.fasta > $DIR/51.fasta
+cat $DIR/SRR095213*.trim.fasta $DIR/SRR095214*.trim.fasta $DIR/SRR095215*.trim.fasta $DIR/SRR095216*.trim.fasta $DIR/SRR095217*.trim.fasta $DIR/SRR095218*.trim.fasta $DIR/SRR095219*.trim.fasta $DIR/SRR095220*.trim.fasta $DIR/SRR095221*.trim.fasta $DIR/SRR095222*.trim.fasta $DIR/SRR095223*.trim.fasta $DIR/SRR095224*.trim.fasta $DIR/SRR095225*.trim.fasta $DIR/SRR095226*.trim.fasta $DIR/SRR095227*.trim.fasta $DIR/SRR095228*.trim.fasta $DIR/SRR095229*.trim.fasta $DIR/SRR095230*.trim.fasta $DIR/SRR095231*.trim.fasta $DIR/SRR095232*.trim.fasta $DIR/SRR095233*.trim.fasta $DIR/SRR095234*.trim.fasta $DIR/SRR095235*.trim.fasta $DIR/SRR095236*.trim.fasta $DIR/SRR095237*.trim.fasta $DIR/SRR095238*.trim.fasta $DIR/SRR095239*.trim.fasta $DIR/SRR095240*.trim.fasta $DIR/SRR095241*.trim.fasta $DIR/SRR095242*.trim.fasta $DIR/SRR095243*.trim.fasta $DIR/SRR095244*.trim.fasta $DIR/SRR095245*.trim.fasta $DIR/SRR095246*.trim.fasta > $DIR/52.fasta
+cat $DIR/SRR095249*.trim.fasta $DIR/SRR095250*.trim.fasta > $DIR/87.fasta
+cat $DIR/SRR095265*.trim.fasta $DIR/SRR095266*.trim.fasta > $DIR/190.fasta
+cat $DIR/SRR095267*.trim.fasta $DIR/SRR095268*.trim.fasta > $DIR/p127_s1.fasta
+cat $DIR/SRR095287*.trim.fasta $DIR/SRR095288*.trim.fasta > $DIR/p138_s1.fasta
+cat $DIR/SRR095303*.trim.fasta $DIR/SRR095304*.trim.fasta > $DIR/p123_s1.fasta
+cat $DIR/SRR095363*.trim.fasta $DIR/SRR095364*.trim.fasta > $DIR/p121_s1.fasta
+cat $DIR/SRR095365*.trim.fasta $DIR/SRR095366*.trim.fasta > $DIR/68.fasta
+cat $DIR/SRR095397*.trim.fasta $DIR/SRR095398*.trim.fasta > $DIR/160.fasta
+cat $DIR/SRR095410*.trim.fasta $DIR/SRR095411*.trim.fasta $DIR/SRR095510*.trim.fasta $DIR/SRR095511*.trim.fasta > $DIR/191.fasta
+cat $DIR/SRR095444*.trim.fasta $DIR/SRR095445*.trim.fasta > $DIR/24.fasta
+cat $DIR/SRR095468*.trim.fasta $DIR/SRR095469*.trim.fasta $DIR/SRR095631*.trim.fasta $DIR/SRR095632*.trim.fasta > $DIR/92.fasta
+cat $DIR/SRR095552*.trim.fasta $DIR/SRR095553*.trim.fasta $DIR/SRR095558*.trim.fasta $DIR/SRR095559*.trim.fasta > $DIR/464.fasta
+cat $DIR/SRR095580*.trim.fasta $DIR/SRR095581*.trim.fasta $DIR/SRR095602*.trim.fasta $DIR/SRR095603*.trim.fasta > $DIR/53.fasta
+cat $DIR/SRR095582*.trim.fasta $DIR/SRR095583*.trim.fasta $DIR/SRR095584*.trim.fasta $DIR/SRR095585*.trim.fasta $DIR/SRR095586*.trim.fasta $DIR/SRR095587*.trim.fasta $DIR/SRR095594*.trim.fasta $DIR/SRR095595*.trim.fasta > $DIR/54.fasta
+cat $DIR/SRR095596*.trim.fasta $DIR/SRR095597*.trim.fasta $DIR/SRR095604*.trim.fasta $DIR/SRR095605*.trim.fasta > $DIR/61.fasta
+cat $DIR/SRR095608*.trim.fasta $DIR/SRR095609*.trim.fasta $DIR/SRR095624*.trim.fasta $DIR/SRR095625*.trim.fasta > $DIR/83.fasta
+cat $DIR/SRR095612*.trim.fasta $DIR/SRR095613*.trim.fasta $DIR/SRR095630*.trim.fasta > $DIR/77.fasta
+cat $DIR/SRR095614*.trim.fasta $DIR/SRR095615*.trim.fasta $DIR/SRR095618*.trim.fasta $DIR/SRR095619*.trim.fasta > $DIR/7.fasta
+cat $DIR/SRR095622*.trim.fasta $DIR/SRR095623*.trim.fasta $DIR/SRR095628*.trim.fasta $DIR/SRR095629*.trim.fasta > $DIR/81.fasta
+
+rm -f $DIR/*.sra $DIR/*.fastq $DIR/*.scrap.* $DIR/*.trim.* $DIR/SRR*fasta $DIR/SRR*qual $DIR/header.txt $DIR/group.txt
+
+groupN="102 107 113 116 11 126 128 12 13 14 150 156 157 160 162 168 169 177 179 186 190 191 192 1 201 208 211 212 213 214 216 217 219 224 226 230 234 238 242 24 259 269 275 283 287 289 297 2 308 313 316 323 327 333 346 349 352 354 358 367 373 376 381 388 392 395 397 398 401 406 410 411 416 423 424 427 429 444 445 44 453 455 459 463 464 46 473 474 475 481 482 483 488 48 49 50 51 523 52 53 54 59 61 66 68 77 7 81 83 84 87 92 p0_s1 p100_s1 p103_s1 p105_s1 p106_s1 p108_s1 p10_s1 p111_s1 p112_s1 p113_s1 p114_s1 p115_s1 p118_s1 p119_s1 p120_s1 p121_s1 p123_s1 p124_s1 p125_s1 p127_s1 p129_s1 p130_s1 p133_s1 p134_s1 p136_s1 p137_s1 p138_s1 p13_s1 p140_s1 p142_s1 p148_s1 p149_s1 p14_s1 p151_s1 p152_s1 p153_s1 p154_s1 p156_s1 p158_s1 p15_s1 p160_s1 p161_s1 p17_s1 p18_s1 p20_s1 p22_s1 p24_s1 p25_s1 p27_s1 p29_s1 p33_s1 p34_s1 p36_s1 p37_s1 p38_s1 p39_s1 p3_s1 p41_s1 p42_s1 p43_s1 p46_s1 p48_s1 p49_s1 p4_s1 p50_s1 p54_s1 p55_s1 p57_s1 p58_s1 p61_s1 p62_s1 p63_s1 p64_s1 p68_s1 p69_s1 p6_s1 p72_s1 p73_s1 p75_s1 p77_s1 p78_s1 p79_s1 p7_s1 p82_s1 p83_s1 p86_s1 p87_s1 p88_s1 p8_s1 p90_s1 p91_s1 p95_s1 p97_s1 p98_s1 p99_s1"
+
+for V in ${groupN}
+do
+	grep -e '^>' $DIR/${V}.fasta | cut -c 2- | sed "s/\s*$/\t$V/" > $DIR/${V}.groups
+done 
+
+cat $DIR/*.fasta > $DIR/zupancic.fasta
+cat $DIR/*groups > $DIR/zupancic.groups
+
+
+
+mothur "#unique.seqs(fasta=$DIR/zupancic.fasta);
+        align.seqs(fasta=current, reference=data/references/silva.seed.align, processors=8);
+       	count.seqs(name=current, group=$DIR/zupancic.groups);
+	screen.seqs(fasta=current, count=current, end=6458, optimize=start, criteria=95, minlength=200, maxhomop=8, processors=8);
+        filter.seqs(fasta=current, vertical=T, trump=.);
+        unique.seqs(fasta=current, count=current);
+        pre.cluster(fasta=current, count=current, diffs=2);
+        chimera.uchime(fasta=current, count=current, dereplicate=t);
+        remove.seqs(fasta=current, accnos=current);
+        classify.seqs(fasta=current, count=current, reference=data/references/trainset14_032015.pds.fasta, taxonomy=data/references/trainset14_032015.pds.tax, cutoff=80, processors=8);
+        remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
+        cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
+        make.shared(list=current, count=current, label=0.03);
+        classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+        count.groups();
+        sub.sample(shared=current, size=1551);
+        dist.shared(shared=current, subsample=1551, calc=braycurtis, iters=100);"
+

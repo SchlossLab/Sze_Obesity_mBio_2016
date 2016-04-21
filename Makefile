@@ -51,3 +51,50 @@ $(REFS)/trainset14_032015.% :
 	rm Trainset14_032015.pds.tgz
 
 
+################################################################################
+#
+#	Part 2: Get shared file, taxonomy data, and metadata from individual
+#	studies
+#
+################################################################################
+
+
+# Get Baxter study data from project repository...
+
+data/baxter/baxter.normal.0.03.subsample.shared\
+	data/baxter/baxter.normal.0.03.subsample.braycurtis.0.03.lt.ave.dist\
+	data/baxter/baxter.normal.metadata\
+	data/baxter/baxter.taxonomy : code/baxter.batch code/baxter.R  
+	bash code/baxter.batch
+
+
+# Get HMP study data from project repository...
+
+data/hmp/hmp.0.03.subsample.shared\
+	data/hmp/hmp.0.03.subsample.braycurtis.0.03.lt.ave.dist\
+	data/hmp/hmp.taxonomy : code/hmp.batch
+	bash code/hmp.batch
+
+
+# Get Ross study data and process through mothur
+
+ross : code/ross.batch
+	bash code/ross.batch
+
+
+# Get Goodrich study data and process through mothur
+
+goodrich : code/goodrich.batch
+	bash code/goodrich.batch
+
+
+# Get Escobar study data and process through mothur
+
+escobar : code/escobar.batch
+	bash code/escobar.batch
+
+
+# Get Zupancic study data and process through mothur
+
+zupancic: code/zupancic.batch
+	bash code/zupancic.batch

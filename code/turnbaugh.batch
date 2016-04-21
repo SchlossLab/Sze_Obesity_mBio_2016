@@ -1,18 +1,36 @@
-unique.seqs(fasta=V2.fasta)
-count.seqs(name=V2.names, group=V2.groups)
-summary.seqs(fasta=current, count=current)
-align.seqs(fasta=current, reference=silva.bacteria.fasta)
-screen.seqs(fasta=current, count=current, end=4597, optimize=start, criteria=95, minlength=200, maxhomop=8)
-summary.seqs(fasta=current, count=current)
-filter.seqs(fasta=current, vertical=T, trump=.)
-unique.seqs(fasta=current, count=current)
-pre.cluster(fasta=current, count=current, diffs=2)
-chimera.uchime(fasta=current, count=current, dereplicate=t)
-remove.seqs(fasta=current, accnos=current)
-summary.seqs(fasta=current, count=current)
-classify.seqs(fasta=current, count=current, reference=trainset9_032012.pds.fasta, taxonomy=trainset9_032012.pds.tax, cutoff=80, processors=8)
-remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota)
-cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15)
-make.shared(list=current, count=current, label=0.03)
-classify.otu(list=current, count=current, taxonomy=current, label=0.03)
-count.groups()
+#!bash
+
+DIR=data/turnbaugh
+
+# This is the very famous twin study of the microbiome and obesity. The other 
+# two re-analysis articles [@finucane_taxonomic_2014; 
+# @walters_meta-analyses_2014] also use this data set. The raw data is not 
+# available on the SRA but you can download a fasta file for either the V2 or V6
+# 16S rRNA gene here. We used the V2 region. For the most part it was relatively
+# straight forward. The code used and instruction are below:
+
+
+wget -q -N https://gordonlab.wustl.edu/NatureTwins_2008/V2.fasta.gz
+
+mv V2.fasta.gz $DIR
+gunzip $DIR/V2.fasta.gz
+mv $DIR/V2.fasta $DIR/turnbaugh.fasta
+
+grep "^>" $DIR/turnbaugh.fasta | cut -f 1 -d ' ' | cut -c 2- | sed 's/\(.*\)_\(.*\)/\1_\2\t\1/' > $DIR/turnbaugh.groups
+
+mothur "#unique.seqs(fasta=data/turnbaugh/turnbaugh.fasta);
+	count.seqs(name=current, group=data/turnbaugh/turnbaugh.groups);
+	align.seqs(fasta=current, reference=data/references/silva.seed.align, flip=T);
+	screen.seqs(fasta=current, count=current, end=6333, start=2579, minlength=200, maxhomop=8);
+	filter.seqs(fasta=current, vertical=T, trump=.);
+	unique.seqs(fasta=current, count=current);
+	pre.cluster(fasta=current, count=current, diffs=2);
+	chimera.uchime(fasta=current, count=current, dereplicate=t);
+	remove.seqs(fasta=current, accnos=current);
+	classify.seqs(fasta=current, count=current, reference=data/references/trainset14_032015.pds.fasta, taxonomy=data/references/trainset14_032015.pds.tax, cutoff=80, processors=8);
+	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
+	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
+	make.shared(list=current, count=current, label=0.03);
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+	sub.sample(shared=current, size=1000);
+	dist.shared(shared=current, subsample=1000, calc=braycurtis, iters=100);"
