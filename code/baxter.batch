@@ -1,20 +1,24 @@
 wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/blob/master/data/glne007.final.an.unique_list.shared?raw=true
 
-mv glne007.final.an.unique_list.shared data/baxter/baxter.shared
+mv glne007.final.an.unique_list.shared data/baxter/glne007.final.an.unique_list.shared
 
 wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/raw/master/data/metadata.tsv
 
-mv metadata.tsv data/baxter/baxter.metadata
+mv metadata.tsv data/baxter/metadata.tsv
 
 wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/blob/master/data/glne007.final.an.unique_list.0.03.cons.taxonomy?raw=true
 mv glne007.final.an.unique_list.0.03.cons.taxonomy data/baxter/baxter.taxonomy
 
 R -e "source('code/baxter.R')"
 
-mothur "#sub.sample(shared=data/baxter/baxter.normal.shared, label=0.03);
-				dist.shared(shared=current, calc=braycurtis, label=0.03, subsample=T, iters=100, processors=8)"
+mothur "#sub.sample(shared=data/baxter/baxter.shared, label=0.03);
+				dist.shared(shared=data/baxter/baxter.shared, calc=braycurtis, label=0.03, subsample=T, iters=100, processors=8);
+				summary.single(shared=data/baxter/baxter.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=T)"
 
 
-rm data/baxter/baxter.shared
-rm data/baxter/baxter.normal.0.03.subsample.braycurtis.0.03.lt.std.dist
-rm data/baxter/baxter.normal.0.03.subsample.braycurtis.0.03.lt.dist
+rm data/baxter/metadata.tsv
+rm data/baxter/glne007.final.an.unique_list.shared
+rm data/baxter/baxter.braycurtis.0.03.lt.dist
+rm data/baxter/baxter.braycurtis.0.03.lt.std.dist
+rm data/baxter/*rabund
+rm data/baxter/baxter.groups.summary
