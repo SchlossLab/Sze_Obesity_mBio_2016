@@ -57,11 +57,11 @@ mothur "#unique.seqs(fasta=$DIR/ross.fasta);
 
 R -e "source('code/ross.R')"
 
-mothur "#sub.sample(shared=data/ross/ross.shared, label=0.03, size=1723);
-				dist.shared(shared=data/ross/ross.shared, calc=braycurtis, label=0.03, subsample=1723, iters=100, processors=8);
-				summary.single(shared=data/ross/ross.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1723)"
+mothur "#sub.sample(shared=data/ross/ross.shared, label=0.03, size=1700);
+				dist.shared(shared=data/ross/ross.shared, calc=braycurtis, label=0.03, subsample=1700, iters=100, processors=8);
+				summary.single(shared=data/ross/ross.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1700)"
 
-mv data/ross/*taxonomy data/ross/ross.taxonomy
+mv data/ross/*cons.taxonomy data/ross/ross.taxonomy
 
 rm data/ross/*rabund
 rm data/ross/*map
@@ -69,7 +69,6 @@ rm data/ross/*unique*
 rm data/ross/*names
 rm data/ross/*groups
 rm data/ross/*count_table
-rm data/ross/*unique*
 rm data/ross/*filter
 rm data/ross/*fasta
 
