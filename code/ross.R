@@ -19,7 +19,7 @@ metadata <- read.csv("data/ross/s40168-015-0072-y-s1.csv", stringsAsFactors=F)
 
 keep <- c("sampleID", "sex", "BMI", "age_at_visit")
 md_keep <- metadata[,colnames(metadata) %in% keep]
-md_keep$obese <- md_keep$BMI >= 34.0
+md_keep$obese <- md_keep$BMI >= 30.0
 md_keep$white <- FALSE
 
 lookup <- read.csv("data/ross/Hispanic_dataset.csv", stringsAsFactors=F)
