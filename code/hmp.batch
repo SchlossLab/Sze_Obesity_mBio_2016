@@ -19,7 +19,6 @@ mothur "#sub.sample(shared=data/hmp/hmp.shared, label=0.03, size=1000);
 				summary.single(shared=data/hmp/hmp.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1000)"
 
 
-rm data/hmp/metadata.tsv
 rm data/hmp/Stool.an.shared
 rm data/hmp/hmp.braycurtis.0.03.lt.dist
 rm data/hmp/hmp.braycurtis.0.03.lt.std.dist
