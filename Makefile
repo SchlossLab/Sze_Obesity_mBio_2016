@@ -87,8 +87,11 @@ data/ross/ross.braycurtis.0.03.lt.ave.dist\
 
 
 # Get Escobar study data and process through mothur
-
-escobar : code/escobar.batch
+data/escobar/escobar.braycurtis.0.03.lt.ave.dist\
+	data/escobar/escobar.groups.ave-std.summary\
+	data/escobar/escobar.0.03.subsample.shared\
+	data/escobar/escobar.metadata\
+	data/escobar/escobar.taxonomy : code/escobar.batch code/escobar.R
 	bash code/escobar.batch
 
 

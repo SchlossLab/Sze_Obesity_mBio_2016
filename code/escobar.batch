@@ -3,25 +3,25 @@ DIR=data/escobar
 
 rm -f $DIR/*.sra
 
-# This data set consisted of normal individuals from Medellin, Colombia South 
-# America.  The paper for this data set can be found 
+# This data set consisted of normal individuals from Medellin, Colombia South
+# America.  The paper for this data set can be found
 # [here](http://bmcmicrobiol.biomedcentral.com/articles/10.1186/s12866-014-0311-6).
-# The project accession number in the ENA is ERP003466.  We can download the 
-# entire data set again with the code mentioned above but with a few 
-# substitutions versus the previous two studies. 
+# The project accession number in the ENA is ERP003466.  We can download the
+# entire data set again with the code mentioned above but with a few
+# substitutions versus the previous two studies.
 #
-# Now just like the goodrich data set there was no sff file provided in this 
-# data set even though it is a 454 data set (I found this out, again, when I 
-# tried to run the command -> sff-dump \*.sra).  We have to use the fastq 
+# Now just like the goodrich data set there was no sff file provided in this
+# data set even though it is a 454 data set (I found this out, again, when I
+# tried to run the command -> sff-dump \*.sra).  We have to use the fastq
 # function of the SRA Tool kit.
 #
-# Because of this difference there are a few changes in this processing versus 
-# the standardized mothur 454 protocol.  First, instead of the sff.info() 
-# command we have to use the fastq.info() command.  Second, and perhaps more 
-# importantly, because we don't have the sff file we have to use the quality 
+# Because of this difference there are a few changes in this processing versus
+# the standardized mothur 454 protocol.  First, instead of the sff.info()
+# command we have to use the fastq.info() command.  Second, and perhaps more
+# importantly, because we don't have the sff file we have to use the quality
 # scores.  Unlike the Ross, et al study we used the mothur specified defaults of
-# *qwindowaverage=35* and *qwindowsize=50*.  Since the data come separated 
-# already we do not need an oligo file and all we have to do is loop the mothur 
+# *qwindowaverage=35* and *qwindowsize=50*.  Since the data come separated
+# already we do not need an oligo file and all we have to do is loop the mothur
 # *trim.seqs* command.
 
 wget -r -q -np -nd -k -P $DIR ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP003/ERP003466/
@@ -42,7 +42,7 @@ grep '^>' $DIR/escobar.fasta | cut -c 2- > $DIR/header.txt
 
 sed 's/\..*//g' $DIR/header.txt > $DIR/group.txt
 paste --delimiters='\t' $DIR/header.txt $DIR/group.txt > $DIR/escobar.groups
- 
+
 rm -f $DIR/*.sra $DIR/*.fastq $DIR/*.scrap.* $DIR/*.trim.* $DIR/SRR*fasta $DIR/SRR*qual $DIR/header.txt $DIR/group.txt
 
 
@@ -59,8 +59,27 @@ mothur "#unique.seqs(fasta=$DIR/escobar.fasta);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
 	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
-	count.groups();
-	sub.sample(shared=current, size=4598);
-	dist.shared(shared=current, subsample=4598, calc=braycurtis, iters=100);"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);"
 
+R -e "source('code/escobar.R')"
+
+mothur "#sub.sample(shared=data/escobar/escobar.shared, label=0.03);
+				dist.shared(shared=data/escobar/escobar.shared, calc=braycurtis, label=0.03, subsample=T, iters=100, processors=8);
+				summary.single(shared=data/escobar/escobar.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=T)"
+
+
+mv data/escobar/*.cons.taxonomy data/escobar/escobar.taxonomy
+
+rm data/escobar/escobar.unique.*
+rm data/escobar/*fasta
+rm data/escobar/*qual
+rm data/escobar/escobar.filter
+rm data/escobar/escobar.good.count_table
+rm data/escobar/escobar.count_table
+rm data/escobar/escobar.names
+rm data/escobar/escobar.groups
+
+rm data/escobar/escobar.braycurtis.0.03.lt.dist
+rm data/escobar/escobar.braycurtis.0.03.lt.std.dist
+rm data/escobar/*rabund
+rm data/escobar/escobar.groups.summary
