@@ -69,10 +69,11 @@ data/baxter/baxter.braycurtis.0.03.lt.ave.dist\
 
 
 # Get HMP study data from project repository...
-
-data/hmp/hmp.0.03.subsample.shared\
-	data/hmp/hmp.0.03.subsample.braycurtis.0.03.lt.ave.dist\
-	data/hmp/hmp.taxonomy : code/hmp.batch
+data/hmp/hmp.braycurtis.0.03.lt.ave.dist\
+	data/hmp/hmp.groups.ave-std.summary\
+	data/hmp/hmp.0.03.subsample.shared\
+	data/hmp/hmp.metadata\
+	data/hmp/hmp.taxonomy : code/hmp.batch code/hmp.R
 	bash code/hmp.batch
 
 
@@ -85,12 +86,6 @@ data/ross/ross.braycurtis.0.03.lt.ave.dist\
 	bash code/ross.batch
 
 
-# Get Goodrich study data and process through mothur
-
-goodrich : code/goodrich.batch
-	bash code/goodrich.batch
-
-
 # Get Escobar study data and process through mothur
 
 escobar : code/escobar.batch
@@ -101,3 +96,9 @@ escobar : code/escobar.batch
 
 zupancic: code/zupancic.batch
 	bash code/zupancic.batch
+
+
+# Get Goodrich study data and process through mothur
+
+goodrich : code/goodrich.batch
+	bash code/goodrich.batch
