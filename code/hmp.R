@@ -35,7 +35,7 @@ age <- good_continuous$AGEENR
 white <- good_categorical$WHITE_C == "Yes"
 obese <- bmi >= 30.0
 
-simple_metadata <- cbind(sample=sample_ids, sex=sex, bmi=bmi, age=age, white=white, obese=obese)
+simple_metadata <- cbind(sample=groups, sex=sex, bmi=bmi, age=age, white=white, obese=obese)
 colnames(simple_metadata) <- c("sample", "sex", "bmi", "age", "white", "obese")
 
 write.table(simple_metadata, file="data/hmp/hmp.metadata", quote=F, sep='\t', row.names=F)

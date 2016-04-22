@@ -3,17 +3,25 @@ mkdir -p data/hmp
 wget --no-check-certificate https://s3-us-west-2.amazonaws.com/dingschlossnature/v35_otus/Stool.an.shared.bz2
 bunzip2 Stool.an.shared.bz2
 
-mv Stool.an.shared data/hmp/hmp.shared
+mv Stool.an.shared data/hmp/Stool.an.shared
 
 wget --no-check-certificate https://s3-us-west-2.amazonaws.com/dingschlossnature/v35_otus/v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.cons.taxonomy.bz2
 bunzip2 v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.cons.taxonomy.bz2
 
 mv v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.cons.taxonomy data/hmp/hmp.taxonomy
 
-mothur "#sub.sample(shared=data/hmp/hmp.shared, size=1000, label=0.03);
-	dist.shared(shared=current, calc=braycurtis, label=0.03, subsample=1000, iters=100, processors=8)"
+
+R -e "source('code/hmp.R')"
 
 
-rm data/hmp/hmp.shared
-rm data/hmp/hmp*.braycurtis.0.03.lt.std.dist
-rm data/hmp/*.0.03.subsample.braycurtis.0.03.lt.dist
+mothur "#sub.sample(shared=data/hmp/hmp.shared, label=0.03, size=1000);
+				dist.shared(shared=data/hmp/hmp.shared, calc=braycurtis, label=0.03, subsample=1000, iters=100, processors=8);
+				summary.single(shared=data/hmp/hmp.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1000)"
+
+
+rm data/hmp/metadata.tsv
+rm data/hmp/Stool.an.shared
+rm data/hmp/hmp.braycurtis.0.03.lt.dist
+rm data/hmp/hmp.braycurtis.0.03.lt.std.dist
+rm data/hmp/*rabund
+rm data/hmp/hmp.groups.summary
