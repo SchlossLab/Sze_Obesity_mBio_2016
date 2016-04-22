@@ -27,7 +27,7 @@ sample <- lookup[,"Run_s"]
 names(sample) <- lookup$Sample_Name_s
 
 md_keep$sampleID <- sample[md_keep$sampleID]
-colnames(md_keep) <- c("sample", "gender", "age", "bmi", "obese", "white")
+colnames(md_keep) <- c("sample", "sex", "age", "bmi", "obese", "white")
 md_keep <- md_keep[order(md_keep$sample), ]
 
 shared <- read.table("data/ross/ross.unique.good.filter.unique.precluster.pick.pick.an.unique_list.shared", header=T)
