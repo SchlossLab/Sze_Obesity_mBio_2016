@@ -103,7 +103,15 @@ data/zupancic/zupancic.braycurtis.0.03.lt.ave.dist\
 	data/zupancic/zupancic.taxonomy : code/zupancic.batch code/zupancic.R
 	bash code/zupancic.batch
 
-# wu
+
+# Get Wu study data and process through mothur
+data/wu/wu.braycurtis.0.03.lt.ave.dist\
+	data/wu/wu.groups.ave-std.summary\
+	data/wu/wu.0.03.subsample.shared\
+	data/wu/wu.metadata\
+	data/wu/wu.taxonomy : code/wu.batch code/wu.R
+	bash code/wu.batch
+
 
 # turnbaugh
 
