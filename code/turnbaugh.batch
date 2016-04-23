@@ -2,9 +2,9 @@
 
 DIR=data/turnbaugh
 
-# This is the very famous twin study of the microbiome and obesity. The other 
-# two re-analysis articles [@finucane_taxonomic_2014; 
-# @walters_meta-analyses_2014] also use this data set. The raw data is not 
+# This is the very famous twin study of the microbiome and obesity. The other
+# two re-analysis articles [@finucane_taxonomic_2014;
+# @walters_meta-analyses_2014] also use this data set. The raw data is not
 # available on the SRA but you can download a fasta file for either the V2 or V6
 # 16S rRNA gene here. We used the V2 region. For the most part it was relatively
 # straight forward. The code used and instruction are below:
@@ -29,8 +29,28 @@ mothur "#unique.seqs(fasta=data/turnbaugh/turnbaugh.fasta);
 	remove.seqs(fasta=current, accnos=current);
 	classify.seqs(fasta=current, count=current, reference=data/references/trainset14_032015.pds.fasta, taxonomy=data/references/trainset14_032015.pds.tax, cutoff=80, processors=8);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
-	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
+	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, classic=T);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
-	sub.sample(shared=current, size=1000);
-	dist.shared(shared=current, subsample=1000, calc=braycurtis, iters=100);"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03)"
+
+
+R -e "source('code/turnbaugh.R')"
+
+mothur "#sub.sample(shared=data/turnbaugh/turnbaugh.shared, label=0.03);
+	dist.shared(shared=data/turnbaugh/turnbaugh.shared, calc=braycurtis, label=0.03, subsample=T, iters=100, processors=8);
+	summary.single(shared=data/turnbaugh/turnbaugh.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=T)"
+
+
+mv data/turnbaugh/*.cons.taxonomy data/turnbaugh/turnbaugh.taxonomy
+
+rm data/turnbaugh/turnbaugh.unique.*
+rm data/turnbaugh/*fasta
+rm data/turnbaugh/*.count_table
+rm data/turnbaugh/*.names
+rm data/turnbaugh/*.groups
+rm data/turnbaugh/turnbaugh.filter
+
+rm data/turnbaugh/turnbaugh.braycurtis.0.03.lt.dist
+rm data/turnbaugh/turnbaugh.braycurtis.0.03.lt.std.dist
+rm data/turnbaugh/*rabund
+rm data/turnbaugh/turnbaugh.groups.summary

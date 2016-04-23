@@ -113,7 +113,13 @@ data/wu/wu.braycurtis.0.03.lt.ave.dist\
 	bash code/wu.batch
 
 
-# turnbaugh
+# Get Turnbaugh study data and process through mothur
+data/turnbaugh/turnbaugh.braycurtis.0.03.lt.ave.dist\
+	data/turnbaugh/turnbaugh.groups.ave-std.summary\
+	data/turnbaugh/turnbaugh.0.03.subsample.shared\
+	data/turnbaugh/turnbaugh.metadata\
+	data/turnbaugh/turnbaugh.taxonomy : code/turnbaugh.batch code/turnbaugh.R
+	bash code/turnbaugh.batch
 
 
 # Get Goodrich study data and process through mothur
