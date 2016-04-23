@@ -24,7 +24,7 @@ sex <- ifelse(categorical == "female", "f", "m")
 #bmi <- continuous$BMI
 obese <- continuous$BMI >= 30
 
-metadata <- cbind(sample=shared$Group, ses=sex, age=continuous$AGE, bmi=continuous$BMI, obese=obese, white=TRUE)
+metadata <- cbind(sample=shared$Group, sex=sex, age=continuous$AGE, bmi=continuous$BMI, obese=obese, white=TRUE)
 
 write.table(metadata, file="data/zupancic/zupancic.metadata", quote=F, sep='\t', row.names=F)
 
