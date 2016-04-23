@@ -96,9 +96,16 @@ data/escobar/escobar.braycurtis.0.03.lt.ave.dist\
 
 
 # Get Zupancic study data and process through mothur
-
-zupancic: code/zupancic.batch
+data/zupancic/zupancic.braycurtis.0.03.lt.ave.dist\
+	data/zupancic/zupancic.groups.ave-std.summary\
+	data/zupancic/zupancic.0.03.subsample.shared\
+	data/zupancic/zupancic.metadata\
+	data/zupancic/zupancic.taxonomy : code/zupancic.batch code/zupancic.R
 	bash code/zupancic.batch
+
+# wu
+
+# turnbaugh
 
 
 # Get Goodrich study data and process through mothur
