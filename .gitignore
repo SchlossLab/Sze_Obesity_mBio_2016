@@ -3,8 +3,9 @@
 .RData
 .Rproj
 
-data/*/*
-!data/process/*
+data/process/*
+data/mothur/*
+data/references/*
 !README.md
 
 *.qsub*
