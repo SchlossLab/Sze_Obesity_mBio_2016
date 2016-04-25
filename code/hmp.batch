@@ -11,6 +11,13 @@ bunzip2 v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.cons.t
 mv v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.cons.taxonomy data/hmp/hmp.taxonomy
 
 
+wget --no-check-certificate https://s3-us-west-2.amazonaws.com/dingschlossnature/v35_otus/v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.rep.fasta.bz2
+
+bunzip2 v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.rep.fasta.bz2
+
+mv v35.unique.good.filter.unique.precluster.unique.pick.pick.an.0.03.rep.fasta data/hmp/hmp.rep.fasta
+
+
 R -e "source('code/hmp.R')"
 
 

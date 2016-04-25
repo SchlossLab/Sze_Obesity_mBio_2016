@@ -59,7 +59,8 @@ mothur "#unique.seqs(fasta=$DIR/escobar.fasta);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
 	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03);"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+	get.oturep(fasta=current, count=current, list=current, label=0.03, method=abundance);"
 
 R -e "source('code/escobar.R')"
 
@@ -69,6 +70,7 @@ mothur "#sub.sample(shared=data/escobar/escobar.shared, label=0.03);
 
 
 mv data/escobar/*.cons.taxonomy data/escobar/escobar.taxonomy
+mv data/escobar/*0.03.rep.fasta data/escobar/escobar.rep.fasta
 
 rm data/escobar/escobar.unique.*
 rm data/escobar/*fasta

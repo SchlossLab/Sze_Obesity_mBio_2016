@@ -268,7 +268,8 @@ mothur "#unique.seqs(fasta=$DIR/zupancic.fasta);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
 	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15, classic=T);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03);"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+	get.oturep(fasta=current, count=current, list=current, label=0.03, method=abundance);"
 
 R -e "source('code/zupancic.R')"
 
@@ -278,6 +279,7 @@ mothur "#sub.sample(shared=data/zupancic/zupancic.shared, label=0.03, size=1500)
 
 
 mv data/zupancic/*.cons.taxonomy data/zupancic/zupancic.taxonomy
+mv data/zupancic/*0.03.rep.fasta data/zupancic/zupancic.rep.fasta
 
 rm data/zupancic/zupancic.unique.*
 rm data/zupancic/*fasta

@@ -31,7 +31,8 @@ mothur "#unique.seqs(fasta=data/turnbaugh/turnbaugh.fasta);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
 	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, classic=T);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03)"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+	get.oturep(fasta=current, count=current, list=current, label=0.03, method=abundance)"
 
 
 R -e "source('code/turnbaugh.R')"
@@ -42,6 +43,7 @@ mothur "#sub.sample(shared=data/turnbaugh/turnbaugh.shared, label=0.03);
 
 
 mv data/turnbaugh/*.cons.taxonomy data/turnbaugh/turnbaugh.taxonomy
+mv data/turnbaugh/*0.03.rep.fasta data/turnbaugh/turnbaugh.rep.fasta
 
 rm data/turnbaugh/turnbaugh.unique.*
 rm data/turnbaugh/*fasta

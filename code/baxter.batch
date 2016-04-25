@@ -1,13 +1,16 @@
 wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/blob/master/data/glne007.final.an.unique_list.shared?raw=true
-
 mv glne007.final.an.unique_list.shared data/baxter/glne007.final.an.unique_list.shared
 
 wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/raw/master/data/metadata.tsv
-
 mv metadata.tsv data/baxter/metadata.tsv
 
 wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/blob/master/data/glne007.final.an.unique_list.0.03.cons.taxonomy?raw=true
 mv glne007.final.an.unique_list.0.03.cons.taxonomy data/baxter/baxter.taxonomy
+
+wget --no-check-certificate https://github.com/SchlossLab/Baxter_glne007Modeling_GenomeMed_2015/blob/master/data/glne007.final.an.unique_list.0.03.rep.fasta
+mv glne007.final.an.unique_list.0.03.rep.fasta data/baxter/baxter.rep.fasta
+
+
 
 R -e "source('code/baxter.R')"
 

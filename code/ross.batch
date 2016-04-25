@@ -52,7 +52,8 @@ mothur "#unique.seqs(fasta=$DIR/ross.fasta);
 	remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
 	cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
 	make.shared(list=current, count=current, label=0.03);
-	classify.otu(list=current, count=current, taxonomy=current, label=0.03);"
+	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+	get.oturep(fasta=current, count=current, list=current, label=0.03, method=abundance);"
 
 
 R -e "source('code/ross.R')"
@@ -62,6 +63,7 @@ mothur "#sub.sample(shared=data/ross/ross.shared, label=0.03, size=1700);
 				summary.single(shared=data/ross/ross.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1700)"
 
 mv data/ross/*cons.taxonomy data/ross/ross.taxonomy
+mv data/ross/*0.03.rep.fasta data/ross/ross.rep.fasta
 
 rm data/ross/*rabund
 rm data/ross/*map

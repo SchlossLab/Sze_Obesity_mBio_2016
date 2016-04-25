@@ -45,7 +45,8 @@ mothur "#trim.seqs(fasta=$DIR/wu.fasta, qfile=$DIR/wu.qual, oligos=$DIR/wu.oligo
   remove.lineage(fasta=current, count=current, taxonomy=current, taxon=Chloroplast-Mitochondria-unknown-Archaea-Eukaryota);
   cluster.split(fasta=current, count=current, taxonomy=current, splitmethod=classify, taxlevel=6, cutoff=0.15);
   make.shared(list=current, count=current, label=0.03);
-  classify.otu(list=current, count=current, taxonomy=current, label=0.03);"
+  classify.otu(list=current, count=current, taxonomy=current, label=0.03);
+	get.oturep(fasta=current, count=current, list=current, label=0.03, method=abundance);"
 
 
 R -e "source('code/wu.R')"
@@ -57,6 +58,7 @@ mothur "#sub.sample(shared=data/wu/wu.shared, label=0.03, size=4000);
 
 
 mv data/wu/*.cons.taxonomy data/wu/wu.taxonomy
+mv data/wu/*0.03.rep.fasta data/wu/wu.rep.fasta
 
 rm data/wu/wu.trim.*
 rm data/wu/*fasta
