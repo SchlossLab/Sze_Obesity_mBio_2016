@@ -137,3 +137,12 @@ data/goodrich/goodrich.braycurtis.0.03.lt.ave.dist\
 	data/goodrich/goodrich.rep.fasta\
 	data/goodrich/goodrich.taxonomy : code/goodrich.batch code/goodrich.R
 	bash code/goodrich.batch
+
+
+data/%/%.braycurtis.0.03.lt.ave.dist\
+	data/%/%.groups.ave-std.summary\
+	data/%/%.0.03.subsample.shared\
+	data/%/%.metadata\
+	data/%/%.rep.fasta\
+	data/%/%.taxonomy : code/%.batch code/%.R
+	bash code/%.batch
