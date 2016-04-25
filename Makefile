@@ -66,7 +66,7 @@ data/baxter/baxter.braycurtis.0.03.lt.ave.dist\
 	data/baxter/baxter.metadata\
 	data/baxter/baxter.rep.fasta\
 	data/baxter/baxter.taxonomy : code/baxter.batch code/baxter.R
-	bash code/baxter.batch
+	bash $<
 
 
 # Get HMP study data from project repository...
@@ -76,7 +76,7 @@ data/hmp/hmp.braycurtis.0.03.lt.ave.dist\
 	data/hmp/hmp.metadata\
 	data/hmp/hmp.rep.fasta\
 	data/hmp/hmp.taxonomy : code/hmp.batch code/hmp.R
-	bash code/hmp.batch
+	bash $<
 
 
 # Get Ross study data and process through mothur
@@ -86,7 +86,7 @@ data/ross/ross.braycurtis.0.03.lt.ave.dist\
 	data/ross/ross.metadata\
 	data/ross/ross.rep.fasta\
 	data/ross/ross.taxonomy : code/ross.batch code/ross.R
-	bash code/ross.batch
+	bash $<
 
 
 # Get Escobar study data and process through mothur
@@ -96,7 +96,7 @@ data/escobar/escobar.braycurtis.0.03.lt.ave.dist\
 	data/escobar/escobar.metadata\
 	data/escobar/escobar.rep.fasta\
 	data/escobar/escobar.taxonomy : code/escobar.batch code/escobar.R
-	bash code/escobar.batch
+	bash $<
 
 
 # Get Zupancic study data and process through mothur
@@ -106,7 +106,7 @@ data/zupancic/zupancic.braycurtis.0.03.lt.ave.dist\
 	data/zupancic/zupancic.metadata\
 	data/zupancic/zupancic.rep.fasta\
 	data/zupancic/zupancic.taxonomy : code/zupancic.batch code/zupancic.R
-	bash code/zupancic.batch
+	bash $<
 
 
 # Get Wu study data and process through mothur
@@ -116,7 +116,7 @@ data/wu/wu.braycurtis.0.03.lt.ave.dist\
 	data/wu/wu.metadata\
 	data/wu/wu.rep.fasta\
 	data/wu/wu.taxonomy : code/wu.batch code/wu.R
-	bash code/wu.batch
+	bash $<
 
 
 # Get Turnbaugh study data and process through mothur
@@ -126,7 +126,7 @@ data/turnbaugh/turnbaugh.braycurtis.0.03.lt.ave.dist\
 	data/turnbaugh/turnbaugh.metadata\
 	data/turnbaugh/turnbaugh.rep.fasta\
 	data/turnbaugh/turnbaugh.taxonomy : code/turnbaugh.batch code/turnbaugh.R
-	bash code/turnbaugh.batch
+	bash $<
 
 
 # Get Goodrich study data and process through mothur
@@ -136,13 +136,13 @@ data/goodrich/goodrich.braycurtis.0.03.lt.ave.dist\
 	data/goodrich/goodrich.metadata\
 	data/goodrich/goodrich.rep.fasta\
 	data/goodrich/goodrich.taxonomy : code/goodrich.batch code/goodrich.R
-	bash code/goodrich.batch
+	bash $<
 
 
-data/%/%.braycurtis.0.03.lt.ave.dist\
-	data/%/%.groups.ave-std.summary\
-	data/%/%.0.03.subsample.shared\
-	data/%/%.metadata\
-	data/%/%.rep.fasta\
-	data/%/%.taxonomy : code/%.batch code/%.R
-	bash code/%.batch
+data/schubert/schubert.braycurtis.0.03.lt.ave.dist\
+	data/schubert/schubert.groups.ave-std.summary\
+	data/schubert/schubert.0.03.subsample.shared\
+	data/schubert/schubert.metadata\
+	data/schubert/schubert.rep.fasta\
+	data/schubert/schubert.taxonomy : code/schubert.batch code/schubert.R
+	bash $<

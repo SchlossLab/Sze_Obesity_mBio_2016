@@ -1,0 +1,28 @@
+wget --no-check-certificate https://github.com/SchlossLab/Schubert_clinical_mBio_2014/blob/master/data/mothur/clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.shared?raw=true
+mv clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.shared data/schubert/clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.shared
+
+wget --no-check-certificate https://github.com/SchlossLab/Schubert_clinical_mBio_2014/raw/master/data/raw/MIMARKS_cdclinical.xlsx
+mv MIMARKS_cdclinical.xlsx data/schubert/MIMARKS_cdclinical.xlsx
+
+wget --no-check-certificate https://github.com/SchlossLab/Schubert_clinical_mBio_2014/blob/master/data/mothur/clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.cons.taxonomy?raw=true
+mv clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.cons.taxonomy data/schubert/schubert.taxonomy
+
+wget --no-check-certificate https://github.com/SchlossLab/Schubert_clinical_mBio_2014/blob/master/data/mothur/clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.rep.fasta
+mv clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.0.03.rep.fasta data/schubert/schubert.rep.fasta
+
+
+
+R -e "source('code/schubert.R')"
+
+
+mothur "#sub.sample(shared=data/schubert/schubert.shared, label=0.03);
+				dist.shared(shared=data/schubert/schubert.shared, calc=braycurtis, label=0.03, subsample=T, iters=100, processors=8);
+				summary.single(shared=data/schubert/schubert.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=T)"
+
+
+rm data/schubert/*xlsx
+rm data/schubert/clinical*.shared
+rm data/schubert/schubert.braycurtis.0.03.lt.dist
+rm data/schubert/schubert.braycurtis.0.03.lt.std.dist
+rm data/schubert/*rabund
+rm data/schubert/schubert.groups.summary
