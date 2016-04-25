@@ -123,6 +123,9 @@ data/turnbaugh/turnbaugh.braycurtis.0.03.lt.ave.dist\
 
 
 # Get Goodrich study data and process through mothur
-
-goodrich : code/goodrich.batch
+data/goodrich/goodrich.braycurtis.0.03.lt.ave.dist\
+	data/goodrich/goodrich.groups.ave-std.summary\
+	data/goodrich/goodrich.0.03.subsample.shared\
+	data/goodrich/goodrich.metadata\
+	data/goodrich/goodrich.taxonomy : code/goodrich.batch code/goodrich.R
 	bash code/goodrich.batch
