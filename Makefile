@@ -83,8 +83,8 @@ data/%.groups.ave-std.summary\
 
 ################################################################################
 #
-#	Part 3: Run alpha and beta diversity analyses, relative risk analysis, random
-# forest analyses, and z-score analysis
+#	Part 3: Run alpha and beta diversity analyses, relative risk analysis, z-score
+# analysis, and random forest analyses
 #
 ################################################################################
 
@@ -102,4 +102,8 @@ data/process/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
 
 data/process/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
  			$(ALPHA) $(METADATA)
+	R -e "source($<); run('$(STUDIES)')"
+
+data/process/random_forest.% : code/run_aucrf_otus.R code/utilities.R\
+ 			$(SHARED) $(METADATA)
 	R -e "source($<); run('$(STUDIES)')"
