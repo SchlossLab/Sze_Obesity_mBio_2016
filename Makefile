@@ -99,3 +99,7 @@ data/process/beta_tests.summary : code/run_beta_diversity.R\
 data/process/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source($<); run('$(STUDIES)')"
+
+data/process/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
+ 			$(ALPHA) $(METADATA)
+	R -e "source($<); run('$(STUDIES)')"
