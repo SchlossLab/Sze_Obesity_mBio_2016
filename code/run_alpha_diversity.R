@@ -42,6 +42,8 @@ run <- function(datasets){
 		metadata <- read.table(file=metadata_file, header=T)
 		metadata <- metadata[metadata$sample %in% alpha$group,]
 
+		stopifnot(alpha$group == metadata$sample)
+
 		bf_relabund <- get_bacteroides_firmicutes(d)
 
 		shannon <- analyze(alpha$shannon, metadata$obese)

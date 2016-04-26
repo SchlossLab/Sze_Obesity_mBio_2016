@@ -45,6 +45,8 @@ run <- function(datasets){
 		metadata <- read.table(file=metadata_file, header=T)
 		metadata <- metadata[metadata$sample %in% rownames(beta),]
 
+		stopifnot(rownames(beta) == metadata$sample)
+
 		test <- adonis(beta~metadata$obese, permutations=9999)
 		p_value <- test["aov.tab"][[1]]$'Pr(>F)'[1]
 
