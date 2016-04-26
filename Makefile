@@ -51,98 +51,22 @@ $(REFS)/trainset14_032015.% :
 	rm Trainset14_032015.pds.tgz
 
 
+
 ################################################################################
 #
-#	Part 2: Get shared file, taxonomy data, and metadata from individual
-#	studies
+#	Part 2: Get shared file, taxonomy data, representative sequence, distance
+#	matrix, and metadata from individual studies
 #
 ################################################################################
 
-
-# Get Baxter study data from project repository...
-data/baxter/baxter.braycurtis.0.03.lt.ave.dist\
-	data/baxter/baxter.groups.ave-std.summary\
-	data/baxter/baxter.0.03.subsample.shared\
-	data/baxter/baxter.metadata\
-	data/baxter/baxter.rep.fasta\
-	data/baxter/baxter.taxonomy : code/baxter.batch code/baxter.R
+.SECONDEXPANSION:
+data/%.braycurtis.0.03.lt.ave.dist\
+	data/%.groups.ave-std.summary\
+	data/%.0.03.subsample.shared\
+	data/%.metadata\
+	data/%.rep.fasta\
+	data/%.taxonomy : code/$$(notdir $$*).batch code/$$(notdir $$*).R\
+			$(REFS)/silva.seed.align $(REFS)/trainset14_032015.pds.fasta
+			$(REFS)/trainset14_032015.pds.tax
 	bash $<
 
-
-# Get HMP study data from project repository...
-data/hmp/hmp.braycurtis.0.03.lt.ave.dist\
-	data/hmp/hmp.groups.ave-std.summary\
-	data/hmp/hmp.0.03.subsample.shared\
-	data/hmp/hmp.metadata\
-	data/hmp/hmp.rep.fasta\
-	data/hmp/hmp.taxonomy : code/hmp.batch code/hmp.R
-	bash $<
-
-
-# Get Ross study data and process through mothur
-data/ross/ross.braycurtis.0.03.lt.ave.dist\
-	data/ross/ross.groups.ave-std.summary\
-	data/ross/ross.0.03.subsample.shared\
-	data/ross/ross.metadata\
-	data/ross/ross.rep.fasta\
-	data/ross/ross.taxonomy : code/ross.batch code/ross.R
-	bash $<
-
-
-# Get Escobar study data and process through mothur
-data/escobar/escobar.braycurtis.0.03.lt.ave.dist\
-	data/escobar/escobar.groups.ave-std.summary\
-	data/escobar/escobar.0.03.subsample.shared\
-	data/escobar/escobar.metadata\
-	data/escobar/escobar.rep.fasta\
-	data/escobar/escobar.taxonomy : code/escobar.batch code/escobar.R
-	bash $<
-
-
-# Get Zupancic study data and process through mothur
-data/zupancic/zupancic.braycurtis.0.03.lt.ave.dist\
-	data/zupancic/zupancic.groups.ave-std.summary\
-	data/zupancic/zupancic.0.03.subsample.shared\
-	data/zupancic/zupancic.metadata\
-	data/zupancic/zupancic.rep.fasta\
-	data/zupancic/zupancic.taxonomy : code/zupancic.batch code/zupancic.R
-	bash $<
-
-
-# Get Wu study data and process through mothur
-data/wu/wu.braycurtis.0.03.lt.ave.dist\
-	data/wu/wu.groups.ave-std.summary\
-	data/wu/wu.0.03.subsample.shared\
-	data/wu/wu.metadata\
-	data/wu/wu.rep.fasta\
-	data/wu/wu.taxonomy : code/wu.batch code/wu.R
-	bash $<
-
-
-# Get Turnbaugh study data and process through mothur
-data/turnbaugh/turnbaugh.braycurtis.0.03.lt.ave.dist\
-	data/turnbaugh/turnbaugh.groups.ave-std.summary\
-	data/turnbaugh/turnbaugh.0.03.subsample.shared\
-	data/turnbaugh/turnbaugh.metadata\
-	data/turnbaugh/turnbaugh.rep.fasta\
-	data/turnbaugh/turnbaugh.taxonomy : code/turnbaugh.batch code/turnbaugh.R
-	bash $<
-
-
-# Get Goodrich study data and process through mothur
-data/goodrich/goodrich.braycurtis.0.03.lt.ave.dist\
-	data/goodrich/goodrich.groups.ave-std.summary\
-	data/goodrich/goodrich.0.03.subsample.shared\
-	data/goodrich/goodrich.metadata\
-	data/goodrich/goodrich.rep.fasta\
-	data/goodrich/goodrich.taxonomy : code/goodrich.batch code/goodrich.R
-	bash $<
-
-
-data/schubert/schubert.braycurtis.0.03.lt.ave.dist\
-	data/schubert/schubert.groups.ave-std.summary\
-	data/schubert/schubert.0.03.subsample.shared\
-	data/schubert/schubert.metadata\
-	data/schubert/schubert.rep.fasta\
-	data/schubert/schubert.taxonomy : code/schubert.batch code/schubert.R
-	bash $<
