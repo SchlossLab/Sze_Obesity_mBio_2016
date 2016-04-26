@@ -66,7 +66,6 @@ data/%.braycurtis.0.03.lt.ave.dist\
 	data/%.metadata\
 	data/%.rep.fasta\
 	data/%.taxonomy : code/$$(notdir $$*).batch code/$$(notdir $$*).R\
-			$(REFS)/silva.seed.align $(REFS)/trainset14_032015.pds.fasta
+			$(REFS)/silva.seed.align $(REFS)/trainset14_032015.pds.fasta\
 			$(REFS)/trainset14_032015.pds.tax
 	bash $<
-
