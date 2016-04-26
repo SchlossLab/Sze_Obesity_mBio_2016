@@ -59,13 +59,23 @@ $(REFS)/trainset14_032015.% :
 #
 ################################################################################
 
+STUDIES = baxter escobar goodrich hmp ross schubert turnbaugh wu zupancic
+STUB = $(foreach S, $(STUDIES), data/$(S)/$(S))
+
+ALPHA = $(addsuffix .groups.ave-std.summary,$(STUB))
+BETA = $(addsuffix .braycurtis.0.03.lt.ave.dist,$(STUB))
+SHARED = $(addsuffix .0.03.subsample.shared,$(STUB))
+FASTA = $(addsuffix .rep.fasta,$(STUB))
+TAXONOMY = $(addsuffix .taxonomy,$(STUB))
+METADATA = $(addsuffix .metadata,$(STUB))
+
 .SECONDEXPANSION:
-data/%.braycurtis.0.03.lt.ave.dist\
-	data/%.groups.ave-std.summary\
+data/%.groups.ave-std.summary\
+	data/%.braycurtis.0.03.lt.ave.dist\
 	data/%.0.03.subsample.shared\
-	data/%.metadata\
 	data/%.rep.fasta\
-	data/%.taxonomy : code/$$(notdir $$*).batch code/$$(notdir $$*).R\
+	data/%.taxonomy\
+	data/%.metadata : code/$$(notdir $$*).batch code/$$(notdir $$*).R\
 			$(REFS)/silva.seed.align $(REFS)/trainset14_032015.pds.fasta\
 			$(REFS)/trainset14_032015.pds.tax
 	bash $<
