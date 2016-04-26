@@ -30,7 +30,7 @@ keep <- c("sample", "Gender", "BMI", "Age", "White")
 simple_metadata <- normal_metadata[,colnames(normal_metadata) %in% keep]
 simple_metadata$obese <- simple_metadata$BMI >= 30
 simple_metadata$White <- as.logical(simple_metadata$White)
-colnames(simple_metadata) <- c("sample", "sex", "bmi", "age", "white", "obese")
+colnames(simple_metadata) <- c("sample", "age", "sex", "bmi", "white", "obese")
 
 
 write.table(simple_metadata, file="data/baxter/baxter.metadata", quote=F, sep='\t', row.names=F)
