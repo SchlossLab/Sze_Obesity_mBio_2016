@@ -29,26 +29,30 @@ read_lt_matrix <- function(dist_file){
 	return(dist)
 }
 
-datasets <- c('baxter', 'escobar', 'hmp', 'ross', 'turnbaugh', 'wu')
-#'zupancic', 'goodrich', 'schubert'
 
-summary_data <- NULL
+run <- function(datasets){
 
-for(d in datasets){
-	set.seed(1976)
-	beta_file <- paste0('data/', d, '/', d, '.braycurtis.0.03.lt.ave.dist')
-	beta <- read_lt_matrix(beta_file)
+	datasets <- unlist(strsplit(datasets, split=" "))
 
-	metadata_file <- paste0('data/', d, '/', d, '.metadata')
-	metadata <- read.table(file=metadata_file, header=T)
-	metadata <- metadata[metadata$sample %in% rownames(beta),]
+	summary_data <- NULL
 
-	test <- adonis(beta~metadata$obese, permutations=9999)
-	p_value <- test["aov.tab"][[1]]$'Pr(>F)'[1]
+	for(d in datasets){
+		set.seed(1976)
+		beta_file <- paste0('data/', d, '/', d, '.braycurtis.0.03.lt.ave.dist')
+		beta <- read_lt_matrix(beta_file)
 
-	study_data <- cbind(dataset = d, p_value = p_value)
+		metadata_file <- paste0('data/', d, '/', d, '.metadata')
+		metadata <- read.table(file=metadata_file, header=T)
+		metadata <- metadata[metadata$sample %in% rownames(beta),]
 
-	summary_data <- rbind(summary_data, study_data)
+		test <- adonis(beta~metadata$obese, permutations=9999)
+		p_value <- test["aov.tab"][[1]]$'Pr(>F)'[1]
+
+		study_data <- cbind(dataset = d, p_value = p_value)
+
+		summary_data <- rbind(summary_data, study_data)
+	}
+
+	write.table(summary_data, file="data/process/beta_tests.summary", quote=F, sep='\t', row.names=F)
+
 }
-
-write.table(summary_data, file="data/process/beta_tests.summary", quote=F, sep='\t', row.names=F)
