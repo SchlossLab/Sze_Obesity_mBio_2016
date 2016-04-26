@@ -27,7 +27,6 @@ stopifnot(normal_shared$Group == normal_metadata$sample)
 #[21] "Other"        "Ethnic"       "NSAID"        "Abx"          "Diabetes_Med"
 #[26] "stage"        "Location"
 
-#simple_metadata <- normal_metadata[,colnames(normal_metadata) %in% keep]
 sample <- normal_metadata$sample_id
 white <- normal_metadata$race == "white"
 sex <- tolower(normal_metadata$gender)
