@@ -79,3 +79,23 @@ data/%.groups.ave-std.summary\
 			$(REFS)/silva.seed.align $(REFS)/trainset14_032015.pds.fasta\
 			$(REFS)/trainset14_032015.pds.tax
 	bash $<
+
+
+################################################################################
+#
+#	Part 3: Run alpha and beta diversity analyses, relative risk analysis, random
+# forest analyses, and z-score analysis
+#
+################################################################################
+
+data/process/alpha_tests.summary : code/run_alpha_diversity.R code/utilities.R\
+ 			$(ALPHA) $(METADATA)
+	R -e "source($<)"
+
+data/process/beta_tests.summary : code/run_beta_diversity.R\
+ 			$(BETA) $(METADATA)
+	R -e "source($<)"
+
+data/process/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
+ 			$(ALPHA) $(METADATA)
+	R -e "source($<)"
