@@ -12,7 +12,6 @@ run <- function(datasets){
 
 	for(d in datasets){
 		print(d)
-		d <- 'baxter'
 		set.seed(1976)
 
 		shared_file <- paste0('data/', d, '/', d, '.0.03.subsample.shared')
@@ -39,7 +38,7 @@ run <- function(datasets){
 		roc <- roc(metadata$obese~probabilities)
 
 		roc_summary <- rbind(roc_summary, cbind(d, roc$sensitivities, roc$specificities))
-		model_summary <- rbind(summary_data, c(d, auc,k_opt, otus))
+		model_summary <- rbind(model_summary, c(d, auc,k_opt, otus))
 
 	}
 
