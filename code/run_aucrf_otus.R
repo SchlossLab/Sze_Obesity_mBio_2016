@@ -43,9 +43,9 @@ run <- function(datasets){
 	}
 
 	colnames(model_summary) <- c("dataset", "auc", "k_opt", "otus")
-	write.table(model_summary, file="data/process/random_forest.summary", quote=F, sep='\t', row.names=F)
+	write.table(model_summary, file="data/process/random_forest.otu.summary", quote=F, sep='\t', row.names=F)
 
 	colnames(roc_summary) <- c("dataset", "sensitivity", "specificity")
-	write.table(roc_summary, file="data/process/random_forest.roc_data", quote=F, sep='\t', row.names=F)
+	write.table(roc_summary, file="data/process/random_forest.otu.roc_data", quote=F, sep='\t', row.names=F)
 
 }
