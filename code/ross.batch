@@ -63,7 +63,7 @@ mothur "#sub.sample(shared=data/ross/ross.shared, label=0.03, size=1700);
 				summary.single(shared=data/ross/ross.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=1700)"
 
 mv data/ross/*cons.taxonomy data/ross/ross.taxonomy
-mv data/ross/*0.03.rep.fasta data/ross/ross.rep.fasta
+mv data/ross/*0.03.rep.fasta data/ross/ross.rep.seqs
 
 rm data/ross/*rabund
 rm data/ross/*map
@@ -77,3 +77,5 @@ rm data/ross/*fasta
 rm data/ross/ross.braycurtis.0.03.lt.dist
 rm data/ross/ross.braycurtis.0.03.lt.std.dist
 rm data/ross/ross.groups.summary
+
+mv data/ross/ross.rep.seqs data/ross/ross.rep.fasta

@@ -62,7 +62,7 @@ mothur "#sub.sample(shared=data/goodrich/goodrich.shared, label=0.03);
 
 
 mv data/goodrich/*.cons.taxonomy data/goodrich/goodrich.taxonomy
-mv data/goodrich/*0.03.rep.fasta data/goodrich/goodrich.rep.fasta
+mv data/goodrich/*0.03.rep.fasta data/goodrich/goodrich.rep.seqs
 
 rm data/goodrich/goodrich.unique.*
 rm data/goodrich/*fasta
@@ -77,3 +77,5 @@ rm data/goodrich/goodrich.braycurtis.0.03.lt.dist
 rm data/goodrich/goodrich.braycurtis.0.03.lt.std.dist
 rm data/goodrich/*rabund
 rm data/goodrich/goodrich.groups.summary
+
+mv data/goodrich/goodrich.rep.seqs data/goodrich/goodrich.rep.fasta

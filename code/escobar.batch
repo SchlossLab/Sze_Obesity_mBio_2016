@@ -70,7 +70,7 @@ mothur "#sub.sample(shared=data/escobar/escobar.shared, label=0.03);
 
 
 mv data/escobar/*.cons.taxonomy data/escobar/escobar.taxonomy
-mv data/escobar/*0.03.rep.fasta data/escobar/escobar.rep.fasta
+mv data/escobar/*0.03.rep.fasta data/escobar/escobar.rep.seqs
 
 rm data/escobar/escobar.unique.*
 rm data/escobar/*fasta
@@ -85,3 +85,5 @@ rm data/escobar/escobar.braycurtis.0.03.lt.dist
 rm data/escobar/escobar.braycurtis.0.03.lt.std.dist
 rm data/escobar/*rabund
 rm data/escobar/escobar.groups.summary
+
+mv data/escobar/escobar.rep.seqs data/escobar/escobar.rep.fasta

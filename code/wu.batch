@@ -58,7 +58,7 @@ mothur "#sub.sample(shared=data/wu/wu.shared, label=0.03, size=4000);
 
 
 mv data/wu/*.cons.taxonomy data/wu/wu.taxonomy
-mv data/wu/*0.03.rep.fasta data/wu/wu.rep.fasta
+mv data/wu/*0.03.rep.fasta data/wu/wu.rep.seqs
 
 rm data/wu/wu.trim.*
 rm data/wu/*fasta
@@ -74,3 +74,5 @@ rm data/wu/wu.braycurtis.0.03.lt.dist
 rm data/wu/wu.braycurtis.0.03.lt.std.dist
 rm data/wu/*rabund
 rm data/wu/wu.groups.summary
+
+mv data/wu/wu.rep.seqs data/wu/wu.rep.fasta

@@ -279,7 +279,7 @@ mothur "#sub.sample(shared=data/zupancic/zupancic.shared, label=0.03, size=1500)
 
 
 mv data/zupancic/*.cons.taxonomy data/zupancic/zupancic.taxonomy
-mv data/zupancic/*0.03.rep.fasta data/zupancic/zupancic.rep.fasta
+mv data/zupancic/*0.03.rep.fasta data/zupancic/zupancic.rep.seqs
 
 rm data/zupancic/zupancic.unique.*
 rm data/zupancic/*fasta
@@ -294,3 +294,4 @@ rm data/zupancic/zupancic.braycurtis.0.03.lt.dist
 rm data/zupancic/zupancic.braycurtis.0.03.lt.std.dist
 rm data/zupancic/*rabund
 rm data/zupancic/zupancic.groups.summary
+mv data/zupancic/zupancic.rep.seqs data/zupancic/zupancic.rep.fasta
