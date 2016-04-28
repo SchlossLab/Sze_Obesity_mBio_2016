@@ -20,7 +20,6 @@ mothur "#sub.sample(shared=data/schubert/schubert.shared, label=0.03);
 				summary.single(shared=data/schubert/schubert.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=T)"
 
 
-rm data/schubert/*xlsx
 rm data/schubert/clinical*.shared
 rm data/schubert/schubert.braycurtis.0.03.lt.dist
 rm data/schubert/schubert.braycurtis.0.03.lt.std.dist

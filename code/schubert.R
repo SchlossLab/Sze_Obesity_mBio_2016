@@ -9,16 +9,26 @@ library(openxlsx)
 # schubert et al. study
 
 shared <- read.table(file="data/schubert/clinical.unique.good.filter.unique.precluster.pick.pick.pick.an.unique_list.shared", header=T)
-metadata <- read.xlsx(xlsxFile="data/schubert/MIMARKS_cdclinical.xlsx")
+
+metadata_orig <- read.xlsx(xlsxFile="data/schubert/MIMARKS_cdclinical.xlsx")
+metadata_bmi <- read.xlsx(xlsxFile="data/schubert/ERIN_Outpatient_heights_deidentified.xlsx", rowNames=1)
 
 normals <- as.character(metadata[metadata$disease_stat == "NonDiarrhealControl", "sample_id"])
 
-normal_shared <- shared[shared$Group %in% normals,]
+w_bmi <- rownames(metadata_bmi[!is.na(metadata_bmi$BMI), ])
+
+good_samples <- intersect(normals, w_bmi)
+
+
+normal_shared <- shared[shared$Group %in% good_samples,]
+
 write.table(normal_shared, file="data/schubert/schubert.shared", quote=F, sep='\t', row.names=F)
 
-normal_metadata <- metadata[metadata$sample %in% normals,]
+bmi_table <- metadata_bmi[good_samples,]
+metadata_table <- metadata_orig[metadata$sample %in% good_samples,]
 
-stopifnot(normal_shared$Group == normal_metadata$sample)
+stopifnot(normal_shared$Group == metadata_table$sample)
+stopifnot(rownames(bmi_table) == metadata_table$sample)
 
 #[1] "sample"       "fit_result"   "Site"         "Dx_Bin"       "dx"
 #[6] "Hx_Prev"      "Hx_of_Polyps" "Age"          "Gender"       "Smoke"
@@ -27,12 +37,12 @@ stopifnot(normal_shared$Group == normal_metadata$sample)
 #[21] "Other"        "Ethnic"       "NSAID"        "Abx"          "Diabetes_Med"
 #[26] "stage"        "Location"
 
-sample <- normal_metadata$sample_id
-white <- normal_metadata$race == "white"
-sex <- tolower(normal_metadata$gender)
-bmi <- NA
-obese <- NA #simple_metadata$BMI >= 30
-age <- normal_metadata$age
+sample <- metadata_table$sample_id
+white <- metadata_table$race == "white"
+sex <- tolower(metadata_table$gender)
+bmi <- bmi_table$BMI
+obese <- bmi >= 30
+age <- metadata_table$age
 simple_metadata <- cbind(sample=sample, sex=sex, bmi=bmi, age=age, white=white, obese=obese)
 
 
