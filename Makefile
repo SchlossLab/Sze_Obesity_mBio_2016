@@ -107,3 +107,11 @@ data/process/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
 data/process/random_forest.% : code/run_aucrf_otus.R code/utilities.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
+
+data/process/alpha_power.% : code/run_power_analysis.R code/utilities.R\
+			data/process/alpha_tests.summary
+	R -e "source('$<'); run_alpha()"
+
+data/process/rr_power.% : code/run_power_analysis.R code/utilities.R\
+			data/process/relative_risk.summary
+	R -e "source('$<'); run_rr()"
