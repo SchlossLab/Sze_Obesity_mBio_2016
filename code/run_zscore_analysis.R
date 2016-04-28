@@ -2,10 +2,11 @@ source('code/utilities.R')
 
 datasets <- c('baxter', 'escobar', 'hmp', 'ross', 'turnbaugh', 'wu')
 
-run <- function(datasets)
+run <- function(datasets){
 
 	datasets <- unlist(strsplit(datasets, split=" "))
 
+	z_transform <- NULL
 	for(d in datasets){
 
 		print(d)
