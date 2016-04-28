@@ -5,7 +5,7 @@ run <- function(datasets){
 
 	datasets <- unlist(strsplit(datasets, split=" "))
 
-#	datasets <- c('baxter', 'turnbaugh', 'wu', 'escobar', 'ross', 'hmp')
+#	datasets <- c('baxter', 'turnbaugh', 'wu', 'escobar', 'ross', 'hmp', 'zupancic')
 
 	model_summary <- NULL
 	roc_summary <- NULL
