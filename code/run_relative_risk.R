@@ -31,11 +31,11 @@ run <- function(datasets){
 
 	for(d in datasets){
 		alpha_file <- paste0('data/', d, '/', d, '.groups.ave-std.summary')
-		alpha <- read.table(file=alpha_file, header=T)
+		alpha <- read.table(file=alpha_file, header=T, stringsAsFactors=F)
 		alpha <- alpha[alpha$method == 'ave',]
 
 		metadata_file <- paste0('data/', d, '/', d, '.metadata')
-		metadata <- read.table(file=metadata_file, header=T)
+		metadata <- read.table(file=metadata_file, header=T, stringsAsFactors=F)
 		metadata <- metadata[metadata$sample %in% alpha$group,]
 
 		stopifnot(alpha$group == metadata$sample)
