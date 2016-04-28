@@ -16,7 +16,7 @@ analyze <- function(alpha, is_obese){
 	p.value <- test$massoc$chisq.strata$p.value
 
 	counts <- as.vector(contingency)
-	names(counts) <- c('low_obese', 'high_obese', 'low_nonobese', 'high_obese')
+	names(counts) <- c('low_obese', 'high_obese', 'low_nonobese', 'high_nonobese')
 
 	return(unlist(c(rr, p.value=p.value, counts)))
 }
