@@ -29,20 +29,23 @@ run <- function(datasets){
 		rel_abund_keep <- shared[,keep_otus] / n_seqs
 		test_data <- data.frame(obese=as.factor(as.numeric(metadata$obese)), rel_abund_keep)
 
-		model <- AUCRF(obese ~ ., data=test_data, ntree=1000, nodesize=20)
-		auc <- model$`OOB-AUCopt`
+		model <- AUCRF(obese ~ ., data=test_data, ntree=500, nodesize=10)
 		k_opt <- model$Kopt
 		otus <- paste(model$Xopt, collapse=',')
 
 		probabilities <- predict(model$RFopt, type='prob')[, 2]
 		roc <- roc(metadata$obese~probabilities)
 
+		auc <- ci(roc)
+
+		auc_cv <- AUCRFcv(model, nCV=10)
+
 		roc_summary <- rbind(roc_summary, cbind(d, roc$sensitivities, roc$specificities))
-		model_summary <- rbind(model_summary, c(d, auc,k_opt, otus))
+		model_summary <- rbind(model_summary, c(d, auc, auc_cv, k_opt, otus))
 
 	}
 
-	colnames(model_summary) <- c("dataset", "auc", "k_opt", "otus")
+	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt",  "otus")
 	write.table(model_summary, file="data/process/random_forest.otu.summary", quote=F, sep='\t', row.names=F)
 
 	colnames(roc_summary) <- c("dataset", "sensitivity", "specificity")

@@ -83,7 +83,7 @@ run <- function(datasets){
 		rel_abund_keep <- shared[,keep_otus] / n_seqs
 		test_data[[d]] <- data.frame(obese=as.factor(as.numeric(metadata$obese)), rel_abund_keep)
 
-		model[[d]] <- AUCRF(obese ~ ., data=test_data[[d]], ntree=1000, nodesize=20)
+		model[[d]] <- AUCRF(obese ~ ., data=test_data[[d]], ntree=500, nodesize=10)
 		k_opt <- model[[d]]$Kopt
 		otus <- paste(model[[d]]$Xopt, collapse=',')
 
@@ -91,6 +91,8 @@ run <- function(datasets){
 		roc[[d]] <- roc(metadata$obese~probabilities)
 
 		model[[d]]$auc <- ci(roc[[d]])
+
+		model[[d]]$auc_cv <- AUCRFcv(model[[d]], nCV=10)
 
 		opt_index <- which.max(roc[[d]]$sensitivities + roc[[d]]$specificities)
 		model[[d]]$opt_sensitivity <- roc[[d]]$sensitivities[opt_index]
@@ -105,12 +107,13 @@ run <- function(datasets){
 		model[[d]]$opt_negPredValue <- metrics["negPredValue"]
 
 		roc_summary <- rbind(roc_summary, cbind(d, roc[[d]]$sensitivities, roc[[d]]$specificities))
-		model_summary <- rbind(model_summary, c(d, model[[d]]$auc,k_opt, otus,
+		model_summary <- rbind(model_summary, c(d, model[[d]]$auc,
+			 									model[[d]]$auc_cv, k_opt, otus,
 					 							model[[d]]$opt_sensitivity, model[[d]]$opt_specificity,
 												model[[d]]$opt_threshold))
 	}
 
-	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "k_opt", "otus", "sensitivity", "specificity", "threshold")
+	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt", "otus", "sensitivity", "specificity", "threshold")
 	write.table(model_summary, file="data/process/random_forest.genus.summary", quote=F, sep='\t', row.names=F)
 
 	colnames(roc_summary) <- c("dataset", "sensitivity", "specificity")
