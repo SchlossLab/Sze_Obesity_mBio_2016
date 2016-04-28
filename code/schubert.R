@@ -13,7 +13,7 @@ shared <- read.table(file="data/schubert/clinical.unique.good.filter.unique.prec
 metadata_orig <- read.xlsx(xlsxFile="data/schubert/MIMARKS_cdclinical.xlsx")
 metadata_bmi <- read.xlsx(xlsxFile="data/schubert/ERIN_Outpatient_heights_deidentified.xlsx", rowNames=1)
 
-normals <- as.character(metadata[metadata$disease_stat == "NonDiarrhealControl", "sample_id"])
+normals <- as.character(metadata_orig[metadata_orig$disease_stat == "NonDiarrhealControl", "sample_id"])
 
 w_bmi <- rownames(metadata_bmi[!is.na(metadata_bmi$BMI), ])
 
@@ -25,7 +25,7 @@ normal_shared <- shared[shared$Group %in% good_samples,]
 write.table(normal_shared, file="data/schubert/schubert.shared", quote=F, sep='\t', row.names=F)
 
 bmi_table <- metadata_bmi[good_samples,]
-metadata_table <- metadata_orig[metadata$sample %in% good_samples,]
+metadata_table <- metadata_orig[metadata_orig$sample %in% good_samples,]
 
 stopifnot(normal_shared$Group == metadata_table$sample)
 stopifnot(rownames(bmi_table) == metadata_table$sample)
