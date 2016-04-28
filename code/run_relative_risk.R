@@ -16,7 +16,7 @@ analyze <- function(alpha, is_obese){
 	p.value <- test$massoc$chisq.strata$p.value
 
 	counts <- as.vector(contingency)
-	names(counts) <- c('low_obese', 'high_obese', 'low_nonobese', 'high_obese')
+	names(counts) <- c('low_obese', 'high_obese', 'low_nonobese', 'high_nonobese')
 
 	return(unlist(c(rr, p.value=p.value, counts)))
 }
@@ -31,11 +31,11 @@ run <- function(datasets){
 
 	for(d in datasets){
 		alpha_file <- paste0('data/', d, '/', d, '.groups.ave-std.summary')
-		alpha <- read.table(file=alpha_file, header=T)
+		alpha <- read.table(file=alpha_file, header=T, stringsAsFactors=F)
 		alpha <- alpha[alpha$method == 'ave',]
 
 		metadata_file <- paste0('data/', d, '/', d, '.metadata')
-		metadata <- read.table(file=metadata_file, header=T)
+		metadata <- read.table(file=metadata_file, header=T, stringsAsFactors=F)
 		metadata <- metadata[metadata$sample %in% alpha$group,]
 
 		stopifnot(alpha$group == metadata$sample)
