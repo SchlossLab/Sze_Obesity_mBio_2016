@@ -1,3 +1,4 @@
+STUDIES = baxter escobar hmp ross schubert turnbaugh wu zupancic
 REFS = data/references
 FIGS = submission
 TABLES = results/tables
@@ -59,7 +60,6 @@ $(REFS)/trainset14_032015.% :
 #
 ################################################################################
 
-STUDIES = baxter escobar goodrich hmp ross schubert turnbaugh wu zupancic
 STUB = $(foreach S, $(STUDIES), data/$(S)/$(S))
 
 ALPHA = $(addsuffix .groups.ave-std.summary,$(STUB))
@@ -90,20 +90,20 @@ data/%.groups.ave-std.summary\
 
 data/process/alpha_tests.summary : code/run_alpha_diversity.R code/utilities.R\
  			$(ALPHA) $(METADATA)
-	R -e "source($<); run('$(STUDIES)')"
+	R -e "source('$<'); run('$(STUDIES)')"
 
 data/process/beta_tests.summary : code/run_beta_diversity.R\
  			$(BETA) $(METADATA)
-	R -e "source($<); run('$(STUDIES)')"
+	R -e "source('$<'); run('$(STUDIES)')"
 
 data/process/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
  			$(ALPHA) $(METADATA)
-	R -e "source($<); run('$(STUDIES)')"
+	R -e "source('$<'); run('$(STUDIES)')"
 
 data/process/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
  			$(ALPHA) $(METADATA)
-	R -e "source($<); run('$(STUDIES)')"
+	R -e "source('$<'); run('$(STUDIES)')"
 
 data/process/random_forest.% : code/run_aucrf_otus.R code/utilities.R\
  			$(SHARED) $(METADATA)
-	R -e "source($<); run('$(STUDIES)')"
+	R -e "source('$<'); run('$(STUDIES)')"
