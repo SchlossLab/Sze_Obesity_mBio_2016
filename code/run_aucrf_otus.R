@@ -38,7 +38,7 @@ run <- function(datasets){
 
 		auc <- ci(roc)
 
-		auc_cv <- AUCRFcv(model, nCV=10)
+		auc_cv <- AUCRFcv(model, nCV=10)$cvAUC
 
 		roc_summary <- rbind(roc_summary, cbind(d, roc$sensitivities, roc$specificities))
 		model_summary <- rbind(model_summary, c(d, auc, auc_cv, k_opt, otus))

@@ -92,7 +92,7 @@ run <- function(datasets){
 
 		model[[d]]$auc <- ci(roc[[d]])
 
-		model[[d]]$auc_cv <- AUCRFcv(model[[d]], nCV=10)
+		model[[d]]$auc_cv <- AUCRFcv(model[[d]], nCV=10)$cvAUC
 
 		opt_index <- which.max(roc[[d]]$sensitivities + roc[[d]]$specificities)
 		model[[d]]$opt_sensitivity <- roc[[d]]$sensitivities[opt_index]
