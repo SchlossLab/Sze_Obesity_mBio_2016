@@ -32,7 +32,7 @@ get_dependencies <- function(deps){
 		if (dep %in% installed.packages()[,"Package"] == FALSE){
 			install.packages(as.character(dep), quiet=TRUE);
 		}
-		library(dep, verbose=FALSE, character.only=TRUE)
+		library(dep, verbose=F, character.only=T, quietly=T, warn.conflicts=F)
 	}
 
 }
