@@ -6,14 +6,14 @@ reverse_complement <- function(string){
 }
 
 get_groups_file <- function(index_file){
-
+"data/zeevi/E13_new_R1_001.indices"
 	mapping_file <- gsub("indices", "mapping", index_file)
 	group_file <- gsub("indices", "groups", index_file)
 
 	index_data <- read.table(index_file, stringsAsFactors=F)
 	colnames(index_data) <- c("seq_name", "index")
 
-	mapping_data <- read.table(mapping_file, stringsAsFactors=F, sep='\t')
+	mapping_data <- read.table(mapping_file, stringsAsFactors=F, sep='\t', fill=T)
 	colnames(mapping_data) <- c("sample_id",	"index", "primer", "description")
 
 	mapping_data <- mapping_data[mapping_data$description != "",]
