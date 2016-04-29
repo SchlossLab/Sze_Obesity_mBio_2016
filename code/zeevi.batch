@@ -1,0 +1,44 @@
+#!bash
+
+DIR=data/zeevi
+
+# pull down all of the sequence data...
+wget -r -q -np -nd -k -P $DIR ftp://ftp.sra.ebi.ac.uk/vol1/ERA540/ERA540323/fastq/
+
+
+# have to unzip since the index sequences are in the sequence headers :(
+gunzip $DIR/*gz
+
+
+# match the sequence names with their index sequences output as a *indices file
+for R1_FASTQ in $DIR/*R1_001.fastq
+do
+	INDEX_FILE=$(echo $R1_FASTQ | sed 's/fastq/indices/')
+	echo $INDEX_FILE
+	grep "^@M" $R1_FASTQ | sed 's/@\(M.*\) .*:\(\w*\)$/\1\t\2/' > $INDEX_FILE
+done
+
+
+# generate groups file for each sequencing run
+for INDEX_FILE in $DIR/*indices
+do
+	R -e "source(\"code/zeevi.R\");get_groups_files(\"$INDEX_FILE\")"
+done
+
+
+# build the contigs
+for R1_FASTQ in $DIR/*R1_001.fastq
+do
+	R2_FASTQ=$(echo $R1_FASTQ | sed 's/_R1_/_R2_/')
+	mothur \"#make.contigs(ffastq=$R1_FASTQ, rfastq=$R2_FASTQ, rename=F, processors=8)\"
+done
+
+
+# pick out the sequences that matched to an index
+for CONTIGS in $DIR/*trim.contigs.fasta
+do
+	GROUPS_FILE=$(echo $CONTIGS | sed 's/trim.contigs.fasta/groups/')
+	ACCNOS_FILE=$(echo $CONTIGS | sed 's/trim.contigs.fasta/accnos/')
+	cut -f 1 $GROUPS_FILE > $ACCNOS_FILE
+	mothur "#remove.seqs(fasta=$CONTIGS, accnos=$ACCNOS_FILE)"
+done
