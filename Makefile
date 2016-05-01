@@ -39,6 +39,9 @@ $(REFS)/silva.seed.align :
 	mv silva.seed_v123.pick.align $(REFS)/silva.seed.align
 	rm Silva.seed_v123.tgz silva.seed_v123.*
 
+$(REFS)/silva.v4.align : $(REFS)/silva.seed.align
+	mothur "#pcr.seqs(fasta=$(REFS)/silva.seed.align, start=11894, end=25319, keepdots=F, processors=8)"
+	mv $(REFS)/silva.seed.pcr.align $(REFS)/silva.v4.align
 
 # Next, we want the RDP reference taxonomy. The current version is v10 and we
 # use a "special" pds version of the database files, which are described at
@@ -76,9 +79,11 @@ data/%.groups.ave-std.summary\
 	data/%.rep.fasta\
 	data/%.taxonomy\
 	data/%.metadata : code/$$(notdir $$*).batch code/$$(notdir $$*).R\
-			$(REFS)/silva.seed.align $(REFS)/trainset14_032015.pds.fasta\
+			$(REFS)/silva.seed.align $(REFS)/silva.v4.align\
+ 			$(REFS)/trainset14_032015.pds.fasta\
 			$(REFS)/trainset14_032015.pds.tax
 	bash $<
+
 
 
 ################################################################################
@@ -115,3 +120,11 @@ data/process/alpha_power.% : code/run_power_analysis.R code/utilities.R\
 data/process/rr_power.% : code/run_power_analysis.R code/utilities.R\
 			data/process/relative_risk.summary
 	R -e "source('$<'); run_rr()"
+
+
+
+################################################################################
+#
+#	Part 4: Generate figures
+#
+################################################################################
