@@ -1,4 +1,4 @@
-STUDIES = baxter escobar hmp ross schubert turnbaugh wu zupancic
+STUDIES = baxter escobar hmp ross schubert turnbaugh wu zupancic goodrich
 REFS = data/references
 FIGS = submission
 TABLES = results/tables
