@@ -27,11 +27,17 @@ stopifnot(shared$Group == simple$Run_s)
 sample <- simple$Run_s
 sex <- ifelse(simple$sex_s == 47, 'm', 'f')
 bmi <- simple$body_mass_index_s
+bmi[bmi == "<not provided>"] <- NA
 white <- NA
 age <- simple$age_s
 obese <- bmi >= 30
 metadata <- cbind(sample=sample, sex=sex, bmi=bmi, age=age, white=white, obese=obese)
 
-write.table(shared, file="data/goodrich/goodrich.shared", quote=F, sep='\t', row.names=F)
+metadata_nona <- metadata[!is.na(metadata[, "obese"]),]
+shared_nona <- shared[!is.na(metadata[, "obese"]),]
 
-write.table(metadata, file="data/goodrich/goodrich.metadata", quote=F, sep='\t', row.names=F)
+
+write.table(shared_nona, file="data/goodrich/goodrich.shared", quote=F, sep='\t', row.names=F)
+
+write.table(metadata_nona, file="data/goodrich/goodrich.metadata", quote=F, sep='\t', row.names=F)
+
