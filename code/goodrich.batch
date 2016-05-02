@@ -56,9 +56,9 @@ mothur "#unique.seqs(fasta=$DIR/goodrich.fasta);
 
 R -e "source('code/goodrich.R')"
 
-mothur "#sub.sample(shared=data/goodrich/goodrich.shared, label=0.03);
-				dist.shared(shared=data/goodrich/goodrich.shared, calc=braycurtis, label=0.03, subsample=T, iters=100, processors=8);
-				summary.single(shared=data/goodrich/goodrich.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=T)"
+mothur "#sub.sample(shared=data/goodrich/goodrich.shared, label=0.03, size=10000);
+	dist.shared(shared=data/goodrich/goodrich.shared, calc=braycurtis, label=0.03, subsample=10000, iters=100, processors=8);
+	summary.single(shared=data/goodrich/goodrich.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=10000)"
 
 
 mv data/goodrich/*.cons.taxonomy data/goodrich/goodrich.taxonomy
