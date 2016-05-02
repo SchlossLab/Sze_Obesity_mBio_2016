@@ -1,3 +1,4 @@
+source('code/utilities.R')
 get_dependencies('vegan')
 
 read_lt_matrix <- function(dist_file){
