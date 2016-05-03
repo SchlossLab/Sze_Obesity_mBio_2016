@@ -109,7 +109,11 @@ data/process/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/random_forest.% : code/run_aucrf_otus.R code/utilities.R\
+data/process/random_forest.otu.% : code/run_aucrf_otus.R code/utilities.R\
+ 			$(SHARED) $(METADATA)
+	R -e "source('$<'); run('$(STUDIES)')"
+
+data/process/random_forest.genus.% : code/run_aucrf_genus.R code/utilities.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
