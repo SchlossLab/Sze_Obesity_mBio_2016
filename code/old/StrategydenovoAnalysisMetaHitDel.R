@@ -494,9 +494,11 @@ metadata <- EditTable(metadata, 7, delRange=0)
 microbiome <- read.table("data/process/Goodrich/GoodrichGoodSub.shared", header=T)
 microbiome <- EditTable(microbiome, 2, delRange=c(1:3))
 keep  <- which(metadata$body_mass_index_s != "<not provided>")
-microbiome<- microbiome[keep, ]
+keep2 <- rownames(metadata[which(
+  metadata$body_mass_index_s != "<not provided>"), ])
+microbiome<- microbiome[keep2, ]
 metadata <- metadata[keep, ]
-rm(keep)
+rm(keep, keep2)
 
 #generate alpha diversity measures with vegan
 alpha.test <- makeAlphaTable(microbiome)
@@ -531,7 +533,7 @@ obese <- factor(metadata$obese)
 
 ##Test BMI versus alpha diversity and phyla
 
-goodrichH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.614
+goodrichH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.001384
 MeanNonObeseH <- c(MeanNonObeseH, 
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
@@ -1785,12 +1787,14 @@ metadata <- read.csv("data/process/Turnbaugh/turnbaugh.metadata.csv")
 metadata <- EditTable(metadata, 4, delRange=4)
 
 keep1 <- which(metadata$Sample == 1) # n =146
+keep2 <- rownames(metadata[which(metadata$Sample == 1),])
 
 #use the first sampling
 #subset data for only the first sampling
 metadata <- metadata[keep1, ]
-microbiome <- microbiome[keep1, ]
-rm(keep1)
+microbiome <- microbiome[keep2, ]
+rm(keep1, keep2)
+
 
 #generate alpha diversity measures with vegan
 alpha.test <- makeAlphaTable(microbiome)
@@ -1822,7 +1826,7 @@ bmi <- metadata$BMI.category
 
 ##Test BMI versus alpha diversity and phyla
 
-turnbaughH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.9699
+turnbaughH <- wilcox.test(alpha.test$H ~ obese) #P-value=0.1077
 MeanNonObeseH <- c(MeanNonObeseH, 
                    mean(alpha.test$H[which(metadata$obese == "No")]))
 MeanObeseH <- c(MeanObeseH, 
@@ -1834,7 +1838,7 @@ SDObeseH <- c(SDObeseH,
 averageStudyH <- c(averageStudyH, mean(alpha.test$H))
 sdH <- c(sdH, sd(alpha.test$H))
 
-turnbaughS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.5436
+turnbaughS <- wilcox.test(alpha.test$S ~ obese) #P-value=0.1032
 MeanNonObeseS <- c(MeanNonObeseS, 
                    mean(alpha.test$S[which(metadata$obese == "No")]))
 MeanObeseS <- c(MeanObeseS, 
@@ -1846,7 +1850,7 @@ SDObeseS <- c(SDObeseS,
 averageStudyS <- c(averageStudyS, mean(alpha.test$S))
 sdS <- c(sdS, sd(alpha.test$S))
 
-turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.8834
+turnbaughJ <- wilcox.test(alpha.test$J ~ obese) #P-value=0.2074
 MeanNonObeseJ <- c(MeanNonObeseJ, 
                    mean(alpha.test$J[which(metadata$obese == "No")]))
 MeanObeseJ <- c(MeanObeseJ, 
