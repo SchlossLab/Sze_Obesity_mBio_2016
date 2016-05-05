@@ -93,7 +93,8 @@ data/%.groups.ave-std.summary\
 #
 ################################################################################
 
-data/process/alpha_tests.summary : code/run_alpha_diversity.R code/utilities.R\
+data/process/alpha_tests.summary data/process/alpha.data: \
+			code/run_alpha_diversity.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 

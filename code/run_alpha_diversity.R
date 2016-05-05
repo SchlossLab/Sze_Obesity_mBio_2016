@@ -1,6 +1,6 @@
 source('code/utilities.R')
 
-analyze <- function(alpha, is_obese){
+single_analysis <- function(alpha, is_obese){
 
 	p.value <- wilcox.test(alpha ~ is_obese)$p.value
 
@@ -27,13 +27,18 @@ analyze <- function(alpha, is_obese){
 	)
 }
 
+datasets <- c('baxter', 'goodrich', 'escobar', 'hmp', 'ross', 'turnbaugh', 'wu', 'zupancic')
+
 run <- function(datasets){
 
 	datasets <- unlist(strsplit(datasets, split=" "))
 
 	summary_data <- NULL
+	composite_data <- NULL
 
 	for(d in datasets){
+		print(d)
+
 		alpha_file <- paste0('data/', d, '/', d, '.groups.ave-std.summary')
 		alpha <- read.table(file=alpha_file, header=T, stringsAsFactors=F)
 		alpha <- alpha[alpha$method == 'ave',]
@@ -46,18 +51,28 @@ run <- function(datasets){
 
 		bf_relabund <- get_bacteroides_firmicutes(d)
 
-		shannon <- analyze(alpha$shannon, metadata$obese)
-		sobs <- analyze(alpha$sobs, metadata$obese)
-		shannoneven <- analyze(alpha$shannoneven, metadata$obese)
-		bacteroidetes <- analyze(bf_relabund[,"b"], metadata$obese)
-		firmicutes <- analyze(bf_relabund[,"f"], metadata$obese)
-		bf_ratio <- analyze(bf_relabund[,"bf"], metadata$obese)
+		shannon <- single_analysis(alpha$shannon, metadata$obese)
+		sobs <- single_analysis(alpha$sobs, metadata$obese)
+		shannoneven <- single_analysis(alpha$shannoneven, metadata$obese)
+		bacteroidetes <- single_analysis(bf_relabund[,"b"], metadata$obese)
+		firmicutes <- single_analysis(bf_relabund[,"f"], metadata$obese)
+		bf_ratio <- single_analysis(bf_relabund[,"bf"], metadata$obese)
 
-		test <- rbind(shannon, sobs, shannoneven, bacteroidetes, firmicutes, bf_ratio)
-		study_data <- cbind(dataset = d, metric = rownames(test), test)
+		test <- rbind(shannon, sobs, shannoneven,
+									bacteroidetes, firmicutes, bf_ratio)
 
-		summary_data <- rbind(summary_data, study_data)
+		study_data <- data.frame(dataset=d, subject=alpha$group,
+			 					obese=metadata$obese,
+								shannon=alpha$shannon, sobs=alpha$sobs,
+								shannoneven=alpha$shannoneven, bacteroidetes=bf_relabund[,"b"],
+								firmicutes=bf_relabund[,"f"], bf_ratio=bf_relabund[,"bf"])
+		composite_data <- rbind(composite_data, study_data)
+
+		study_summary <- data.frame(dataset = d, metric = rownames(test), test)
+		summary_data <- rbind(summary_data, study_summary)
 	}
+
+	write.table(composite_data, file="data/process/alpha.data", quote=F, sep='\t', row.names=F)
 
 	write.table(summary_data, file="data/process/alpha_tests.summary", quote=F, sep='\t', row.names=F)
 }
