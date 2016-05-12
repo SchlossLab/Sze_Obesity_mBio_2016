@@ -93,7 +93,7 @@ data/%.groups.ave-std.summary\
 #
 ################################################################################
 
-$(PROC)/alpha_tests.summary $(PROC)/alpha.data: \
+$(PROC)/alpha_tests.summary $(PROC)/alpha.data $(PROC)/alpha_composite.summary:\
 			code/run_alpha_diversity.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
@@ -103,10 +103,6 @@ $(PROC)/beta_tests.summary : code/run_beta_diversity.R\
 	R -e "source('$<'); run('$(STUDIES)')"
 
 $(PROC)/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
- 			$(ALPHA) $(METADATA)
-	R -e "source('$<'); run('$(STUDIES)')"
-
-$(PROC)/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 

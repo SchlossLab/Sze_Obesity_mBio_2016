@@ -1,8 +1,18 @@
+library("lme4")
+
 source('code/utilities.R')
 
-single_analysis <- function(alpha, is_obese){
+composite_analysis <- function(alpha, dataset, is_obese, pow){
 
-	p.value <- wilcox.test(alpha ~ is_obese)$p.value
+	null_model <- lmer(alpha^pow ~ (1|dataset), REML=FALSE)
+	obese_model <- lmer(alpha^pow ~ (1|is_obese) + (1|dataset), REML=FALSE)
+	anova(null_model, obese_model)[["Pr(>Chisq)"]][2]
+
+}
+
+single_analysis <- function(alpha, pow, is_obese){
+
+	p.value <- t.test(alpha^pow ~ is_obese)$p.value
 
 	mean_overall <- mean(alpha, na.rm=T)
 	sd_overall <- sd(alpha, na.rm=T)
@@ -17,12 +27,16 @@ single_analysis <- function(alpha, is_obese){
 	n_non <- length(non_obese)
 	n_obese <- length(obese)
 
+	ci_obese <- unname(quantile(obese, c(0.025, 0.975)))
+	ci_non <- unname(quantile(non_obese, c(0.025, 0.975)))
+
+
 	return(
 		c(p.value = p.value,
 			mean_overall = mean_overall, sd_overall = sd_overall,
 			mean_non = mean_non, mean_obese = mean_obese,
 			sd_non = sd_non, sd_obese = sd_obese,
-			n_non = n_non, n_obese = n_obese
+			n_non = n_non, n_obese = n_obese, low_ci_obese=ci_obese[1], high_ci_obese=ci_obese[2], low_ci_non=ci_non[1], high_ci_non=ci_non[2]
 		)
 	)
 }
@@ -51,12 +65,13 @@ run <- function(datasets){
 
 		bf_relabund <- get_bacteroides_firmicutes(d)
 
-		shannon <- single_analysis(alpha$shannon, metadata$obese)
-		sobs <- single_analysis(alpha$sobs, metadata$obese)
-		shannoneven <- single_analysis(alpha$shannoneven, metadata$obese)
-		bacteroidetes <- single_analysis(bf_relabund[,"b"], metadata$obese)
-		firmicutes <- single_analysis(bf_relabund[,"f"], metadata$obese)
-		bf_ratio <- single_analysis(bf_relabund[,"bf"], metadata$obese)
+		#transformations were worked out with a qqplot to check for normality
+		shannon <- single_analysis(alpha$shannon, pow=2, metadata$obese)
+		sobs <- single_analysis(alpha$sobs, pow=0.5, metadata$obese)
+		shannoneven <- single_analysis(alpha$shannoneven, pow=4, metadata$obese)
+		bacteroidetes <- single_analysis(bf_relabund[,"b"], pow=0.5, metadata$obese)
+		firmicutes <- single_analysis(bf_relabund[,"f"], pow=1, metadata$obese)
+		bf_ratio <- single_analysis(bf_relabund[,"bf"], pow=0.5, metadata$obese)
 
 		test <- rbind(shannon, sobs, shannoneven,
 									bacteroidetes, firmicutes, bf_ratio)
@@ -75,4 +90,15 @@ run <- function(datasets){
 	write.table(composite_data, file="data/process/alpha.data", quote=F, sep='\t', row.names=F)
 
 	write.table(summary_data, file="data/process/alpha_tests.summary", quote=F, sep='\t', row.names=F)
+
+#	composite_analysis <- function(alpha, dataset, is_obese, pow){
+	composite_p <- NULL
+	composite_p["shannon"] <- composite_analysis(composite_data$shannon, composite_data$dataset, composite_data$obese, 2)
+	composite_p["sobs"] <- composite_analysis(composite_data$sobs, composite_data$dataset, composite_data$obese, 0.5)
+	composite_p["shannoneven"] <- composite_analysis(composite_data$shannoneven, composite_data$dataset, composite_data$obese, 4)
+	composite_p["bacteroidetes"] <- composite_analysis(composite_data$bacteroidetes, composite_data$dataset, composite_data$obese, 0.5)
+	composite_p["firmicutes"] <- composite_analysis(composite_data$firmicutes, composite_data$dataset, composite_data$obese, 1)
+	composite_p["bf_ratio"] <- composite_analysis(composite_data$bf_ratio, composite_data$dataset, composite_data$obese, 0.5)
+
+	write.table(file="data/process/alpha_composite.summary", data.frame(composite_p), quote=F, sep='\t')
 }
