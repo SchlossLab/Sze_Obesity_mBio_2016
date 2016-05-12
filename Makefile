@@ -93,37 +93,37 @@ data/%.groups.ave-std.summary\
 #
 ################################################################################
 
-data/process/alpha_tests.summary data/process/alpha.data: \
+$(PROC)/alpha_tests.summary $(PROC)/alpha.data: \
 			code/run_alpha_diversity.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/beta_tests.summary : code/run_beta_diversity.R\
+$(PROC)/beta_tests.summary : code/run_beta_diversity.R\
  			$(BETA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
+$(PROC)/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
+$(PROC)/z_transform.% : code/run_zscore_analysis.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/random_forest.otu.% : code/run_aucrf_otus.R code/utilities.R\
+$(PROC)/random_forest.otu.% : code/run_aucrf_otus.R code/utilities.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/random_forest.genus.% : code/run_aucrf_genus.R code/utilities.R\
+$(PROC)/random_forest.genus.% : code/run_aucrf_genus.R code/utilities.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-data/process/alpha_power.% : code/run_power_analysis.R code/utilities.R\
-			data/process/alpha_tests.summary
+$(PROC)/alpha_power.% : code/run_power_analysis.R code/utilities.R\
+			$(PROC)/alpha_tests.summary
 	R -e "source('$<'); run_alpha()"
 
-data/process/rr_power.% : code/run_power_analysis.R code/utilities.R\
-			data/process/relative_risk.summary
+$(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
+			$(PROC)/relative_risk.summary
 	R -e "source('$<'); run_rr()"
 
 
