@@ -80,6 +80,6 @@ run <- function(datasets){
 	composite <- rbind(shannon, shannoneven, sobs,
 											firmicutes, bacteroidetes, bf_ratio)
 
-	write.table(summary_data, file="data/process/relative_risk.composite", quote=F, sep='\t', row.names=F)
+	write.table(composite, file="data/process/relative_risk.composite", quote=F, sep='\t', row.names=F)
 
 }
