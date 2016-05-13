@@ -102,7 +102,7 @@ $(PROC)/beta_tests.summary : code/run_beta_diversity.R\
  			$(BETA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-$(PROC)/relative_risk.summary : code/run_relative_risk.R code/utilities.R\
+$(PROC)/relative_risk.% : code/run_relative_risk.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
