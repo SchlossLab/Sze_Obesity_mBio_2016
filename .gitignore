@@ -6,6 +6,8 @@
 data/
 !README.md
 
+!data/process
+
 *.qsub*
 mothur*logfile
 *temp*
