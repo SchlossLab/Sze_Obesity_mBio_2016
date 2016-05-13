@@ -1,10 +1,14 @@
+make_label <- function(string, p){
+	p_value <- paste0("=", format(round(p, digits=3), nsmall=3L))
+	p_value[p_value == "=0.000" | p_value == "=0"] <- "<0.001"
+	paste(string, " (P", p_value, ")", sep="")
+}
+
+
 make_study_label <- function(data){
 	options(scipen=10000)
 	study <- ifelse(data$dataset=="hmp", "HMP", capwords(data$dataset))
-	p_value <- paste0("=", format(round(data$p.value, digits=3)))
-	p_value[p_value == "=0.000"] <- "<0.001"
-	study_label <- paste(study, " (P", p_value, ")", sep="")
-
+	make_label(study,data$p.value)
 }
 
 make_metric_label <- function(metric){
@@ -36,9 +40,9 @@ diversity_plot <- function(metric, leg=NULL){
 	alpha$se_non <- alpha$sd_non/sqrt(alpha$n_non)
 	alpha$se_obese <- alpha$sd_obese/sqrt(alpha$n_obese)
 
-#	metric <- levels(alpha$metric)
-	datasets <- levels(alpha$dataset)
+	composite <- read.table(file="data/process/alpha_composite.summary", header=T)
 
+	datasets <- levels(alpha$dataset)
 
 	subset <- alpha[alpha$metric == metric,]
 	subset <- subset[order(subset$dataset),]
@@ -46,9 +50,7 @@ diversity_plot <- function(metric, leg=NULL){
 
 
 	par(mar=c(5,8,0.5,0.5))
-	plot(NA, ylim=c(1,length(datasets)), xlim=c(0,max(subset$mean_non+1.95*subset$se_non, subset$mean_obese+1.95*subset$se_obese)), axes=F, xlab=make_metric_label(metric), ylab="")
-
-	abline(v=c(mean(subset$mean_non), mean(subset$mean_obese)), col=c("red", "blue"))
+	plot(NA, ylim=c(0,length(datasets)), xlim=c(0,max(subset$mean_non+1.95*subset$se_non, subset$mean_obese+1.95*subset$se_obese)), axes=F, xlab=make_metric_label(metric), ylab="")
 
 	arrows(x0=subset$mean_obese, x1=subset$mean_obese+1.95*subset$se_obese, y0=length(datasets):1+gap, y1=length(datasets):1+gap, angle=90, length=gap/2)
 	arrows(x0=subset$mean_obese, x1=subset$mean_obese-1.95*subset$se_obese, y0=length(datasets):1+gap, y1=length(datasets):1+gap, angle=90, length=gap/2)
@@ -59,9 +61,13 @@ diversity_plot <- function(metric, leg=NULL){
 	points(x=subset$mean_non, y=length(datasets):1-gap, pch=21, bg="red")
 	points(x=subset$mean_obese, y=length(datasets):1+gap, pch=21, bg="blue")
 
+	points(x=c(mean(subset$mean_non), mean(subset$mean_obese)), y=c(-gap,gap), pch=21, bg=c("red", "blue"), xpd=T)
 
 	axis(1)
 	axis(2, at=length(datasets):1, label=make_study_label(subset), las=2, cex.axis=0.8)
+
+	axis(2, at=0, label=make_label("Overall", composite[metric,1]), las=2, cex.axis=0.8)
+
 	box()
 
 	if(!is.null(leg)){
