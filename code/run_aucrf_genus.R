@@ -1,4 +1,5 @@
 source('code/utilities.R')
+source('code/cross_validate.R')
 get_dependencies(c('AUCRF', 'pROC'))
 
 get_genus_shared <- function(dataset){
@@ -92,7 +93,8 @@ run <- function(datasets){
 
 		model[[d]]$auc <- ci(roc[[d]])
 
-		model[[d]]$auc_cv <- AUCRFcv(model[[d]], nCV=10)$cvAUC
+		model[[d]]$auc_cv <- cross_validate(model[[d]])
+
 
 		opt_index <- which.max(roc[[d]]$sensitivities + roc[[d]]$specificities)
 		model[[d]]$opt_sensitivity <- roc[[d]]$sensitivities[opt_index]
@@ -106,9 +108,10 @@ run <- function(datasets){
 		model[[d]]$opt_posPredValue <- metrics["posPredValue"]
 		model[[d]]$opt_negPredValue <- metrics["negPredValue"]
 
-		roc_summary <- rbind(roc_summary, cbind(d, roc[[d]]$sensitivities, roc[[d]]$specificities))
+		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = model[[d]]$auc_cv[["sens_spec"]]$sens, specificity = model[[d]]$auc_cv[["sens_spec"]]$spec))
+
 		model_summary <- rbind(model_summary, c(d, model[[d]]$auc,
-			 									model[[d]]$auc_cv, k_opt, otus,
+			 									model[[d]]$auc_cv["cv_est"], k_opt, otus,
 					 							model[[d]]$opt_sensitivity, model[[d]]$opt_specificity,
 												model[[d]]$opt_threshold))
 	}
@@ -116,7 +119,6 @@ run <- function(datasets){
 	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt", "otus", "sensitivity", "specificity", "threshold")
 	write.table(model_summary, file="data/process/random_forest.genus.summary", quote=F, sep='\t', row.names=F)
 
-	colnames(roc_summary) <- c("dataset", "sensitivity", "specificity")
 	write.table(roc_summary, file="data/process/random_forest.genus.roc_data", quote=F, sep='\t', row.names=F)
 
 

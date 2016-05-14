@@ -106,11 +106,13 @@ $(PROC)/relative_risk.% : code/run_relative_risk.R code/utilities.R\
  			$(ALPHA) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-$(PROC)/random_forest.otu.% : code/run_aucrf_otus.R code/utilities.R\
+$(PROC)/random_forest.otu.% : code/run_aucrf_otus.R code/cross_validate.R\
+															code/utilities.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
-$(PROC)/random_forest.genus.% : code/run_aucrf_genus.R code/utilities.R\
+$(PROC)/random_forest.genus.% : code/run_aucrf_genus.R code/cross_validate.R\
+																code/utilities.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
