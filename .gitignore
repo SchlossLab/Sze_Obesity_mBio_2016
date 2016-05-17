@@ -3,7 +3,7 @@
 .RData
 .Rproj
 
-data/
+
 !README.md
 
 !data/process/
