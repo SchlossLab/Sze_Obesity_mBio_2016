@@ -6,7 +6,6 @@ reverse_complement <- function(string){
 }
 
 get_groups_file <- function(index_file){
-"data/zeevi/E13_new_R1_001.indices"
 	mapping_file <- gsub("indices", "mapping", index_file)
 	group_file <- gsub("indices", "groups", index_file)
 
