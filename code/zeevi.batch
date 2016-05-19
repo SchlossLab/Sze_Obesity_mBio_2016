@@ -68,3 +68,9 @@ mothur "#rename.seqs(fasta=$DIR/zeevi.fasta, group=$DIR/zeevi.groups);
 	make.shared(list=current, count=current, label=0.03);
 	classify.otu(list=current, count=current, taxonomy=current, label=0.03);
 	get.oturep(fasta=current, count=current, list=current, label=0.03, method=abundance);"
+
+R -e "source('code/zeevi.R'); link_shared_and_metadata()"
+
+mothur "#sub.sample(shared=data/zeevi/zeevi.shared, label=0.03, size=4000);
+	dist.shared(shared=data/zeevi/zeevi.shared, calc=braycurtis, label=0.03, subsample=4000, iters=100, processors=8);
+	summary.single(shared=data/zeevi/zeevi.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=4000)"
