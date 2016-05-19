@@ -74,3 +74,6 @@ R -e "source('code/zeevi.R'); link_shared_and_metadata()"
 mothur "#sub.sample(shared=data/zeevi/zeevi.shared, label=0.03, size=4000);
 	dist.shared(shared=data/zeevi/zeevi.shared, calc=braycurtis, label=0.03, subsample=4000, iters=100, processors=8);
 	summary.single(shared=data/zeevi/zeevi.shared, calc=nseqs-sobs-shannon-shannoneven, subsample=4000)"
+
+mv data/zeevi/zeevi.renamed.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.rep.fasta data/zeevi/zeevi.rep.fasta
+mv data/zeevi/zeevi.renamed.unique.good.filter.unique.precluster.pick.pick.an.unique_list.0.03.cons.taxonomy data/zeevi/zeevi.taxonomy
