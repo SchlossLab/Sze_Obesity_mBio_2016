@@ -221,9 +221,9 @@ We also used a funnel plot to asses the bias of the 9 data sets used in this met
 
 
 
-***Z-Score Normalization Pooled Analysis***
+***Linear Mixed-Effect models for Pooled Analysis***
 
-Using the third approach with Z-score normalization we found that there was no significant difference in the Shannon diversity between the obese and non-obese group (P-value = `r format(round(combZHTtest$p.value, 2), nsmall=2)`) [Figure 5A]. Additionally,  we found that the there was also no significant difference in B/F ratio, using the Z-score normalization, between obese and non-obese individuals (P-value = `r format(round(combZLogBFTtest$p.value, 2), nsmall=2)`) [Figure 5B].
+Using the third approach which utilizes a linear mixed-effect model to control for the effect of study on the Shannon diversity  we found that there was a significant difference between the obese and non-obese groups (P-value = `r format(round(alpha_composite.summary['shannon', 'composite_p'], 4), nsmall=4)`) [Figure 5A]. Additionally,  there was also a significant difference in obseverd richness (P-value = `r format(round(alpha_composite.summary['sobs', 'composite_p'], 9), nsmall=9)`.  However, we found that the there was no significant difference in evenness (P-value = `r format(round(alpha_composite.summary['shannoneven', 'composite_p'], 2)), nsmall=2)`, Bacteroidetes (P-value = `r format(round(alpha_composite.summary['bacteroidetes', 'composite_p'], 2)), nsmall=2)`), Firmicutes (P-value = `r format(round(alpha_composite.summary['firmicutes', 'composite_p'], 2)), nsmall=2)`), and B/F ratio (P-value = `r format(round(alpha_composite.summary['bf_ratio', 'composite_p'], 2)), nsmall=2)`using this approach, between obese and non-obese individuals [Figure 5B].
 
 
 ***Power and Sample Size Estimates and Simulations***
