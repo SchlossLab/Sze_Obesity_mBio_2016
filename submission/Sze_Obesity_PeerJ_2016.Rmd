@@ -33,6 +33,38 @@ Phone: 734-647-5801
 
 ```{r Loading_data_tables, echo=FALSE, message=FALSE, warning=FALSE}
 
+alpha_tests.summary <- read.table("../data/process/alpha_tests.summary", header=T)
+alpha_composite.summary <- read.table("../data/process/alpha_composite.summary")
+alpha_power.obs <- read.table("../data/process/alpha_power.observed", 
+                              header = T, row.names = 1)
+alpha_power.predicted <- read.table("../data/process/alpha_power.predicted", 
+                                    header = T)
+
+beta_tests.summary <- read.table("../data/process/beta_tests.summary", 
+                                 header=T, row.names = 1)
+rand_forest.genus.roc_data <- read.table("../data/process/random_forest.genus.roc_data", header=T)
+
+rand_forest.genus.summary <- read.table("../data/process/random_forest.genus.summary", 
+                                        header = T, row.names = 1)
+
+rand_forest.genus.train_test <- 
+  read.table("../data/process/random_forest.genus.train_test", header = T)
+
+rand_forest.otu.roc_data <- 
+  read.table("../data/process/random_forest.otu.roc_data", header = T)
+
+rand_forest.otu.summary <- 
+  read.table("../data/process/random_forest.otu.summary", 
+             header = T, row.names = 1)
+
+RR_composite <- read.table("../data/process/relative_risk.composite", header = T)
+RR_summary <- read.table("../data/process/relative_risk.summary", header = T)
+RR_pow.obs <- read.table("../data/process/rr_power.observed", 
+                         header = T, row.names = 1)
+RR_pow.pred <- read.table("../data/process/rr_power.predicted", header = T)
+
+
+# Hold on to these for now as I update the rest of the rmd.
 demographics <- read.csv("results/tables/denovodemographicsTable.csv")
 OverallPValue <- read.csv("results/tables/denovoOverallPTable.csv")
 ShannonRRTable <- read.csv("results/tables/denovoShannonRRTable.csv")
