@@ -136,6 +136,17 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
 
+|    Study    |    Age (SD)     |  Sex (F&#124;M)  |  European Ancestry (%)  |  Obese (No&#124;Yes)  |    BMI (SD)     |     Min BMI     |     Max BMI     |
+|:-----------:|:---------------:|:----------------:|:-----------------------:|:---------------------:|:---------------:|:---------------:|:---------------:|
+|   baxter    |  54.29 (9.93)   |  111 &#124; 61   |      88 &#124; 12       |    27  &#124;  73     |      26.96      |      17.53      |      46.88      |
+|   escobar   |  38.1 (11.08)   |   14 &#124; 16   |      50 &#124; 50       |    17  &#124;  33     |      27.44      |      19.5       |      37.6       |
+|     hmp     |  26.28 (5.03)   |  141 &#124; 146  |      82 &#124; 18       |    11  &#124;  89     |      24.3       |       19        |       34        |
+|    ross     |  57.03 (11.16)  |   48 &#124; 15   |      0 &#124; 100       |    60  &#124;  40     |      31.63      |      22.1       |      47.9       |
+|  schubert   |  52.84 (21.04)  |   69 &#124; 34   |      83 &#124; 17       |    33  &#124;  67     |      28.22      |      18.48      |      62.48      |
+|  turnbaugh  |  Not Available  |  Not Available   |      51 &#124; 49       |    68  &#124;  32     |  Not Available  |  Not Available  |  Not Available  |
+|     wu      |  26.35 (8.98)   |   34 &#124; 30   |      50 &#124; 50       |     4  &#124;  46     |      24.34      |      14.04      |      41.29      |
+|  zupancic   |  46.69 (13.09)  |  118 &#124; 89   |      100 &#124; 0       |    36  &#124;  64     |      28.15      |      18.2       |       127       |
+|  goodrich   |  61.01 (9.37)   |  971 &#124; 11   |      50 &#124; 50       |    10  &#124;  40     |      26.26      |      16.16      |      52.39      |
 
 * For Turnbaugh only BMI group information was provided and only an age range was given.
 

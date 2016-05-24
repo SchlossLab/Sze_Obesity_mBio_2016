@@ -40,6 +40,7 @@ alpha_power.obs <- read.table("../data/process/alpha_power.observed",
 alpha_power.predicted <- read.table("../data/process/alpha_power.predicted", 
                                     header = T)
 alpha.data.ALL <- read.table("../data/process/alpha.data", header = T)
+alpha_effectSize <- read.table("../data/process/alpha_EffectSize.summary")
 
 beta_tests.summary <- read.table("../data/process/beta_tests.summary", 
                                  header=T, row.names = 1)
@@ -68,22 +69,6 @@ shannond <- (mean(alpha.data.ALL[which(alpha.data.ALL$obese == FALSE), ]$shannon
 
 bf_ratiod <- (mean(alpha.data.ALL[which(alpha.data.ALL$obese == FALSE), ]$bf_ratio)-mean(alpha.data.ALL[which(alpha.data.ALL$obese == TRUE), ]$bf_ratio))/sd(alpha.data.ALL$bf_ratio)
 
-#Using a quick for loop to generate the necessary effect size information
-variableTested <- seq(1:6)
-variables <- colnames(alpha_power.obs)[1:6]
-alpha_effectSize <- matrix(nrow=length(rownames(beta_tests.summary)), ncol=length(variableTested))
-studies <- rownames(beta_tests.summary)
-
-for(i in variableTested){
-  tempdata <- c()
-  for(j in studies){
-  tempdata <- rbind(tempdata, abs((mean(alpha.data.ALL[which(alpha.data.ALL$dataset == j & alpha.data.ALL$obese == FALSE), variables[i]]) - mean(alpha.data.ALL[which(alpha.data.ALL$dataset == j & alpha.data.ALL$obese == TRUE), variables[i]]))/mean(alpha.data.ALL[, variables[i]]) * 100))
-  }
-  alpha_effectSize[, i] <- tempdata
-}
-
-colnames(alpha_effectSize) <- variables
-rownames(alpha_effectSize) <- studies
 
 ```
 
@@ -204,36 +189,12 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 ## Tables
 
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
-```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- as.character(rownames(beta_tests.summary))
+table1 <- read.table("../results/tables/table1.demographics", header=T)
 
-Age <- as.character(demographics$meanAge)
-AgeSD <- as.character(format(round(
-  demographics$SDAge, 2), nsmall = 2))
-AgeTable <- paste(Age," (",AgeSD,")", sep="")
-
-Sex <- paste(demographics$females, "|", demographics$males)
-
-Ancestry <- as.character(format(round(
-  demographics$ancestry*100, 2), nsmall = 2))
-
-ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
-ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
-
-ObBreakdown <- paste(ContTotal, " | ", ObeseTotal, sep="")
-
-BMI <- paste(demographics$meanBMI, " (", demographics$SDBMI, ")", sep="")
-
-Min <- as.character(demographics$minBMI)
-
-Max <- as.character(demographics$maxBMI)
-
-table1 <- cbind(Study, AgeTable, Sex, Ancestry, ObBreakdown, BMI, Min, Max)
-table1[table1=="NA" | table1=="NA | NA" | table1=="NA (NA)" |
-         table1=="      NA"] <- "Not Available"
-
-colnames(table1) <- c("Study", "Age (SD)", "Sex (F|M)", "European Ancestry (%)", "Obese (No|Yes)", "BMI (SD)", "Min BMI","Max BMI")
+colnames(table1) <- c("Study", "Age (SD)", "Sex (F|M)", "European Ancestry (%)", 
+                      "Obese (No|Yes)", "BMI (SD)", "Min BMI","Max BMI")
 
 kable(table1, format = "markdown", align = 'c', padding = 2)
 
