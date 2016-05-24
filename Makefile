@@ -118,11 +118,11 @@ $(PROC)/random_forest.genus.% : code/run_aucrf_genus.R code/cross_validate.R\
 
 $(PROC)/alpha_power.% : code/run_power_analysis.R code/utilities.R\
 			$(PROC)/alpha_tests.summary
-	R -e "source('$<'); run_alpha()"
+	R -e "source('$<'); run_alpha('$(STUDIES)')"
 
 $(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
 			$(PROC)/relative_risk.summary
-	R -e "source('$<'); run_rr()"
+	R -e "source('$<'); run_rr('$(STUDIES)')"
 
 
 
