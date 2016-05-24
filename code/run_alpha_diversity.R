@@ -1,6 +1,7 @@
-library("lme4")
-
 source('code/utilities.R')
+get_dependencies("lme4")
+
+
 
 composite_analysis <- function(alpha, dataset, is_obese, pow){
 
@@ -27,8 +28,8 @@ single_analysis <- function(alpha, pow, is_obese){
 	n_non <- length(non_obese)
 	n_obese <- length(obese)
 
-	ci_obese <- unname(quantile(obese, c(0.025, 0.975)))
-	ci_non <- unname(quantile(non_obese, c(0.025, 0.975)))
+	ci_obese <- unname(quantile(obese, c(0.025, 0.975), na.rm=T))
+	ci_non <- unname(quantile(non_obese, c(0.025, 0.975), na.rm=T))
 
 
 	return(

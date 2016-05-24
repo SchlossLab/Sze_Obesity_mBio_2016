@@ -38,6 +38,7 @@ run <- function(datasets){
 	summary_data <- NULL
 
 	for(d in datasets){
+		print(d)
 		set.seed(1976)
 		beta_file <- paste0('data/', d, '/', d, '.braycurtis.0.03.lt.ave.dist')
 		beta <- read_lt_matrix(beta_file)
