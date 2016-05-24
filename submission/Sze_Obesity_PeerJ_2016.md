@@ -155,6 +155,17 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 **Table 2. Summary of Important Study Characteristics.**
 
 
+|    Study    |   Study Type    |                              Population                              |  Published  |                                   Outcomes Reported                                   |
+|:-----------:|:---------------:|:--------------------------------------------------------------------:|:-----------:|:-------------------------------------------------------------------------------------:|
+|   baxter    |  Observational  |  Adults without Cancer from Texas, Ontario, Michigan, Massachusetts  |     Yes     |           Did not investigate control populations for relationship with BMI           |
+|   escobar   |  Observational  |                     Healthy adults from Columbia                     |     Yes     |                        Firmicutes less abundant at higher BMI                         |
+|     hmp     |  Observational  |                   Healthy Adults from Pennsylvania                   |     Yes     |                              No significant correlations                              |
+|    ross     |  Observational  |     Hispanic adults with and without type 2 diabetes from Texas      |     Yes     |                Mentions obesity, no specific correlations made though                 |
+|  schubert   |  Observational  |          Nondiarrheal indivdiuals without infection history          |     Yes     |           Did not investigate control populations for relationship with BMI           |
+|  turnbaugh  |  Observational  |                Adult twins and mothers from Missouri                 |     Yes     |                        Unweighted UniFrac Correlation with BMI                        |
+|     wu      |  Observational  |                Healthy Adults from Texas and Missouri                |     Yes     |  Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI  |
+|  zupancic   |  Observational  |  Amish Adults with and without metabolic syndrome from Pennsylvania  |     Yes     |                Bacteroidetes/Firmicutes ratio adjusted BMI correlation                |
+|  goodrich   |  Observational  |           Adult twins and mothers from the United Kingdom            |     Yes     |    Christensenellaceae higher in low BMI individuals. No other correlations found.    |
 
 
 
