@@ -56,7 +56,7 @@ run <- function(datasets){
 		metadata <- metadata[!na_obesity,]
 		alpha <- alpha[!na_obesity,]
 
-		stopifnot(rownames(alpha) == metadata$sample)
+		stopifnot(alpha$group == metadata$sample)
 
 		bf_relabund <- get_bacteroides_firmicutes(d)
 
