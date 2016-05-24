@@ -42,7 +42,7 @@ single_analysis <- function(alpha, pow, is_obese){
 	)
 }
 
-datasets <- c('baxter', 'goodrich', 'escobar', 'hmp', 'ross', 'turnbaugh', 'wu', 'zupancic')
+datasets <- c('baxter', 'goodrich', 'escobar', 'hmp', 'ross', 'turnbaugh', 'wu', 'zupancic', 'zeevi')
 
 run <- function(datasets){
 
@@ -67,11 +67,13 @@ run <- function(datasets){
 		na_obesity <- is.na(metadata$obese)
 		metadata <- metadata[!na_obesity,]
 		alpha <- alpha[!na_obesity,]
-
 		stopifnot(alpha$group == metadata$sample)
 
-
 		bf_relabund <- get_bacteroides_firmicutes(d)
+		bf_relabund <- bf_relabund[alpha$group,]
+		stopifnot(rownames(bf_relabund) == metadata$sample)
+
+
 
 		#transformations were worked out with a qqplot to check for normality
 		shannon <- single_analysis(alpha$shannon, pow=2, metadata$obese)
