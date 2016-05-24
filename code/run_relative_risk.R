@@ -52,6 +52,12 @@ run <- function(datasets){
 
 		stopifnot(alpha$group == metadata$sample)
 
+		na_obesity <- is.na(metadata$obese)
+		metadata <- metadata[!na_obesity,]
+		alpha <- alpha[!na_obesity,]
+
+		stopifnot(rownames(alpha) == metadata$sample)
+
 		bf_relabund <- get_bacteroides_firmicutes(d)
 
 		shannon <- analyze_indiv_study(alpha$shannon, metadata$obese)

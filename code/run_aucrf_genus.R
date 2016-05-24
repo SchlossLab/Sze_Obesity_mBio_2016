@@ -79,6 +79,12 @@ run <- function(datasets){
 
 		stopifnot(rownames(shared) == metadata$sample)
 
+		na_obesity <- is.na(metadata$obese)
+		metadata <- metadata[!na_obesity,]
+		shared <- shared[!na_obesity,]
+
+		stopifnot(rownames(shared) == metadata$sample)
+
 		keep_otus <- apply(shared > 0, 2, sum) > (0.1 * nrow(shared))
 
 		rel_abund_keep <- shared[,keep_otus] / n_seqs

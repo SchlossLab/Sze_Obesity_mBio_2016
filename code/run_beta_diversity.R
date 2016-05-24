@@ -43,8 +43,14 @@ run <- function(datasets){
 		beta <- read_lt_matrix(beta_file)
 
 		metadata_file <- paste0('data/', d, '/', d, '.metadata')
-		metadata <- read.table(file=metadata_file, header=T)
+		metadata <- read.table(file=metadata_file, header=T, stringsAsFactors=F)
 		metadata <- metadata[metadata$sample %in% rownames(beta),]
+
+		stopifnot(rownames(beta) == metadata$sample)
+
+		na_obesity <- is.na(metadata$obese)
+		metadata <- metadata[!na_obesity,]
+		beta <- beta[!na_obesity,!na_obesity]
 
 		stopifnot(rownames(beta) == metadata$sample)
 
