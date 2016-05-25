@@ -94,64 +94,7 @@ kable(tableS1, format = "markdown", align = 'c', padding = 2)
 
 
 
-
-**Figure S1: Boxplots of All Clostridiales OTUs Important for Non-Obese and Obese Classification.** A total of 6/8 studies had at least 1 OTU that was classified to Clostridiales.  However, overall there was a wide range in direction both between studies and within studies.
-
-
-
-
-**Figure S2: Boxplots of All Lachnospiraceae OTUs Important for Non-Obese and Obese Classification.** A total of 6/8 studies had at least 1 OTU that was classified to Lachnospiraceae.  However, overall there was a wide range in direction both between studies and within studies.
-
-
-
-
-**Figure S3: Boxplots of All Ruminococcaceae OTUs Important for Non-Obese and Obese Classification.** A total of 7/8 studies had at least 1 OTU that was classified to Ruminococcaceae  However, overall there was a wide range in direction both between studies and within studies.
-
-
-**Table 2. Summary of BLAST alignment of Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae classification OTUs**  
-
-```{r Table_S2, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
-
-Study <- c("Wu", "Turnbaugh", "Ross", "Escobar", "Zupancic", "Baxter", "Goodrich", "HMP")
-VariableRegion <- c("V1-V2", "V2", "V1-V3", "V1-V3", "V1-V3", "V4", "V4", "V3-V5")
-ClosMostPrev <- c("OTU191:3 Clostridium", "None", "OTU102:8 Ruminococcus", "None", "OTU322:3 Parvimonas | OTU62:3 Parvimonas | OTU256:4 Clostridium", "OTU479:4 Anaerostipes", "OTU287:5 Clostridium | OTU662:8 Clostridium | OTU145:6 Clostridium | OTU244:3 Clostridium | OTU442:4 Clostridium", "OTU293:7 Clostridium")
-ClostHighMatch <- c("Anaerovorax odorimutans(81|95)", "None", "Ruminococcus champanellensis(100|100)", "None", "OTU322:Eubacterium hallii(92|100) | OTU62:Eubacterium hallii(92|99) | OTU256:Romboutsia lituseburensis(92|99)", "Anaerosporbacter mobilis(100|94)", "OTU287:Clostridium fimetarium(100|94) |  OTU662:Ruminiclostridium thermocellum(100|91) | OTU145:Ruminococcus lactaris(100|100) | OTU244:Anaerosporobacter mobilis(100|94) | OTU442:Clostridium propionicum(100|92)", "Anaerobacterium chartisolvens (100|91)")
-LachMostPrev <- c("OTU75:6 Clostridium | OTU229:5 Peptostreptococcus | OTU5: 4 Blautia", "OTU318:", "OTU177:3 Roseburia", "OTU67:6 Eubacterium | OTU74:5 Blautia | OTU80:4 Blautia", "None", "OTU36:8 Clostridium", "OTU180:4 Clostridium | OTU75: 5 Clostridium | OTU122:5 Roseburia | OTU92:8 Clostridium | OTU673:7 Clostridium", "None")
-LachHighMatch <- c("Clostridium bolteae(100|96)", "", "Clostridium Spp(100|98)", "OTU67:Dorea formicigenerans(100|96) | OTU74:Blautia luti(100|96) | OTU80:Blautia producta(100|93)", "None", "Lachnobacterium bovis(100|96)", "OTU180:Hungatella effluvii(100|95) | OTU75:Ruminococcus gnavus(100|100) | OTU122:Eubacterium ramulus(100|96) | OTU92:Fusicatenibacter saccharivorans(100|94) | OTU673:Bacteroides xylanolyticus(92|97) | OTU523:Eubacterium rectale(100|97)", "None")
-RumiMostPrev <- c("OTU123:4 Clostridium", "OTU30:", "OTU22:3 Oscillibacter", "None", "OTU398:3 Eubacterium | OTU850:3 Ethanoligenens | OTU817:8 Ruminococcus", "OTU320:4 Clostridium", "OTU68:5 Ruminococcus | OTU255:3 Blautia | OTU1145:3 Ethanoligenens | OTU558:8 Ruminococcus | OTU297:3 Oscillibacter | OTU6:4 Clostridium | OTU132:2 Ruminoclostridium", "OTU252:10 Clostridium")
-RumiHighMatch <- c("Anaerotruncus colihominis(85|95)", "", "Oscillibacter Spp(100|97)", "None", "OTU398:Oscillibacter valericigene(77|96) | OTU850:Papillibacter cinnamivorans(90|91) | OTU817:Ruminococcus callidus(91|95)", "Sporobacter termitidis(100|94)", "OTU68:Acetanaerobacterium elongatum(100|89) | OTU255:Pseudoflaconifractor capillosus(100|91) | OTU1145:Subdoligranulum variable(100|95) | OTU558:Ruminococcus champanellensis(92|98) | OTU297:Flavonifractor plautii(100|95) | OTU6:Oscillibacter valericigenes(100|93) | OTU132:Intestinimonas butyriciproducens(100|92)", "Clostridium Spp(100|97)")
-
-
-
-tableS2 <- cbind(Study, VariableRegion, ClosMostPrev, ClostHighMatch, LachMostPrev, LachHighMatch, RumiMostPrev, RumiHighMatch)
-colnames(tableS2) <- c("Study", "Hypervariable Region", "Clostridiales OTU Most Prevalent Match", "Clostridiales OTU Highest Match (Query Cover|Identity)", "Lachnospiraceae OTU Most Prevalent Match", "Lachnospiraceae OTU Highest Match (Query Cover|Identity)", "Ruminococcaceae OTU Most Prevalent Match", "Ruminococcaceae OTU Highest Match (Query Cover|Identity)")
-
-kable(tableS2, format = "markdown", align = 'c', padding = 2)
-```
-
-
-**Table S3. Top Sequence Similarity by Variable Region Based on the Representative OTU for Clostridiales, Lachnospiraceae, and Ruminococcaceae**  
-
-```{r Table_S3, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
-
-VariableRegion <- c("V1-V2 vs V2", "V1-V3", "V4")
-
-TopHitClos <- c("None", "50.3|39.1", "89.4|2.8")
-AverageClos <- c("None", "48.0|42.4", "87.7|2.4")
-TopHitLachno <- c("TBC", "40.1|47.9", "92.9|0.8")
-AverageLachno <- c("TBC", "35.9|52.5", "85.8|5.6")
-TopHitRumi <- c("TBC", "30.4|68.4", "86.6|0.8")
-AverageRumi <- c("TBC", "29.2|69.1", "81.6|6.6")
-
-tableS3 <- cbind(VariableRegion, TopHitClos, AverageClos, TopHitLachno, AverageLachno, TopHitRumi, AverageRumi)
-colnames(tableS3) <- c("Variable Region", "Top Similarity Colstridiales (Id|Gaps)", "Average Similarity Colstridiales (Id|Gaps)", "Top Similarity Lachnospiraceae (Id|Gaps)", "Average Similarity Lachnospiraceae (Id|Gaps)", "Top Similarity Ruminococcaceae (Id|Gaps)", "Average Similarity Ruminococcaceae (Id|Gaps)")
-
-kable(tableS3, format = "markdown", align = 'c', padding = 2)
-
-```
-
-
-```{r Figure_S4, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S1, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 library(metafor)
 
@@ -216,10 +159,10 @@ funnel(res2, main="B")
 
 ```
 
-**Figure S4: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
+**Figure S1: Funnel Plot of the Shannon Diversity and Bacteroidetes/Firmicutes Ratio Relative Risk.**  **A)** Overall there does not seem to be any bias associated with the studies selected for the Shannon Diversity analysis with studies falling on either side of the predicted value and those with smaller total n falling further away from this. **B)** For the Bacteroidetes/Firmicutes ratio there does not seem to be any associated bias. The overall pattern is similar to that observed for the Shannon Diversity analysis.
 
 
-```{r Figure_S5, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S2, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 source("code/MakeFiguresCodeSupplemental.R")
 library(gridExtra)
@@ -231,46 +174,46 @@ grid.arrange(s2, sn2, nrow=2)
 
 ```
 
-**Figure S5. Summary of Power and Sample Size Simulations for OTU Richness (S) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure S2. Summary of Power and Sample Size Simulations for OTU Richness (S) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-```{r Figure_S6, echo=FALSE, message=FALSE, warning=FALSE, eval = FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S3, echo=FALSE, message=FALSE, warning=FALSE, eval = FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(j2, jn2, nrow=2)
 
 
 ```
 
-**Figure S6. Summary of Power and Sample Size Simulations for Evenness (J) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure S3. Summary of Power and Sample Size Simulations for Evenness (J) for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
-```{r Figure_S7, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S4, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(b2, bn2, nrow=2)
 ```
 
-**Figure S7. Summary of Power and Sample Size Simulations for Bacteroidetes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure S4. Summary of Power and Sample Size Simulations for Bacteroidetes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-```{r Figure_S8, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S5, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(f2, fn2, nrow=2)
 ```
 
-**Figure S8. Summary of Power and Sample Size Simulations for Firmicutes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure S5. Summary of Power and Sample Size Simulations for Firmicutes for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
-```{r Figure_S9, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S6, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(RRH2, HRRn2, nrow=2)
 ```
 
-**Figure S9. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on Shannon Diversity**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure S6. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on Shannon Diversity**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
-```{r Figure_S10, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
+```{r Figure_S7, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
 grid.arrange(RRBF2, BFRRn2, nrow=2)
 ```
 
-**Figure S10. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on B/F Ratio**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure S7. Summary of Power and Sample Size Simulations for Relative Risk  for Obesity based on B/F Ratio**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
 *******
