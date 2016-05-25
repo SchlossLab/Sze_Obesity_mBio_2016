@@ -246,18 +246,22 @@ kable(table1, format = "markdown", align = 'c', padding = 2)
 
 **Table 2. Summary of Important Study Characteristics.**
 
-```{r Table_2, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r Table_2, echo=FALSE, message=FALSE, warning=FALSE}
+# Old order
+#Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", "HMP", "Wu", #"Turnbaugh")
 
-Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", "HMP", "Wu", "Turnbaugh")
+Study <- as.character(table1$Study)
+  #New Order
+  #baxter, escobar, hmp, ross, schubert, turnbaugh, wu, zupancic, goodrich, zeevi
 
 Type <- c("Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational")
 
-Population <- c("Adults without Cancer from Texas, Ontario, Michigan, Massachusetts", "Hispanic adults with and without type 2 diabetes from Texas
-", "Adult twins and mothers from the United Kingdom", "Healthy adults from Columbia", "Amish Adults with and without metabolic syndrome from Pennsylvania", "Healthy Adults from Texas and Missouri", "Healthy Adults from Pennsylvania", "Adult twins and mothers from Missouri")
+Population <- c("Adults without Cancer from Texas, Ontario, Michigan, Massachusetts", "Healthy adults from Columbia", "Healthy Adults from Pennsylvania", "Hispanic adults with and without type 2 diabetes from Texas
+", "Nondiarrheal indivdiuals without infection history", "Adult twins and mothers from Missouri", "Healthy Adults from Texas and Missouri", "Amish Adults with and without metabolic syndrome from Pennsylvania", "Adult twins and mothers from the United Kingdom")
 
-Published <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes","Yes")
+Published <- c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes","Yes", "Yes")
 
-Outcomes <- c("N/A (Unpublished)", "Mentions obesity, no specific correlations made though", "Christensenellaceae higher in low BMI individuals. No other correlations found.", "Firmicutes less abundant at higher BMI", "Bacteroidetes/Firmicutes ratio adjusted BMI correlation", "No significant correlations", "Unweighted UniFrac Correlation with BMI", "Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI ")
+Outcomes <- c("Did not investigate control populations for relationship with BMI", "Firmicutes less abundant at higher BMI", "No significant correlations", "Mentions obesity, no specific correlations made though", "Did not investigate control populations for relationship with BMI", "Unweighted UniFrac Correlation with BMI", "Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI ", "Bacteroidetes/Firmicutes ratio adjusted BMI correlation", "Christensenellaceae higher in low BMI individuals. No other correlations found.")
 
 table2 <- cbind(Study, Type, Population, Published, Outcomes)
 
