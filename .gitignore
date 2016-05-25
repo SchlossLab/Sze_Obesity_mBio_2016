@@ -3,7 +3,8 @@
 .RData
 .Rproj
 
-data/
+data/references/
+data/zeevi/
 
 !README.md
 
