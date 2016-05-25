@@ -3,11 +3,10 @@
 .RData
 .Rproj
 
-data/references/
-data/zeevi/
 
 !README.md
 
+data/
 !data/process/
 
 *.qsub*
