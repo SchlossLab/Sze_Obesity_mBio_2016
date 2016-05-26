@@ -48,7 +48,7 @@ run <- function(datasets){
 
 		auc_cv <- cross_validate(model)
 
-		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = auc_cv$sens_spec["sens"], specificity = auc_cv$sens_spec["spec"]))
+		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc$sensitivities, specificity = roc$specificities))
 
 		model_summary <- rbind(model_summary, c(d, auc, auc_cv$cv_est, k_opt, otus))
 
@@ -57,6 +57,7 @@ run <- function(datasets){
 	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt",  "otus")
 	write.table(model_summary, file="data/process/random_forest.otu.summary", quote=F, sep='\t', row.names=F)
 
+	colnames(roc_summary) <- c("dataset", "sensitivity", "specificity")
 	write.table(roc_summary, file="data/process/random_forest.otu.roc_data", quote=F, sep='\t', row.names=F)
 
 }
