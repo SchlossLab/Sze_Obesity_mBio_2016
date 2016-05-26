@@ -200,34 +200,9 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 ## Tables
 
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
-```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- as.character(rownames(beta_tests.summary))
-
-Age <- as.character(demographics$meanAge)
-AgeSD <- as.character(format(round(
-  demographics$SDAge, 2), nsmall = 2))
-AgeTable <- paste(Age," (",AgeSD,")", sep="")
-
-Sex <- paste(demographics$females, "|", demographics$males)
-
-Ancestry <- as.character(format(round(
-  demographics$ancestry*100, 2), nsmall = 2))
-
-ObeseTotal <- ShannonRRTable$tposH + ShannonRRTable$cposH
-ContTotal <- ShannonRRTable$tnegH + ShannonRRTable$cnegH
-
-ObBreakdown <- paste(ContTotal, " | ", ObeseTotal, sep="")
-
-BMI <- paste(demographics$meanBMI, " (", demographics$SDBMI, ")", sep="")
-
-Min <- as.character(demographics$minBMI)
-
-Max <- as.character(demographics$maxBMI)
-
-table1 <- cbind(Study, AgeTable, Sex, Ancestry, ObBreakdown, BMI, Min, Max)
-table1[table1=="NA" | table1=="NA | NA" | table1=="NA (NA)" |
-         table1=="      NA"] <- "Not Available"
+table1 <- read.table("../results/tables/table1.demographics", header = T)
 
 colnames(table1) <- c("Study", "Age (SD)", "Sex (F|M)", "European Ancestry (%)", "Obese (No|Yes)", "BMI (SD)", "Min BMI","Max BMI")
 
