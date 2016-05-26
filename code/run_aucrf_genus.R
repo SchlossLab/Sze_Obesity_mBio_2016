@@ -38,26 +38,11 @@ get_genus_shared <- function(dataset){
 	return(shared_genus)
 }
 
-get_metrics <- function(predicted, reference){
-
-	contingency_table <- table(predicted = predicted, reference=reference)
-
-	sensitivity <- contingency_table[2,2] / sum(contingency_table[,2])
-	specificity <- contingency_table[1,1] / sum(contingency_table[,1])
-	accuracy <- (contingency_table[1,1] + contingency_table[2,2]) / sum(contingency_table)
-	posPredValue <- contingency_table[2,2] / sum(contingency_table[2,])
-	negPredValue <- contingency_table[1,1] / sum(contingency_table[1,])
-
-	return(c(sensitivity = sensitivity, specificity = specificity,
-		 			accuracy = accuracy, posPredValue = posPredValue,
-					negPredValue = negPredValue))
-}
-
 run <- function(datasets){
 
 	datasets <- unlist(strsplit(datasets, split=" "))
 
-#	datasets <- c('baxter', 'escobar', 'turnbaugh', 'wu', 'ross', 'hmp', 'zupancic')
+#	datasets <- c('baxter', 'escobar', 'turnbaugh', 'wu', 'ross', 'hmp', 'zupancic', 'zeevi', 'schubert', 'goodrich')
 
 	test_data <- list()
 	model <- list()
@@ -65,6 +50,7 @@ run <- function(datasets){
 	model_summary <- NULL
 	roc_summary <- NULL
 
+	datasets <- c("baxter", "zupancic")
 
 	for(d in datasets){
 		print(d)
@@ -108,17 +94,17 @@ run <- function(datasets){
 		model[[d]]$opt_threshold <- roc[[d]]$thresholds[opt_index]
 
 		predicted <- factor(probabilities >= model[[d]]$opt_threshold, levels=c("FALSE", "TRUE"))
-		metrics <- get_metrics(predicted, metadata$obese)
 
-		model[[d]]$opt_accuracy <- metrics["accuracy"]
-		model[[d]]$opt_posPredValue <- metrics["posPredValue"]
-		model[[d]]$opt_negPredValue <- metrics["negPredValue"]
+		accuracy <- ci.coords(roc[[d]], x=model[[d]]$opt_threshold, input = "threshold", ret="acc", progress="none")
 
-		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = model[[d]]$auc_cv[["sens_spec"]]$sens, specificity = model[[d]]$auc_cv[["sens_spec"]]$spec))
+		model[[d]]$opt_accuracy <- accuracy[2]
+		model[[d]]$opt_accuracy_lci <- accuracy[1]
+		model[[d]]$opt_accuracy_uci <- accuracy[3]
+
+		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc[[d]]$sensitivities, specificity = roc[[d]]$specificities))
 
 		model_summary <- rbind(model_summary, c(d, model[[d]]$auc,
 			 									model[[d]]$auc_cv["cv_est"], k_opt, otus,
-					 							model[[d]]$opt_sensitivity, model[[d]]$opt_specificity,
 												model[[d]]$opt_threshold))
 	}
 
@@ -151,20 +137,20 @@ run <- function(datasets){
 
 				roc_test <- roc(test_data[[test]]$obese~p[,2])
 
-				metrics <- get_metrics(predicted, test_data[[test]]$obese)
+				accuracy <- ci.coords(roc_test, x=model[[d]]$opt_threshold, input = "threshold", ret="acc", progress="none")
 
 				train_test_p <- roc.test(roc_test, roc[[train]])$p.value
 
-				result <- c(train, test, metrics["sensitivity"], metrics["specificity"],
-									metrics["accuracy"], metrics["posPredValue"],
-									metrics["negPredValue"], ci(roc_test), train_test_p)
+				result <- c(train, test,
+									accuracy[2], accuracy[1],
+									accuracy[3], ci(roc_test), train_test_p)
 				testing_summary <- rbind(testing_summary, result)
 			} else {
 				result <- c(train, test, model[[train]]$opt_sensitivity,
 																	model[[train]]$opt_specificity,
 																	model[[train]]$opt_accuracy,
-																	model[[train]]$opt_posPredValue,
-																	model[[train]]$opt_negPredValue,
+																	model[[train]]$opt_accuracy_lci,
+																	model[[train]]$opt_accuracy_uci,
 																	model[[train]]$auc, NA)
 				testing_summary <- rbind(testing_summary, result)
 
@@ -172,8 +158,8 @@ run <- function(datasets){
 		}
 	}
 
-	colnames(testing_summary) <- c("train", "test", "sensitivity", "specificity",
-																	"accuracy", "posPredValue", "negPredValue",
+	colnames(testing_summary) <- c("train", "test",
+																	"accuracy", "accuracy_lci", "accuracy_uci",
 																	"auc_lci", "auc", "auc_hci", "p_value")
 	rownames(testing_summary) <- NULL
 	write.table(testing_summary, file="data/process/random_forest.genus.train_test", quote=F, sep='\t', row.names=F)
