@@ -279,7 +279,7 @@ rocPlot + geom_line(aes(group=Study, color=Study)) +
 
 ```
 
-**Figure 2: Receiver Operating Characteristic Curve of the Random Forest Analysis of Each Study.** After adjusting for multiple comparisons there was no significant difference between any of the 8 studies examined (P-value > 0.05).  
+**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B/F Ratio.** A) For Shannon diversity only Baxter (P-value = `r format(round(alpha_tests.summary[which(alpha_tests.summary$dataset == 'baxter' & alpha_tests.summary$metric == 'shannon'), 'p.value'], 2), nsmall = 2)` and Goodrich (P-value = `r format(round(alpha_tests.summary[which(alpha_tests.summary$dataset == 'goodrich' & alpha_tests.summary$metric == 'shannon'), 'p.value'], 5), nsmall = 5)`) studies indivdiually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = `r format(round(alpha_composite.summary['shannon', 'composite_p'], 5), nsmall = 5)`). B) For the B/F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
 
 
 

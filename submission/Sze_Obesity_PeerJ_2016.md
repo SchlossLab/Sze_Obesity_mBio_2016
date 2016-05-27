@@ -182,7 +182,7 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 
 
-**Figure 2: Receiver Operating Characteristic Curve of the Random Forest Analysis of Each Study.** After adjusting for multiple comparisons there was no significant difference between any of the 8 studies examined (P-value > 0.05).  
+**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B/F Ratio.** A) For Shannon diversity only Baxter (P-value = 0.03 and Goodrich (P-value = 4e-05) studies indivdiually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = 4e-05). B) For the B/F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
 
 
 
