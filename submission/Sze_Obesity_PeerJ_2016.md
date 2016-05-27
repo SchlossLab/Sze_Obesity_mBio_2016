@@ -182,14 +182,14 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 
 
-**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B/F Ratio.** A) For Shannon diversity only Baxter (P-value = 0.03 and Goodrich (P-value = 4e-05) studies indivdiually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = 4e-05). B) For the B/F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
+**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B/F Ratio.** **A)** For Shannon diversity only Baxter (P-value = 0.03 and Goodrich (P-value = 4e-05) studies indivdiually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = 4e-05). **B)** For the B/F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
 
 
 
 
 
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B/F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was 1.27 with a P-value of 0.00.  **B)** The overall pooled relative risk for the B/F ratio was  0.96 with a P-value of 0.52.
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B/F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, green represents studies that used a V3-V4 region, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was 1.27 with a P-value of 0.00.  **B)** The overall pooled relative risk for the B/F ratio was  0.96 with a P-value of 0.52.
 
 
 
@@ -197,12 +197,12 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 
 
-**Figure 4: Pooled Analysis of Shannon Diversity and B/F ratio by either Obesity Status or BMI Groups.**  **A)** Z-score Normalized Shannon Diversity and Obesity. There was a significant difference between non-obese (n = 2049) and obese groups (n = 677) (P-value = 0.0000). **B)** Z-score Normalized B/F Ratio and Obesity. There was no significant difference between the non-obese (n = 2049) and obese (n = 677) group based on B/F ratio (P-value = 1.00).
+**Figure 4: ROC Curves for Each Study based on Classification of Non-Obese or Obese Groups at the Genus or OTU level.**  **A)** No significant difference was found between the different ROC curves based on Study for the genus level.  The overall AUCs ranged from 0.64 to 0.91 with a mean of 0.73. **B)** Similarly no difference was found between the ROC curves based on Study at the OTU level.  The overall mean of the AUCs were slightly higher overall than the genus level 0.76 but the range was greater going from 0.59 to 1.
 
 
 
 
-**Figure 5. Summary of Power and Sample Size Simulations for Shannon Diversity for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
+**Figure 5: Summary of Power and Sample Size Simulations for Shannon Diversity for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
 
 
 
