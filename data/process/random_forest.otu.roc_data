@@ -1,4 +1,4 @@
-dataset	sens	spec
+dataset	sensitivity	specificity
 baxter	0	1
 baxter	0.01	0.992
 baxter	0.02	0.992
