@@ -144,15 +144,12 @@ run <- function(datasets){
 
 				result <- c(train, test,
 									accuracy[2], accuracy[1],
-									accuracy[3], ci(roc_test), train_test_p)
+									accuracy[3], train_test_p)
 				testing_summary <- rbind(testing_summary, result)
 			} else {
-				result <- c(train, test, model[[train]]$opt_sensitivity,
-																	model[[train]]$opt_specificity,
-																	model[[train]]$opt_accuracy,
+				result <- c(train, test, model[[train]]$opt_accuracy,
 																	model[[train]]$opt_accuracy_lci,
-																	model[[train]]$opt_accuracy_uci,
-																	model[[train]]$auc, NA)
+																	model[[train]]$opt_accuracy_uci, NA)
 				testing_summary <- rbind(testing_summary, result)
 
 			}
@@ -161,7 +158,7 @@ run <- function(datasets){
 
 	colnames(testing_summary) <- c("train", "test",
 																	"accuracy", "accuracy_lci", "accuracy_uci",
-																	"auc_lci", "auc", "auc_hci", "p_value")
+																	"p_value")
 	rownames(testing_summary) <- NULL
 	write.table(testing_summary, file="data/process/random_forest.genus.train_test", quote=F, sep='\t', row.names=F)
 
