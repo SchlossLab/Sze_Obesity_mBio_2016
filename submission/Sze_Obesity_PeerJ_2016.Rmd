@@ -217,18 +217,22 @@ kable(table1, format = "markdown", align = 'c', padding = 2)
 
 **Table 2. Summary of Important Study Characteristics.**
 
-```{r Table_2, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE}
+```{r Table_2, echo=FALSE, message=FALSE, warning=FALSE}
 
-Study <- c("Baxter", "Ross", "Goodrich", "Escobar", "Zupancic", "HMP", "Wu", "Turnbaugh")
+Study <- as.character(table1$Study)
+#New Order
+  #baxter, escobar, hmp, ross, schubert, turnbaugh, wu, zupancic, goodrich, zeevi
 
-Type <- c("Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational")
+Type <- c("Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational")
 
-Population <- c("Adults without Cancer from Texas, Ontario, Michigan, Massachusetts", "Hispanic adults with and without type 2 diabetes from Texas
-", "Adult twins and mothers from the United Kingdom", "Healthy adults from Columbia", "Amish Adults with and without metabolic syndrome from Pennsylvania", "Healthy Adults from Texas and Missouri", "Healthy Adults from Pennsylvania", "Adult twins and mothers from Missouri")
+Population <- c("Adults without Cancer from Texas, Ontario, Michigan, Massachusetts", "Healthy adults from Columbia", "Healthy Adults from Pennsylvania", "Hispanic adults with and without type 2 diabetes from Texas
+", "Nondiarrheal indivdiuals without infection history", "Adult twins and mothers from Missouri", "Healthy Adults from Texas and Missouri", "Amish Adults with and without metabolic syndrome from Pennsylvania", "Adult twins and mothers from the United Kingdom", "Healthy Adults from Tel Aviv")
 
-Published <- c("No", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes","Yes")
 
-Outcomes <- c("N/A (Unpublished)", "Mentions obesity, no specific correlations made though", "Christensenellaceae higher in low BMI individuals. No other correlations found.", "Firmicutes less abundant at higher BMI", "Bacteroidetes/Firmicutes ratio adjusted BMI correlation", "No significant correlations", "Unweighted UniFrac Correlation with BMI", "Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI ")
+
+Published <- c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes","Yes", "Yes", "Yes")
+
+Outcomes <- c("Did not investigate control populations for relationship with BMI", "Firmicutes less abundant at higher BMI", "No significant correlations", "Mentions obesity, no specific correlations made though", "Did not investigate control populations for relationship with BMI", "Unweighted UniFrac Correlation with BMI", "Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI ", "Bacteroidetes/Firmicutes ratio adjusted BMI correlation", "Christensenellaceae higher in low BMI individuals. No other correlations found.", "Found associations with postprandial (post meal) glycemic responses, which correlates with BMI, and Proteobacteria, Actinobacteria, and Enterobacteriaceae")
 
 table2 <- cbind(Study, Type, Population, Published, Outcomes)
 
@@ -275,7 +279,7 @@ rocPlot + geom_line(aes(group=Study, color=Study)) +
 
 ```
 
-**Figure 2: Receiver Operating Characteristic Curve of the Random Forest Analysis of Each Study.** After adjusting for multiple comparisons there was no significant difference between any of the 8 studies examined (P-value > 0.05).  
+**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B/F Ratio.** A) For Shannon diversity only Baxter (P-value = `r format(round(alpha_tests.summary[which(alpha_tests.summary$dataset == 'baxter' & alpha_tests.summary$metric == 'shannon'), 'p.value'], 2), nsmall = 2)` and Goodrich (P-value = `r format(round(alpha_tests.summary[which(alpha_tests.summary$dataset == 'goodrich' & alpha_tests.summary$metric == 'shannon'), 'p.value'], 5), nsmall = 5)`) studies indivdiually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = `r format(round(alpha_composite.summary['shannon', 'composite_p'], 5), nsmall = 5)`). B) For the B/F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
 
 
 
@@ -286,7 +290,7 @@ grid.arrange(HRRG1, BFRRG1, ncol=2)
 
 ```
 
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B/F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was `r format(round(RR_composite['shannon', 'rr'],2), nsmall=2)` with a P-value of `r format(round(RR_composite['shannon', 'p_value']), nsmall=2)`.  **B)** The overall pooled relative risk for the B/F ratio was  `r format(round(RR_composite['bf_ratio', 'rr'],2), nsmall=2)` with a P-value of `r format(round(RR_composite['bf_ratio', 'p_value'], 2), nsmall=2)`.
+**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B/F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, green represents studies that used a V3-V4 region, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was `r format(round(RR_composite['shannon', 'rr'],2), nsmall=2)` with a P-value of `r format(round(RR_composite['shannon', 'p_value']), nsmall=2)`.  **B)** The overall pooled relative risk for the B/F ratio was  `r format(round(RR_composite['bf_ratio', 'rr'],2), nsmall=2)` with a P-value of `r format(round(RR_composite['bf_ratio', 'p_value'], 2), nsmall=2)`.
 
 
 

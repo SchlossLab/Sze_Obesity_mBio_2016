@@ -152,6 +152,18 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 **Table 2. Summary of Important Study Characteristics.**
 
 
+|    Study    |   Study Type    |                              Population                              |  Published  |                                                                      Outcomes Reported                                                                       |
+|:-----------:|:---------------:|:--------------------------------------------------------------------:|:-----------:|:------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+|   baxter    |  Observational  |  Adults without Cancer from Texas, Ontario, Michigan, Massachusetts  |     Yes     |                                              Did not investigate control populations for relationship with BMI                                               |
+|   escobar   |  Observational  |                     Healthy adults from Columbia                     |     Yes     |                                                            Firmicutes less abundant at higher BMI                                                            |
+|     hmp     |  Observational  |                   Healthy Adults from Pennsylvania                   |     Yes     |                                                                 No significant correlations                                                                  |
+|    ross     |  Observational  |     Hispanic adults with and without type 2 diabetes from Texas      |     Yes     |                                                    Mentions obesity, no specific correlations made though                                                    |
+|  schubert   |  Observational  |          Nondiarrheal indivdiuals without infection history          |     Yes     |                                              Did not investigate control populations for relationship with BMI                                               |
+|  turnbaugh  |  Observational  |                Adult twins and mothers from Missouri                 |     Yes     |                                                           Unweighted UniFrac Correlation with BMI                                                            |
+|     wu      |  Observational  |                Healthy Adults from Texas and Missouri                |     Yes     |                                     Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI                                      |
+|  zupancic   |  Observational  |  Amish Adults with and without metabolic syndrome from Pennsylvania  |     Yes     |                                                   Bacteroidetes/Firmicutes ratio adjusted BMI correlation                                                    |
+|  goodrich   |  Observational  |           Adult twins and mothers from the United Kingdom            |     Yes     |                                       Christensenellaceae higher in low BMI individuals. No other correlations found.                                        |
+|    zeevi    |  Observational  |                     Healthy Adults from Tel Aviv                     |     Yes     |  Found associations with postprandial (post meal) glycemic responses, which correlates with BMI, and Proteobacteria, Actinobacteria, and Enterobacteriaceae  |
 
 
 
@@ -170,7 +182,7 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 
 
-**Figure 2: Receiver Operating Characteristic Curve of the Random Forest Analysis of Each Study.** After adjusting for multiple comparisons there was no significant difference between any of the 8 studies examined (P-value > 0.05).  
+**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B/F Ratio.** A) For Shannon diversity only Baxter (P-value = 0.03 and Goodrich (P-value = 4e-05) studies indivdiually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = 4e-05). B) For the B/F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
 
 
 
