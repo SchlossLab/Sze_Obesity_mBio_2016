@@ -267,7 +267,7 @@ kable(table2, format = "markdown", align = 'c', padding = 2)
 **Figure 4: ROC Curves for Each Study based on Classification of Non-Obese or Obese Groups at the Genus or OTU level.**  **A)** No significant difference was found between the different ROC curves based on Study for the genus level.  The overall AUCs ranged from `r round(min(rand_forest.genus.summary$auc), 2)` to `r round(max(rand_forest.genus.summary$auc), 2)` with a mean of `r round(mean(rand_forest.genus.summary$auc), 2)`. **B)** Similarly no difference was found between the ROC curves based on Study at the OTU level.  The overall mean of the AUCs were slightly higher overall than the genus level `r round(mean(rand_forest.otu.summary$auc), 2)` but the range was greater going from `r round(min(rand_forest.otu.summary$auc), 2)` to `r round(max(rand_forest.otu.summary$auc), 2)`.
 
 
-
+**Figure 5: Overall Accuracy of Each Study to Predict Non-Obese and Obese Individuals based on that Study's Classification Variables** Overall there is no significant difference between the studes in mean accuracy.  Additionally, the accuracy for each study group to predict Non-Obese and Obese individuals was relatively low.
 
 ```{r Figure_5, echo=FALSE, message=FALSE, warning=FALSE, eval=FALSE,  fig.path="results/figures/", dev = c("pdf", "png")}
 
