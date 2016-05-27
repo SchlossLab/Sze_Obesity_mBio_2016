@@ -50,7 +50,6 @@ run <- function(datasets){
 	model_summary <- NULL
 	roc_summary <- NULL
 
-	datasets <- c("baxter", "zupancic")
 
 	for(d in datasets){
 		print(d)
