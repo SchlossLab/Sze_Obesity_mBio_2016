@@ -53,10 +53,10 @@ Once these 2 studies were excluded there was a total of 11 studies in the qualit
 
 
 
-**Figure S1: Individual and Combined comparison of Obese and Non-Obese groups for Observed OTUs.**  For observed OTUs Baxter (P-value = 0.01, Goodrich (P-value = 0.00000), and Turnbaugh (P-value = 0.03) studies individually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = 0.00000)
+**Figure S1: Individual and Combined comparison of Obese and Non-Obese groups for Observed OTUs.**  For observed OTUs Baxter (P-value = 0.01, Goodrich (P-value = 4e-08), and Turnbaugh (P-value = 0.03) studies individually were signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = 1e-08)
 
 
-**Figure S2: Individual and Combined comparison of Obese and Non-Obese groups for Evenness.**  For evenness only the Goodrich study (P-value = 0.006)  individually was signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was an overall significant difference between Non-Obese and Obese groups (P-value = 0.00)
+**Figure S2: Individual and Combined comparison of Obese and Non-Obese groups for Evenness.**  For evenness only the Goodrich study (P-value = 0.006)  individually was signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was an overall significant difference between Non-Obese and Obese groups (P-value = 0.01)
 
 
 **Figure S3: Individual and Combined comparison of Obese and Non-Obese groups for Bacteroidetes Relative Abundance.**  Only the Escobar study (P-value = 0.046)  individually was signficantly different for obese and non-obese groups.  When the data sets were combined and study effect was corrected for,  there was no overall significant difference between Non-Obese and Obese groups (P-value = 1.00)
