@@ -104,6 +104,8 @@ run <- function(datasets){
 
 		model_summary <- rbind(model_summary, c(d, model[[d]]$auc,
 			 									model[[d]]$auc_cv["cv_est"], k_opt, otus,
+												model[[d]]$opt_sensitivity,
+												model[[d]]$opt_specificity,
 												model[[d]]$opt_threshold))
 	}
 
