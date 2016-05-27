@@ -18,11 +18,11 @@ The initial search strategy included looking for all papers that initially fit u
 
 This search yielded a total of 187 manuscripts.  From two previous other reviews of obesity and the bacterial microbiome along with knowledge of two other published papers that investigated obesity but were missed by the database search we obtained a total of 7 more articles.  We also had access to normal healthy individuals from an unpublished dataset.  This brought our total number of records to 196.  
 
-From this total we browsed abstracts for mention of stool or feces examination, that did not involve children, was not a clinical trial for probiotics or other diet related treatments, did not only have participants with inflammatory bowel disease, the articles were in English, did not only use PCR, qPCR, or RT-PCR only for their analysis, and sequencing that used only clone libraries.  This ultimately excluded all but a total of 11 studies.
+From this total we browsed abstracts for mention of stool or feces examination, that did not involve children, was not a clinical trial for probiotics or other diet related treatments, did not only have participants with inflammatory bowel disease, the articles were in English, did not only use PCR, qPCR, or RT-PCR only for their analysis, and sequencing that used only clone libraries.  This ultimately excluded all but a total of 13 studies.
 
-From this total of 12 studies the full text was reviewed for whether or not sequencing data was publicly available, BMI information (either categorical or continuous) was available in a supplement or, if it was not available, whether authors upon contact were willing to share this information or direct us to repositories that stored this specific information.  One study was excluded [@yatsunenko_human_2012] because it contained children and their sequencing of the 16S rRNA gene involved amplicons of only 100bp in length.  They also did not have obesity as part of their results in the actual published manuscript.  The second study was excluded because they did not have BMI information available and when contacted the authors never returned any correspondence [@zeevi_personalized_2015].  A third study was excluded since it did not use 16S rRNA gene sequencing for their bacterial microbiome analysis [@arumugam_enterotypes_2011]  
+From this total of 11 studies with the full text was reviewed for whether or not sequencing data was publicly available, BMI information (either categorical or continuous) was available in a supplement or, if it was not available, whether authors upon contact were willing to share this information or direct us to repositories that stored this specific information.  One study was excluded [@yatsunenko_human_2012] because it contained children and their sequencing of the 16S rRNA gene involved amplicons of only 100bp in length.  They also did not have obesity as part of their results in the actual published manuscript.  The second study was excluded because it did not use 16S rRNA gene sequencing for their bacterial microbiome analysis [@arumugam_enterotypes_2011].  
 
-Once these 3 studies were excluded there was a total of 9 studies in the qualitative synthesis of the analysis.  Because we decided a prioi to use the standard definition for BMI group classification one study from this ten did not have any individuals who were obese by this criteria [@nam_comparative_2011] and was excluded from the final quantitative synthesis and analysis.  
+Once these 2 studies were excluded there was a total of 11 studies in the qualitative synthesis of the analysis.  Because we decided a prioi to use the standard definition for BMI group classification one study from this 11 did not have any individuals who were obese by this criteria [@nam_comparative_2011] and was excluded from the final quantitative synthesis and analysis.  
 
 *Inclusion Criteria:*
 
@@ -45,8 +45,6 @@ Once these 3 studies were excluded there was a total of 9 studies in the qualita
 * Samples were not stool or feces
 * Study contained children
 * Study was a review
-
-
 
 
 
