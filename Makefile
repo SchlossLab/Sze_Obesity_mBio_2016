@@ -132,8 +132,17 @@ $(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
 #
 ################################################################################
 
+results/figures/shannon_bf_ratio.pdf : code/plot_alpha_diversity.R\
+																				data/process/alpha_composite.summary\
+																				data/process/alpha_tests.summary
+	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
 
 
+results/figures/shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
+																				code/plot_alpha_diversity.R\
+																				data/process/alpha_composite.summary\
+																				data/process/alpha_tests.summary
+	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
 
 results/figures/roc_curve.pdf : code/plot_roc_data.R\
@@ -142,6 +151,7 @@ results/figures/roc_curve.pdf : code/plot_roc_data.R\
 																data/process/random_forest.genus.roc_data\
 																data/process/random_forest.genus.summary\
 	R -e "source('$<'); build_figure()"
+
 
 results/figures/train_test.pdf : code/plot_train_test.R\
 																data/process/random_forest.genus.train_test
