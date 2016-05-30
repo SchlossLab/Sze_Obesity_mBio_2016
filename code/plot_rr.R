@@ -4,11 +4,11 @@ make_label <- function(string, p){
 	paste(string, " (P", p_value, ")", sep="")
 }
 
-make_study_label <- function(data){
-	options(scipen=10000)
-	study <- ifelse(data$dataset=="hmp", "HMP", capwords(data$dataset))
+make_study_label <- function(datasets){
+#	options(scipen=10000)
+	study <- ifelse(datasets=="hmp", "HMP", capwords(datasets))
 
-	make_label(study, data$p.value)
+#	make_label(study, data$p.value)
 }
 
 make_metric_label <- function(metric){
@@ -16,8 +16,8 @@ make_metric_label <- function(metric){
 	formatted_metrics <- c(shannon = "Relative Risk\nShannon Diversity Index",
 												shannoneven = "Relative Risk\nShannon Evenness Index",
 												sobs = "Relative Risk\nNumber of Observed OTUs",
-												bacteroidetes = "Relative Risk\nRelative Abundance of Bacteroidetes",
-												firmicutes = "Relative Risk\nRelative Abundance of Firmicutes",
+												bacteroidetes = "Relative Risk\nRelative Abundance\nof Bacteroidetes",
+												firmicutes = "Relative Risk\nRelative Abundance\nof Firmicutes",
 												bf_ratio = "Relative Risk\nRatio of Bacteroidetes to Firmicutes"
 											)
 	formatted_metrics[metric]
@@ -31,7 +31,6 @@ capwords <- function(s, strict = FALSE) {
 		sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
 }
 
-metric <- 'shannon'
 
 rr_plot <- function(metric){
 
@@ -46,9 +45,10 @@ rr_plot <- function(metric){
 	subset <- subset[order(subset$dataset),]
 	stopifnot(subset$dataset == datasets)
 
-	par(mar=c(5,8,0.5,0.5))
-	plot(NA, ylim=c(0,length(datasets)), xlim=c(min(subset$lower),max(subset$upper)), axes=F, xlab=make_metric_label(metric), ylab="", log="x")
+	par(mar=c(5,0.5,0.5,0.5))
+	plot(NA, ylim=c(0,length(datasets)), xlim=c(min(subset$lower),max(subset$upper)), axes=F, xlab="", ylab="", log="x")
 
+	mtext(side=1, text=make_metric_label(metric), line=4, cex=0.7)
 	abline(v=1)
 
 	arrows(x0=subset$est, x1=subset$upper, y0=length(datasets):1, y1=length(datasets):1, angle=90, length=gap/2)
@@ -56,26 +56,48 @@ rr_plot <- function(metric){
 
 	points(x=subset$est, y=length(datasets):1, pch=19)
 
+	sig_star <- ifelse(subset$p.value < 0.05, "*", "")
+	text(x=min(subset$lower), y=length(datasets):1, labels=sig_star, cex=3)
+
 	points(x=rr_composite[metric,"rr"], y=0, pch=19)
 	arrows(x0=rr_composite[metric,"rr"], x1=rr_composite[metric,"ci_lb"], y0=0, y1=0, angle=90, length=gap/2)
 	arrows(x0=rr_composite[metric,"rr"], x1=rr_composite[metric,"ci_ub"], y0=0, y1=0, angle=90, length=gap/2)
 
+	if(rr_composite[metric,"p_value"] < 0.05){
+		text(x=min(subset$lower), y=0, labels="*", cex=3)
+	}
+
+
 	axis(1)
-	axis(2, at=length(datasets):0, label=c(make_study_label(subset), make_label("Overall", rr_composite[metric,"p_value"])), las=2, cex.axis=0.8)
+	axis(2, at=0:nrow(subset), labels=FALSE)
 	box()
+
+	return(datasets)
+}
+
+build_figure <- function(metrics, width=6.5, height=3.75){
+	n_metrics <- length(metrics)
+
+	output_file <- paste0("results/figures/rr_", paste(metrics, collapse="_"), ".pdf")
+	pdf(file=output_file, width=width, height=height)
+
+	axis_width <- 0.12 * n_metrics
+	layout(matrix(c(n_metrics+1, seq(1:(n_metrics))), nrow=1), width=c(axis_width, rep(1, n_metrics)))
+
+	datasets <- NULL
+
+	for(m in metrics){
+		datasets <- rr_plot(m)
+	}
+
+	par(mar=c(5,0.5,0.5,0.5))
+	plot(NA, xlim=c(0,1), ylim=c(0,length(datasets)),axes=F, xlab="", ylab="")
+
+	text(x=0.1, y=length(datasets):1, labels=make_study_label(datasets), las=2, cex=1.0, adj=0, xpd=T)
+	text(x=0.1, y=0, labels="Overall", las=2, cex=1.0, adj=0, xpd=T)
+
+	dev.off()
 
 }
 
-pdf(file="rr.pdf")
-rr_plot('shannon')
-rr_plot('shannoneven')
-rr_plot('sobs')
-rr_plot('bacteroidetes')
-rr_plot('firmicutes')
-rr_plot('bf_ratio')
-dev.off()
-
-layout(matrix(c(1,2), nrow=1))
-rr_plot('shannon')
-rr_plot('bf_ratio')
-layout(1)
+build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'))

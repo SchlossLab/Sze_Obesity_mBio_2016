@@ -144,6 +144,17 @@ results/figures/shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
 																				data/process/alpha_tests.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
+results/figures/rr_shannon_bf_ratio.pdf : code/plot_rr.R\
+																				data/process/relative_risk_composite\
+																				data/process/relative_risk.summary
+	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
+
+
+results/figures/rr_shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
+																				code/plot_rr.R\
+																				data/process/relative_risk_composite\
+																				data/process/relative_risk.summary
+	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
 results/figures/roc_curve.pdf : code/plot_roc_data.R\
 																data/process/random_forest.otu.roc_data\
