@@ -131,3 +131,18 @@ $(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
 #	Part 4: Generate figures
 #
 ################################################################################
+
+
+
+
+
+results/figures/roc_curve.pdf : code/plot_roc_data.R\
+																data/process/random_forest.otu.roc_data\
+																data/process/random_forest.otu.summary\
+																data/process/random_forest.genus.roc_data\
+																data/process/random_forest.genus.summary\
+	R -e "source('$<'); build_figure()"
+
+results/figures/train_test.pdf : code/plot_train_test.R\
+																data/process/random_forest.genus.train_test
+	R -e "source('$<');"
