@@ -168,3 +168,13 @@ $(FIGS)/roc_curve.pdf : code/plot_roc_data.R\
 $(FIGS)/train_test.pdf : code/plot_train_test.R\
 												$(PROC)/random_forest.genus.train_test
 	R -e "source('$<');"
+
+
+$(FIGS)/alpha_%_power.pdf : code/plot_power.R\
+												$(PROC)/alpha_power.predicted
+	R -e "source('$<'); build_plots('alpha')"
+
+
+$(FIGS)/rr_%_power.pdf : code/plot_power.R\
+												$(PROC)/rr_power.predicted
+	R -e "source('$<'); build_plots('rr')"
