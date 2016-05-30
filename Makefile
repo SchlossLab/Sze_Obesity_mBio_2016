@@ -1,8 +1,8 @@
 STUDIES = baxter escobar hmp ross schubert turnbaugh wu zupancic goodrich zeevi
 REFS = data/references
-FIGS = submission
-TABLES = results/tables
 PROC = data/process
+FIGS = results/figures
+TABLES = results/tables
 
 # utility function to print various variables. For example, running the
 # following at the command line:
@@ -132,38 +132,39 @@ $(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
 #
 ################################################################################
 
-results/figures/shannon_bf_ratio.pdf : code/plot_alpha_diversity.R\
-																				data/process/alpha_composite.summary\
-																				data/process/alpha_tests.summary
+$(FIGS)/shannon_bf_ratio.pdf : code/plot_alpha_diversity.R\
+												$(PROC)/alpha_composite.summary\
+												$(PROC)/alpha_tests.summary
 	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
 
 
-results/figures/shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
-																				code/plot_alpha_diversity.R\
-																				data/process/alpha_composite.summary\
-																				data/process/alpha_tests.summary
+$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
+												code/plot_alpha_diversity.R\
+												$(PROC)/alpha_composite.summary\
+												$(PROC)/alpha_tests.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
-results/figures/rr_shannon_bf_ratio.pdf : code/plot_rr.R\
-																				data/process/relative_risk_composite\
-																				data/process/relative_risk.summary
+$(FIGS)/rr_shannon_bf_ratio.pdf : code/plot_rr.R\
+												$(PROC)/relative_risk_composite\
+												$(PROC)/relative_risk.summary
 	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
 
 
-results/figures/rr_shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
-																				code/plot_rr.R\
-																				data/process/relative_risk_composite\
-																				data/process/relative_risk.summary
+$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
+												code/plot_rr.R\
+												$(PROC)/relative_risk_composite\
+												$(PROC)/relative_risk.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
-results/figures/roc_curve.pdf : code/plot_roc_data.R\
-																data/process/random_forest.otu.roc_data\
-																data/process/random_forest.otu.summary\
-																data/process/random_forest.genus.roc_data\
-																data/process/random_forest.genus.summary\
+
+$(FIGS)/roc_curve.pdf : code/plot_roc_data.R\
+												$(PROC)/random_forest.otu.roc_data\
+												$(PROC)/random_forest.otu.summary\
+												$(PROC)/random_forest.genus.roc_data\
+												$(PROC)/random_forest.genus.summary\
 	R -e "source('$<'); build_figure()"
 
 
-results/figures/train_test.pdf : code/plot_train_test.R\
-																data/process/random_forest.genus.train_test
+$(FIGS)/train_test.pdf : code/plot_train_test.R\
+												$(PROC)/random_forest.genus.train_test
 	R -e "source('$<');"
