@@ -81,7 +81,8 @@ build_plots <- function(method){
 
 		par(mar=c(0,0,0,0))
 		plot(NA, xlim=c(0,1), ylim=c(0,1), axes=F, xlab="", ylab="")
-		legend(x=0.1, y=0.66, legend=names, pch=pch, col=col, pt.bg=bg, pt.cex=1.5)
+		legend(x=0.1, y=0.66, legend=names, pch=pch, col=col, pt.bg=bg, pt.cex=1.5,
+			 pt.lwd=2)
 		dev.off()
 
 	}
