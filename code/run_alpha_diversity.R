@@ -114,5 +114,5 @@ run <- function(datasets){
 	composite_p["firmicutes"] <- composite_analysis(composite_data$firmicutes, composite_data$dataset, composite_data$obese, 1)
 	composite_p["bf_ratio"] <- composite_analysis(composite_data$bf_ratio, composite_data$dataset, composite_data$obese, 0.5)
 
-	write.table(file="data/process/alpha_composite.summary", data.frame(non_mean$metric, non_mean$mean_non, obese_mean$mean_obese, composite_p), quote=F, sep='\t', row.names=F)
+	write.table(file="data/process/alpha_composite.summary", data.frame(metric=non_mean$metric, non_obese=non_mean$mean_non, obese=obese_mean$mean_obese, p = composite_p), quote=F, sep='\t', row.names=F)
 }

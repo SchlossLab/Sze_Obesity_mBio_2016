@@ -1,4 +1,4 @@
-non_mean.metric	non_mean.mean_non	obese_mean.mean_obese	composite_p
+metric	non_obese	obese	p
 bacteroidetes	0.390770747384866	0.410313778900756	0.999997749162331
 bf_ratio	2.12892438735961	1.88983958364233	1
 firmicutes	0.511818275644839	0.505962276581476	0.999998341608921
