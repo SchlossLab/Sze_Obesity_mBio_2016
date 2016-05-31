@@ -101,8 +101,12 @@ run <- function(datasets){
 
 	write.table(summary_data, file="data/process/alpha_tests.summary", quote=F, sep='\t', row.names=F)
 
-#	composite_analysis <- function(alpha, dataset, is_obese, pow){
-	composite_p <- NULL
+	non_mean <- aggregate(mean_non~metric, data=summary_data, mean)
+	obese_mean <- aggregate(mean_obese~metric, data=summary_data, mean)
+
+	composite_p <- rep(NA, nrow(non_mean))
+	names(composite_p) <- non_mean$metric
+
 	composite_p["shannon"] <- composite_analysis(composite_data$shannon, composite_data$dataset, composite_data$obese, 2)
 	composite_p["sobs"] <- composite_analysis(composite_data$sobs, composite_data$dataset, composite_data$obese, 0.5)
 	composite_p["shannoneven"] <- composite_analysis(composite_data$shannoneven, composite_data$dataset, composite_data$obese, 4)
@@ -110,5 +114,5 @@ run <- function(datasets){
 	composite_p["firmicutes"] <- composite_analysis(composite_data$firmicutes, composite_data$dataset, composite_data$obese, 1)
 	composite_p["bf_ratio"] <- composite_analysis(composite_data$bf_ratio, composite_data$dataset, composite_data$obese, 0.5)
 
-	write.table(file="data/process/alpha_composite.summary", data.frame(composite_p), quote=F, sep='\t')
+	write.table(file="data/process/alpha_composite.summary", data.frame(non_mean$metric, non_mean$mean_non, obese_mean$mean_obese, composite_p), quote=F, sep='\t', row.names=F)
 }
