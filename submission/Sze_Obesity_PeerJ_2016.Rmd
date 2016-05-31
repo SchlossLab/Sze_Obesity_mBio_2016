@@ -11,6 +11,9 @@ fontsize: 11pt
 geometry: margin=1.0in
 ---
 
+# Lack of power and small effect size confounds the ability to differentiate obese and non-obese individuals using gut microbiome data
+
+
 ```{r knitr_settings, eval=TRUE, echo=FALSE, cache=FALSE}
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = FALSE)
@@ -56,25 +59,32 @@ Department of Microbiology and Immunology, University of Michigan, Ann Arbor, MI
 
 
 ```{r datasets}
+alpha <- read.table(file="data/process/alpha_composite.summary", header=T)
+shannon_effect_size <- 100*abs(1-alpha[alpha$metric=="shannon","obese"]/alpha[alpha$metric=="shannon","non_obese"])
 beta <- read.table(file="data/process/beta_tests.summary", header=T)
+
 genus <- read.table(file="data/process/random_forest.genus.summary", header=T)
 otu <- read.table(file="data/process/random_forest.otu.summary", header=T)
+
 test <- read.table(file="data/process/random_forest.genus.train_test", header=T)
 test_summary <- aggregate(accuracy~train, data=test, median)
 
+power <- read.table(file="data/process/alpha_power.predicted", header=T)
+well_powered <- sum(power[power$metric=="shannon" &
+ 												power$effect_size==0.05, "power"] > 0.8)
 
+
+
+number_string <- c("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
 ```
 
+## Abstract
+Two recent studies have re-analyzed published data and found that when datasets are analyzed independently there was limited support the widely accepted hypothesis that changes in the microbiome are associated with obesity. This hypothesis was reconsidered by increasing the number of data sets and pooling the results across the individual datasets. The Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines were applied to identify 10 studies for an updated and more synthetic analysis. Alpha-diversity metrics and the relative risk of obesity based on those metrics were used to identify a limited number of significant associations with obesity; however, when the results of the studies were pooled using a random effects model significant associations were observed between Shannon diversity, number of observed OTUs, and Shannon evenness and obesity status They were not observed for the ratio of *Bacteroidetes* and *Firmicutes* or their individual relative abundances. Although these tests yielded small P-values, the difference between the Shannon diversity index of obese and non-obese individuals was `r shannon_effect_size`%. A power analysis demonstrated that `r number_string[well_powered]` of the studies had sufficient power to detect a 5% difference in diversity. When models trained on one dataset were then tested using the other 9 datasets, the median accuracy varied between `r range(test_summary$accuracy)[1]` and `r range(test_summary$accuracy)[2]` (median=`r median(test_summary$accuracy)`). Although there is statistical support for a relationship between the microbial communities found in human feces and obesity status, this association is relatively weak and its detection is confounded by large interpersonal variation and insufficient sample sizes.
 
-## Abstract - this could be significantly shorter if we don't do the structured format.
 
-**Rationale:** The hypothesis that changes in the microbiome are associated with obesity has been widely accepted; however, two recent studies re-analyzed published data and found that when the datasets were analyzed independently they could not support the hypothesis. In this meta analysis, we retested the hypothesis by increasing the number of data sets examined and investigating the effect of pooling the results across the individual datasets.
+## Importance
+As interest in the human microbiome grows there is an increasing number of studies that can be used to test numerous hypotheses across human populations. The hypothesis that variation in the gut microbiota can explain or be used to predict obesity status has received considerable attention and is frequently mentioned as an example for the role of the microbiome in human health. Here we assess this hypothesis using ten independent studies and find that although there is an association, it is smaller than can be detected by most microbiome studies. Furthermore, we directly tested the ability to predict obesity status based on the composition of an individual's microbiome and find that the median classification accuracy is between `r range(test_summary$accuracy)[1]` and `r range(test_summary$accuracy)[2]`%. This type of analysis can be used to design future studies and expanded to explore other hypotheses.
 
-**Methods:** To identify datasets that we included in the meta analysis we followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines we winnowed an initial set of 196 studies that tested the microbiome-obesity association hypothesis or had a large number of samples to 10 studies that fit our criteria. We applied four analysis pipelines to the data from each study to determine whether there was a significant association between variation in the gut microbiome with obesity status. First, we tested for an association with alpha-diversity metrics. Second, we calculated the relative risk (RR) of being obese based on alpha-diversity metrics. Third, we tested for a community-wide association with obesity based on Bray-Curtis distances between samples. Finally, we used the random forest machine learning algorithm to identify community features that would allow us to to classify whether a person was obese based on either genus or OTU level and assessed how well these variables did across other studies. Additionally, we also investigated power and estimated sample sizes needed to adequately test our observer effect sizes amongst the different study populations.
-
-**Results:** When considered in isolation, there were few significant associations between alpha diversity metrics and obesity when we used the observed diversity values or relative risk values; however, when we combined the data into random effects models we observed significant differences in the Shannon diversity, number of observed OTUs, and Shannon evenness. Although these tests yielded small P-values, the general effect sizes were quite small. At the community level, we observed significant differences in the community structure of obese and non-obese individuals in `sum(beta$p_value<0.05)` of the 10 studies. The ability of Random Forest machine learning models to classify obese and non-obese was limited. When models trained on one dataset were then tested using the other 9 datasets, the median accuracy varied between `r range(test_summary$accuracy)[1]` and `r range(test_summary$accuracy)[2]` (median=`r median(test_summary$accuracy)`). Finally, when completing both power and sample size calculations and simulations we found that most of the studies examined were not sufficiently powered to detect modest-sized differences in any of the measurements used.
-
-**Conclusion:** Synthesizing data from 10 microbiome studies, we find statistical support for a relationship between the microbial communities found in human feces and their obesity status; however, this association is relatively weak. Furthermore, this analysis demonstrates that most studies that analyze human feces are underpowered for detecting modest differences in diversity.
 
 
 \newpage
