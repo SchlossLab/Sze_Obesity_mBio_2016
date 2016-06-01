@@ -42,7 +42,7 @@ single_analysis <- function(alpha, pow, is_obese){
 	)
 }
 
-datasets <- c('baxter', 'goodrich', 'escobar', 'hmp', 'ross', 'turnbaugh', 'wu', 'zupancic', 'zeevi')
+datasets <- c('baxter', 'goodrich', 'escobar', 'hmp', 'ross', 'schubert', 'turnbaugh', 'wu', 'zupancic', 'zeevi')
 
 run <- function(datasets){
 
