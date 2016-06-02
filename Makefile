@@ -178,3 +178,75 @@ $(FIGS)/alpha_%_power.pdf : code/plot_power.R\
 $(FIGS)/rr_%_power.pdf : code/plot_power.R\
 												$(PROC)/rr_power.predicted
 	R -e "source('$<'); build_plots('rr')"
+
+
+
+################################################################################
+#
+#	Part 5: write.paper
+#
+################################################################################
+
+submission/figure_1.tiff : (FIGS)/figure_1.tiff
+	convert (FIGS)/flow_chart.png submission/figure_1.tiff
+
+submission/figure_2.tiff : (FIGS)/shannon_bf_ratio.tiff
+	cp $< $@
+
+submission/figure_3.tiff : (FIGS)/rr_shannon_bf_ratio.tiff
+	cp $< $@
+
+submission/figure_4.tiff : (FIGS)/roc_curve.tiff
+	cp $< $@
+
+submission/figure_5.tiff : (FIGS)/train_test.tiff
+	cp $< $@
+
+submission/figure_6.tiff : (FIGS)/alpha_shannon_power.tiff
+	cp $< $@
+
+submission/figure_s1.tiff : \
+												(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
+	cp $< $@
+
+submission/figure_s2.tiff : \
+ 												(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
+	cp $< $@
+
+submission/figure_s3.tiff : (FIGS)/alpha_bf_ratio_power.tiff
+	cp $< $@
+
+submission/figure_s4.tiff : (FIGS)/alpha_sobs_power.tiff
+	cp $< $@
+
+submission/figure_s5.tiff : (FIGS)/alpha_shannoneven_power.tiff
+	cp $< $@
+
+submission/figure_s6.tiff : (FIGS)/alpha_bacteroidetes_power.tiff
+	cp $< $@
+
+submission/figure_s7.tiff : (FIGS)/alpha_firmicutes_power.tiff
+	cp $< $@
+
+submission/figure_s8.tiff : (FIGS)/rr_shannon_power.tiff
+	cp $< $@
+
+write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
+							submission/figure_1.tiff submission/figure_2.tiff\
+							submission/figure_3.tiff submission/figure_4.tiff\
+							submission/figure_5.tiff submission/figure_6.tiff\
+							submission/figure_s1.tiff submission/figure_s2.tiff\
+							submission/figure_s3.tiff submission/figure_s4.tiff\
+							submission/figure_s5.tiff submission/figure_s6.tiff\
+							submission/figure_s7.tiff submission/figure_s8.tiff\
+							$(PROC)/alpha_tests.summary $(PROC)/alpha_composite.summary\
+							$(PROC)/relative_risk.summary $(PROC)/relative_risk.composite\
+							$(PROC)/beta_tests.summary\
+							$(PROC)/random_forest.otu.summary\
+							$(PROC)/random_forest.genus.summary\
+							$(PROC)/random_forest.genus.train_test\
+							$(PROC)/alpha_power.predicted\
+							$(PROC)/rr_power.predicted
+	R -e "render('submission/Sze_Obesity_mBio_2016.Rmd', clean=FALSE)"
+	mv submission/Sze_Obesity_mBio_2016.utf8.md submission/Sze_Obesity_mBio_2016.md
+	rm submission/Sze_Obesity_mBio_2016.knit.md

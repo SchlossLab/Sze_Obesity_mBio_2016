@@ -1,12 +1,12 @@
 ---
 title: "Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome"
-bibliography: references.bib
+bibliography: reference.bib
 output:
   pdf_document:
     keep_tex: true
     includes:
       in_header: header.tex
-csl: msystems.csl
+csl: mbio.csl
 fontsize: 12pt
 geometry: margin=1.0in
 ---
@@ -14,7 +14,10 @@ geometry: margin=1.0in
 # Lack of power and small effect size confounds the ability to differentiate non-obese and obese individuals using gut microbiome data
 
 
-```{r knitr_settings, eval=TRUE, echo=FALSE, cache=FALSE}
+```{r knitr_settings, eval=TRUE, echo=FALSE, cache=FALSE, message=FALSE}
+source('code/utilities.R')
+get_dependencies(c("lme4", "vegan", "epiR", "metafor", "AUCRF", "pROC", "pwr"))
+
 opts_chunk$set("tidy" = TRUE)
 opts_chunk$set("echo" = FALSE)
 opts_chunk$set("eval" = TRUE)
@@ -39,14 +42,19 @@ knitr::knit_hooks$set(inline=inline_hook)
 \begin{center}
 \vspace{25mm}
 
-**Running Title:** The Human Microbiome and Obesity
-<br>
+
+Running Title: The Human Microbiome and Obesity
+
+\vspace{10mm}
+
 Marc A Sze and Patrick D Schloss${^\dagger}$
-<br>
-**Contributions:** Both authors contributed to the planning, design, execution, interpretation, and writing of the analyses.
+
+\vspace{10mm}
+
+Contributions: Both authors contributed to the planning, design, execution, interpretation, and writing of the analyses.
 
 
-\vspace{30mm}
+\vspace{20mm}
 
 $\dagger$ To whom correspondence should be addressed: pschloss@umich.edu
 
@@ -92,11 +100,13 @@ number_string <- c("one", "two", "three", "four", "five", "six", "seven", "eight
 ```
 
 ## Abstract
-Two recent studies have re-analyzed published data and found that when datasets are analyzed independently there was limited support the widely accepted hypothesis that changes in the microbiome are associated with obesity. This hypothesis was reconsidered by increasing the number of data sets and pooling the results across the individual datasets. The Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines were applied to identify 10 studies for an updated and more synthetic analysis. Alpha diversity metrics and the relative risk of obesity based on those metrics were used to identify a limited number of significant associations with obesity; however, when the results of the studies were pooled using a random effects model significant associations were observed between Shannon diversity, number of observed OTUs, and Shannon evenness and obesity status They were not observed for the ratio of *Bacteroidetes* and *Firmicutes* or their individual relative abundances. Although these tests yielded small P-values, the difference between the Shannon diversity index of non-obese and obese individuals was `r alpha_effect_size["shannon"]`%. A power analysis demonstrated that `r number_string[well_powered]` of the studies had sufficient power to detect a 5% difference in diversity. When models trained on one dataset were then tested using the other 9 datasets, the median accuracy varied between `r range(test_summary$accuracy)[1]` and `r range(test_summary$accuracy)[2]` (median=`r median(test_summary$accuracy)`). Although there is statistical support for a relationship between the microbial communities found in human feces and obesity status, this association is relatively weak and its detection is confounded by large interpersonal variation and insufficient sample sizes.
+
+Two recent studies have re-analyzed published data and found that when datasets are analyzed independently there was limited support the widely accepted hypothesis that changes in the microbiome are associated with obesity. This hypothesis was reconsidered by increasing the number of data sets and pooling the results across the individual datasets. The Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines were applied to identify 10 studies for an updated and more synthetic analysis. Alpha diversity metrics and the relative risk of obesity based on those metrics were used to identify a limited number of significant associations with obesity; however, when the results of the studies were pooled using a random effects model significant associations were observed between Shannon diversity, number of observed OTUs, and Shannon evenness and obesity status They were not observed for the ratio of *Bacteroidetes* and *Firmicutes* or their individual relative abundances. Although these tests yielded small P-values, the difference between the Shannon diversity index of non-obese and obese individuals was `r alpha_effect_size["shannon"]`%. A power analysis demonstrated that `r number_string[well_powered]` of the studies had sufficient power to detect a 5% difference in diversity. When models trained on one dataset were then tested using the other 9 datasets, the median accuracy varied between `r 100*range(test_summary$accuracy)[1]` and `r 100*range(test_summary$accuracy)[2]`% (median=`r 100*median(test_summary$accuracy)`%). Although there is statistical support for a relationship between the microbial communities found in human feces and obesity status, this association is relatively weak and its detection is confounded by large interpersonal variation and insufficient sample sizes.
 
 
-## Importance
-As interest in the human microbiome grows there is an increasing number of studies that can be used to test numerous hypotheses across human populations. The hypothesis that variation in the gut microbiota can explain or be used to predict obesity status has received considerable attention and is frequently mentioned as an example for the role of the microbiome in human health. Here we assess this hypothesis using `r number_string[n]` independent studies and find that although there is an association, it is smaller than can be detected by most microbiome studies. Furthermore, we directly tested the ability to predict obesity status based on the composition of an individual's microbiome and find that the median classification accuracy is between `r range(test_summary$accuracy)[1]` and `r range(test_summary$accuracy)[2]`%. This type of analysis can be used to design future studies and expanded to explore other hypotheses.
+### Importance
+
+As interest in the human microbiome grows there is an increasing number of studies that can be used to test numerous hypotheses across human populations. The hypothesis that variation in the gut microbiota can explain or be used to predict obesity status has received considerable attention and is frequently mentioned as an example for the role of the microbiome in human health. Here we assess this hypothesis using `r number_string[n]` independent studies and find that although there is an association, it is smaller than can be detected by most microbiome studies. Furthermore, we directly tested the ability to predict obesity status based on the composition of an individual's microbiome and find that the median classification accuracy is between `r 100*range(test_summary$accuracy)[1]` and `r 100*range(test_summary$accuracy)[2]`%. This type of analysis can be used to design future studies and expanded to explore other hypotheses.
 
 
 
@@ -113,20 +123,20 @@ The recent publication of additional studies that collected BMI data for each su
 
 ## Methods
 
-***Literature Review and Study Inclusion***
+***Literature Review and Study Inclusion.***
 We followed the Preferred Reporting Items for Systematic Reviews and Meta-Analyses (PRISMA) guidelines to identify studies to include in our meta-analysis [@moher_preferred_2010]. A detailed description of our selection process and the exact search terms are provided in the Supplement and in figure 1. Briefly, we searched PubMed for original research studies that involved studying obesity and the human microbiome. The initial search yielded 187 studies. We identified number_string[n] additional studies that were not designed to explicitly test for an association between the microbiome and obesity. We then manually curated the 196 studies to select those studies that included BMI and sequence data. This yielded 10 eligible studies. An additional study was removed from our analysis because no individuals in the study had a BMI over 30. Among the final 10 studies, 3 were from identified from our PubMed search [@turnbaugh_core_2009; @zupancic_analysis_2012; @escobar_gut_2014], 5 were originally identified from the 9 studies that did not explicitly investigate obesity but included BMI data [@zeevi_personalized_2015; @ross_16s_2015; @goodrich_human_2014; @wu_linking_2011; @human_microbiome_project_consortium_structure_2012], and two datasets were used [@schubert_microbiome_2014; @baxter_microbiota-based_2016] because these publications did not specifically look for any metabolic or obesity conditions but had control populations and enabled us to help mitigate against publication biases associated with the bacterial microbiome and obesity. The number_string[n] studies are summarized in Tables 1 and 2.
 
 
-***Sequence Analysis Pipeline***
+***Sequence Analysis Pipeline.***
 All sequence data were publicly available and were downloaded from the NCBI Sequence Read Archive, the European Nucleotide Archive, or the investigators' personal website (https://gordonlab.wustl.edu/TurnbaughSE\_10\_09/STM\_2009.html). In total seven studies used 454 [@turnbaugh_core_2009; @zupancic_analysis_2012; @ross_16s_2015; @escobar_gut_2014; @wu_linking_2011; @human_microbiome_project_consortium_structure_2012; @schubert_microbiome_2014] and three studies used Illumina sequencing [@goodrich_human_2014; @zeevi_personalized_2015; @baxter_microbiota-based_2016]. All of these studies used amplification-based 16S rRNA gene sequencing. Among the studies that sequenced the 16S rRNA gene, the researchers targeted the V1-V2  [@wu_linking_2011], V1-V3 [@ross_16s_2015; @escobar_gut_2014; @zupancic_analysis_2012], V3-V5 [@human_microbiome_project_consortium_structure_2012; @schubert_microbiome_2014], V4 [@goodrich_human_2014; @baxter_microbiota-based_2016; ], and V3-4 [@zeevi_personalized_2015] regions. For those studies where multiple regions were sequenced, we selected the region that corresponded to the largest number of subjects [@turnbaugh_core_2009; @human_microbiome_project_consortium_structure_2012]. We processed the 16S rRNA gene sequence data using a standardized mothur pipeline. Briefly, our pipelines attempted to follow previously recommended approaches for 454 and Illumina sequencing data [@Kozich_2013; @Schloss2011]. All sequences were screened for chimeras using UCHIME and assigned to operational taxonomic units (OTUs) using the average neighbor algorithm using a 3% distance threshold [@Edgar2011; @Westcott2015]. All sequence processing was performed using mothur (v.1.37.0) [@mothur].
 
 
-***Data Analysis***
+***Data Analysis.***
 We split the overall meta-analysis into three general strategies using R (`r paste0(R.Version()$major,'.', R.Version()$minor)`). First, we followed the approach employed by Finucane et al [-@finucane_taxonomic_2014] and Walters et al [-@walters_meta-analyses_2014] where each study was re-analyzed separately to identify associations between BMI and the relative abundance of Bacteroidetes and Firmicutes, the ratio of Bacteroidetes and Firmicutes relative abundances (B:F), Shannon diversity, observed richness, and Shannon evenness. After each variable was transformed to fit a normal distribution a two-tailed t-test was performed for comparison of non-obese and obese individuals (i.e. BMI > 35.0). We performed a pooled analysis on these measured variables using linear random effect models to correct for study effect to asses differences on the combined dataset between non-obese and obese groups using the lme4 (v.`r packageDescription("lme4")$Version`) R package. Next, we compared the community structure from non-obese and obese individuals using PERMANOVA analysis of Bray-Curtis distance matrices. This analysis was performed using the vegan (v.`r packageDescription("vegan")$Version`) R package. For both analyses, the datasets were rarefied (N=1000) so that each study within a study had the same number of sequences. Second, for each study we partitioned the subjects into a low or high group depending on whether their alpha diversity metrics were below or above the median value for the study. The relative risk (RR) was then calculated as the ratio of the number of obese individuals in the low group to the number of obese individuals in the high group. We then performed a Fisher exact-test to investigate whether the RR was significantly different from 1.0 within each study and across all of the studies using the epiR (`r packageDescription("epiR")$Version`) and metafor (`r packageDescription("metafor")$Version`) packages. Third, we used the AUCRF (`r packageDescription("AUCRF")$Version`) R package to generate Random Forest models. For each study we developed models using either OTUs or genus-level phylotypes. The quality of each model was assessed by measuring the area under the curve (AUC) of the Receive Operating Characteristic (ROC) using ten-fold cross validation. Because the genus-level phylotype models were developed using a common reference, it was possible to use one study's model (i.e. the training set) to classify the samples from the other studies (i.e. the testing sets). The optimum threshold for the training set was set as the probability threshold that had the highest combined sensitivity and specificity. This threshold was then used to calculate the accuracy of the model applied to the test studies. To generate Receiver Operator Characteristic (ROC) curves and calculate the accuracy of the models we used the pROC (`r packageDescription("pROC")$Version`) R package. Finally, we performed power and sample number simulations for different effect sizes for each study using the pwr (`r packageDescription("pwr")$Version`) R package and base R functions. We also calculated the actual sample size needed based on the effect size of each individual study.
 
 
-***Reproducible methods***
-A detailed and reproducible description of how the data were processed and analyzed can be found at https://github.com/SchlossLab/Sze_ObesityMicrobiomeMeta_mBio_2016/.
+***Reproducible methods.***
+A detailed and reproducible description of how the data were processed and analyzed can be found at https://github.com/SchlossLab/Sze_Obesity_mBio_2016/.
 
 
 
@@ -140,8 +150,8 @@ stopifnot(sig_counts['bf_ratio']==0)
 stopifnot(sig_counts['firmicutes']==0)
 ```
 
-***Alpha diversity analysis***
-We calculated the Shannon diversity index, richness, and Shannon evenness,  the relative abundance of *Bacteroidetes* and *Firmicutes*, and the ratio of their relative abundance (B:F) for each sample. Once we transformed each of the six alpha diversity metrics to make them normally distributed, we used a t-test to identify significant associations between the alpha diversity metric and whether an individual was obese for each of the number_string[n] studies. The B:F and the relative abundance of *Firmicutes* were not significantly associated with obesity in any study. We identified `r sum(alpha$p.value < 0.05)` P-values less than 0.05: `r number_string[sig_counts["sobs"]]` studies indicated obese individuals had a lower richness, `r number_string[sig_counts["shannon"]]` studies indicated a significantly lower diversity, `r number_string[sig_counts["shannoneven"]]` study indicated a significantly lower evenness, and `r number_string[sig_counts["bacteroidetes"]]` study indicated a significantly higher relative abundance of *Bacteroidetes* (Figures 2 and S1). These results largely match those of the Walters and Finucane re-analysis studies. Interestingly, although only `r number_string[sig_counts["shannon"]]` of the 10 studies observed the previously reported association between lower diversity and obesity, the other studies appeared to have the same trend, albeit the differences were not statistically significant. We used a random effects linear model to combine the studies using the study as the random effect and found statistical support for decreased richness, evenness, and diversity among obese individuals (all P<`r max(alpha_composite[alpha_composite$p <0.05, "p"])`). Although there was a significant relationship between these metrics and diversity and obesity status, the effect size was quite small. The obese individuals averaged `r alpha_effect_size["sobs"]`% lower richness, `r alpha_effect_size["shannoneven"]`% lower evenness, and `r alpha_effect_size["shannon"]`% lower diversity. There were no significant associations when we pooled the phylum-level metrics across studies. These results indicate that obese individuals do have a statistically significant lower diversity than non-obese individuals; however, it is questionable whether the difference is biologically significant.
+***Alpha diversity analysis.***
+We calculated the Shannon diversity index, richness, and Shannon evenness,  the relative abundance of *Bacteroidetes* and *Firmicutes*, and the ratio of their relative abundance (B:F) for each sample. Once we transformed each of the six alpha diversity metrics to make them normally distributed, we used a t-test to identify significant associations between the alpha diversity metric and whether an individual was obese for each of the `r number_string[n]` studies. The B:F and the relative abundance of *Firmicutes* were not significantly associated with obesity in any study. We identified `r sum(alpha$p.value < 0.05)` P-values less than 0.05: `r number_string[sig_counts["sobs"]]` studies indicated obese individuals had a lower richness, `r number_string[sig_counts["shannon"]]` studies indicated a significantly lower diversity, `r number_string[sig_counts["shannoneven"]]` study indicated a significantly lower evenness, and `r number_string[sig_counts["bacteroidetes"]]` study indicated a significantly higher relative abundance of *Bacteroidetes* (Figures 2 and S1). These results largely match those of the Walters and Finucane re-analysis studies. Interestingly, although only `r number_string[sig_counts["shannon"]]` of the 10 studies observed the previously reported association between lower diversity and obesity, the other studies appeared to have the same trend, albeit the differences were not statistically significant. We used a random effects linear model to combine the studies using the study as the random effect and found statistical support for decreased richness, evenness, and diversity among obese individuals (all P<`r max(alpha_composite[alpha_composite$p <0.05, "p"])`). Although there was a significant relationship between these metrics and diversity and obesity status, the effect size was quite small. The obese individuals averaged `r alpha_effect_size["sobs"]`% lower richness, `r alpha_effect_size["shannoneven"]`% lower evenness, and `r alpha_effect_size["shannon"]`% lower diversity. There were no significant associations when we pooled the phylum-level metrics across studies. These results indicate that obese individuals do have a statistically significant lower diversity than non-obese individuals; however, it is questionable whether the difference is biologically significant.
 
 ```{r}
 rr_sig <- relative[relative$p.value < 0.05,]
@@ -159,7 +169,7 @@ concatenate_rr <- function(data){
 }
 ```
 
-***Relative risk***
+***Relative risk.***
 Building upon the alpha diversity analysis we calculated the relative risk of being obese based on whether an individual's alpha diversity metrics were below or above the median metric for that study. The results using relative risk largely matched those of using the untransformed alpha diversity data. Across the number_string[n] studies and six metrics, the only significant relative risk values were the richness, evenness, and diversity values from the Goodrich study (Figures 3 and S2). Again, although the relative risk values were not significant for other studies, the values tended to be above one. When we pooled the data using a random effects model, the relative risk associated with having a richness, evenness, or diversity below the median for the population was significantly associated with obesity (all P<`r max(relative_composite[relative_composite$p_value <0.05, "p_value"])`). The relative risks associated with alpha diversity were small. The relative risk of having a low richness was `r concatenate_rr(relative_composite["sobs",])`, low evenness was `r concatenate_rr(relative_composite["shannoneven",])`, and low diversity was `r concatenate_rr(relative_composite["shannon",])`. There were no significant difference in the phylum-level metrics. Again, the relative risk results indicate that individuals with a lower richness, evenness, or diversity are at statistically significant increased risk of being obese, it is questionable whether that risk is biologically or clinically relevant.
 
 
@@ -168,7 +178,7 @@ beta_sig <- beta[beta$p_value < 0.05,]
 stopifnot(beta_sig$dataset == c("escobar", "turnbaugh", "goodrich"))
 ```
 
-***Beta diversity analysis***
+***Beta diversity analysis.***
 Following the approach used by the Walters and Finucane re-analysis studies, for each dataset we calculated a Bray-Curtis distance matrix to measure the difference in the membership and structure of the individuals from each study. We then used PERMANOVA to test for a significant differences between the structure of non-obese and obese individuals. The Escobar, Goodrich, and Turnbaugh datasets indicated a significant difference in community structure (all P<0.05). Because it was not possible to ascertain the directionality of the difference in community structure nor perform a pooled analysis using studies that had non-overlapping 16S rRNA gene sequence regions it is unclear whether these differences reflect a broader, but perhaps small, shift in community structure between non-obese and obese individuals.
 
 
@@ -177,7 +187,7 @@ stopifnot(test_summary[which.min(test_summary$accuracy), "train"]=="turnbaugh")
 stopifnot(test_summary[which.max(test_summary$accuracy), "train"]=="hmp")
 ```
 
-***Development of a microbiome-based classifier of obesity***
+***Development of a microbiome-based classifier of obesity.***
 The Walters re-analysis study suggested that it was possible to classify individuals as being obese or non-obese based on the composition of their microbiota. We repeated this analysis with additional datasets using OTU and genus-level phylotype data. For each study we developed a Random Forest machine learning model to classify individuals. Using ten-fold cross validation, the observed AUC values varied between `r min(otu$auc_cv)` and `r max(otu$auc_cv)` indicating a relatively poor ability to classify individuals (Figure 4A). So that we could test models on other datasets, we trained models using genus-level phylotype data for each dataset. The the observed AUC values for the models applied to the training datasets varied between `r min(genus$auc_cv)` and `r max(genus$auc_cv)`, again indicating a relatively poor ability to classify individuals from the original dataset (Figure 4B). For each model we identified the probability where the sum of the sensitivity and specificity was the highest. We then used this to identify a threshold to calculate the accuracy of the models when applied to the other number_string[n-1] datasets (Figure 5). Although there considerable variation in accuracy values for each model, the median accuracy for each model varied between `r min(test_summary$accuracy)` (Turnbaugh) and `r max(test_summary$accuracy)` (HMP) (median=`r median(test_summary$accuracy)`). When we considered the number of samples, balance of non-obese and obese individuals, and region within the 16S rRNA gene it was not possible to identify factors that predictably affected model performance. The ability to predict obesity status using the relative abundance of OTUs and genera in the communities is only marginally better than random. These results suggest that given the large diversity of microbiome compositions it is difficult to identify a taxonomic signal that can be associated with obesity.
 
 
@@ -199,7 +209,7 @@ range_effect_size <- range(abs(100*(1-alpha[alpha$metric == "shannon","mean_obes
 
 ```
 
-***Power and Sample Size Estimate Simulations***
+***Power and Sample Size Estimate Simulations.***
 The inability to detect a difference between non-obese and obese individuals could be due to the lack of a true effect or because the study had insufficient statistical power to detect a difference because of insufficient sampling, large interpersonal variation, and unbalanced sampling of non-obese and obese individuals. To assess this, we calculated the power to detect differences of 1, 5, 10, and 15% in each of the alpha diversity metrics using the sample sizes used in each of the studies (Figures 6, S3-S8). Although there is no biological rationale for these effect sizes, they represent a range that is plausible. Only the Goodrich study  had power greater than 0.80 to detect a 5% difference in Shannon diversity and `r number_string[length(which_div_at_10)]` of the studies had enough power to detect a 10% difference (Figure 6). None of the studies had sufficient power to detect a 15% difference between B:F values (Figure S5). In fact, the maximum power among any of the studies to detect a 15% difference in B:F values was `r max(power[power$metric=="bf_ratio" & power$effect_size==0.15,"power"])`. Among the tests for relative risk, none of the studies had sufficient power to detect a Cohen's d of 0.10 and only `r number_string[sum(rr_power[rr_power$metric=="shannon" & power$effect_size==0.15,"power"] > 0.80)]` studies had sufficient power to detect a Cohen's d of 0.15. We next estimated how many individuals would need to have been sampled to have sufficient power to detect the four effect sizes assuming the observed interpersonal variation from each study and balanced sampling between the two groups. To detect a 1, 5, 10, and 15% difference in Shannon index, the median sampling effort per group was approximately `r signif(median(power[power$metric=="shannon" & power$effect_size==0.01,"balanced_n"]), 2)`, `r signif(median(power[power$metric=="shannon" & power$effect_size==0.05,"balanced_n"]), 2)`,  `r signif(median(power[power$metric=="shannon" & power$effect_size==0.10,"balanced_n"]), 2)`, and  `r signif(median(power[power$metric=="shannon" & power$effect_size==0.15,"balanced_n"]), 2)` individuals, respectively. To detect a 1, 5, 10, and 15% difference in B:F values, the median sampling effort per group was approximately `r signif(median(power[power$metric=="bf_ratio" & power$effect_size==0.01,"balanced_n"]), 2)`, `r signif(median(power[power$metric=="bf_ratio" & power$effect_size==0.05,"balanced_n"]), 2)`,  `r signif(median(power[power$metric=="bf_ratio" & power$effect_size==0.10,"balanced_n"]), 2)`, and  `r signif(median(power[power$metric=="bf_ratio" & power$effect_size==0.15,"balanced_n"]), 2)`  individuals, respectively. To detect a 1, 5, 10, and 15% difference in relative risk values using Shannon diversity, the median sampling effort per group was approximately `r signif(median(rr_power[rr_power$metric=="bf_ratio" & rr_power$effect_size==0.01,"balanced_n"]), 2)`, `r signif(median(rr_power[rr_power$metric=="bf_ratio" & rr_power$effect_size==0.05,"balanced_n"]), 2)`,  `r signif(median(rr_power[rr_power$metric=="bf_ratio" & rr_power$effect_size==0.10,"balanced_n"]), 2)`, and  `r signif(median(rr_power[rr_power$metric=="bf_ratio" & rr_power$effect_size==0.15,"balanced_n"]), 2)` individuals, respectively. These estimates indicate that most microbiome studies are underpowered to detect modest effect sizes using either metric. In the case of obesity, the studies were underpowered to detect the `signif(range_effect_size, 1)[1]` to `r signif(range_effect_size, 1)[2]`% difference in diversity that was observed across the studies.
 
 
@@ -219,6 +229,7 @@ Although we failed to find an effect it is not realistic to necessarily state th
 
 
 ## Acknowledgements
+
 The authors would like to thank Nielson Baxter and Shawn Whitefield for their suggestions on the development of the manuscript. We are grateful to the authors of the studies used in our meta-analysis who have made their data publicly available or available to us directly. Without their forethought studies such as this would not be possible. This work was supported in part by funding from the National Institutes of Health to PDS (U01AI2425501 and P30DK034933).
 
 
