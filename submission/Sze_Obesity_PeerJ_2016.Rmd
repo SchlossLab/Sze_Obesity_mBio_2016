@@ -218,7 +218,6 @@ Similar to our study, the Walters analysis [@walters_meta-analyses_2014], the au
 Although we failed to find an effect it is not realistic to necessarily state that there is no microbiome impact on obesity. There is strong evidence in murine models of obesity that the microbiome and level of adiposity can be manipulated via genetic manipulation of the animal and manipulation of the community through antibiotics or colonizing germ free mice with diverse fecal material from human donors [@turnbaugh_obesity-associated_2006; @Koren2012; @Cox2014; @Mahana2016; @ley_obesity_2005]. These studies appear to conflict with the observations using human subjects. Recalling the large interpersonal variation in the structure of the microbiome, it is possible that each individual has their own signatures of obesity. Alternatively, it could be that the involvement of the microbiome in obesity is at the level of a common set of metabolites that can be produced from different structures of the microbiome.
 
 
-
 ## Acknowledgements
 The authors would like to thank Nielson Baxter and Shawn Whitefield for their suggestions on the development of the manuscript. We are grateful to the authors of the studies used in our meta-analysis who have made their data publicly available or available to us directly. Without their forethought studies such as this would not be possible. This work was supported in part by funding from the National Institutes of Health to PDS (U01AI2425501 and P30DK034933).
 
@@ -226,86 +225,46 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 \newpage
 
-## Tables
 
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
-```{r Table_1, echo=FALSE, message=FALSE, warning=FALSE}
-
-table1 <- read.table("../results/tables/table1.demographics", header = T)
-
-colnames(table1) <- c("Study", "Age (SD)", "Sex (F|M)", "European Ancestry (%)", "Obese (No|Yes)", "BMI (SD)", "Min BMI","Max BMI")
-
-kable(table1, format = "markdown", align = 'c', padding = 2)
 
 
-```
 
-* For Turnbaugh only BMI group information was provided and only an age range was given.
 
 \newpage
 
-**Table 2. Summary of Important Study Characteristics.**
+**Figure 1: PRISMA flow diagram of total records searched [@Moher2009].**
 
-```{r Table_2, echo=FALSE, message=FALSE, warning=FALSE}
+**Figure 2: Individual and combined comparison of obese and non-obese groups for Shannon diversity (A) and B:F (B).**
 
-Study <- as.character(table1$Study)
-#New Order
-  #baxter, escobar, hmp, ross, schubert, turnbaugh, wu, zupancic, goodrich, zeevi
+**Figure 3: Meta analysis of the relative risk of obesity based on Shannon diversity (A) or B:F (B).**
 
-Type <- c("Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational", "Observational")
+**Figure 4: ROC curves for each study based on classification of non-obese or obese groups using OTUs (A) or genus-level classification (B).**
 
-Population <- c("Adults without Cancer from Texas, Ontario, Michigan, Massachusetts", "Healthy adults from Columbia", "Healthy Adults from Pennsylvania", "Hispanic adults with and without type 2 diabetes from Texas
-", "Nondiarrheal indivdiuals without infection history", "Adult twins and mothers from Missouri", "Healthy Adults from Texas and Missouri", "Amish Adults with and without metabolic syndrome from Pennsylvania", "Adult twins and mothers from the United Kingdom", "Healthy Adults from Tel Aviv")
+**Figure 5: Overall accuracy of each study to predict non-obese and obese individuals based on that study's Random Forest machine learning model applied to each of the other studies.**
 
+**Figure 6: Power (A) and sample size simulations (B) for Shannon diversity for differentiating between non-obese versus obese for effect sizes of 1, 5, 10, and 15%.** Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
 
-Published <- c("Yes", "Yes", "Yes", "Yes", "Yes", "Yes", "Yes","Yes", "Yes", "Yes")
+\newpage
 
-Outcomes <- c("Did not investigate control populations for relationship with BMI", "Firmicutes less abundant at higher BMI", "No significant correlations", "Mentions obesity, no specific correlations made though", "Did not investigate control populations for relationship with BMI", "Unweighted UniFrac Correlation with BMI", "Decrease diversity, Bacteroidetes, and Actinobacteria correlated with increased BMI ", "Bacteroidetes/Firmicutes ratio adjusted BMI correlation", "Christensenellaceae higher in low BMI individuals. No other correlations found.", "Found associations with postprandial (post meal) glycemic responses, which correlates with BMI, and Proteobacteria, Actinobacteria, and Enterobacteriaceae")
+**Figure S1: Individual and Combined comparison of Obese and Non-Obese groups Based on Evenness (A), Richness (B), or the Relative Abundance of Bacteroidetes (C) and Firmictues (D).**
 
-table2 <- cbind(Study, Type, Population, Published, Outcomes)
+**Figure S2: Meta Analysis of the Relative Risk of Obesity Based on Evenness (A), Richness (B), or the Relative Abundance of Bacteroidetes (C) and Firmictues (D).**
 
-colnames(table2) <- c("Study", "Study Type", "Population", "Published", "Outcomes Reported")
+**Figure S3: Power (A) and sample size simulations (B) for B:F for differentiating between non-obese versus obese for effect sizes of 1, 5, 10, and 15%.** Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
+**Figure S4: Power (A) and sample size simulations (B) for richness for differentiating between non-obese versus obese for effect sizes of 1, 5, 10, and 15%.** Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
-kable(table2, format = "markdown", align = 'c', padding = 2)
-```
+**Figure S5: Power (A) and sample size simulations (B) for evenness for differentiating between non-obese versus obese for effect sizes of 1, 5, 10, and 15%.** Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
+**Figure S6: Power (A) and sample size simulations (B) for the relative abundance of Bacteroidetes for differentiating between non-obese versus obese for effect sizes of 1, 5, 10, and 15%.** Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
+**Figure S7: Power (A) and sample size simulations (B) for the relative abundance of Firmicutes for differentiating between non-obese versus obese for effect sizes of 1, 5, 10, and 15%.** Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
-
-
-
-*******
-##### Figures:
+**Figure S8: Power (A) and sample size simulations (B) for relative risk of obesity based on Shannon diversity.**  Power calculations use the sampling distribution from the original studies and the sample size estimations assume an equal amount of sampling from each treatment group.
 
 
-**Figure 1: PRISMA Flow Diagram of Total Records Searched.**  This was adapted from:  Moher D, Liberati A, Tetzlaff J, Altman DG, The PRISMA Group (2009). Preferred Reporting Items for Systematic Reviews and Meta-Analyses: The PRISMA Statement. PLoS Med 6(7): e1000097. doi:10.1371/journal.pmed1000097.
+\newpage
 
-
-
-**Figure 2: Individual and Combined comparison of Obese and Non-Obese groups for Shannon Diversity and B:F Ratio.** **A)** For Shannon diversity only Baxter (P-value = `r format(round(alpha_tests.summary[which(alpha_tests.summary$dataset == 'baxter' & alpha_tests.summary$metric == 'shannon'), 'p.value'], 2), nsmall = 2)` and Goodrich (P-value = `r format(round(alpha_tests.summary[which(alpha_tests.summary$dataset == 'goodrich' & alpha_tests.summary$metric == 'shannon'), 'p.value'], 5), nsmall = 5)`) studies indivdiually were signficantly different for non-obese and obese groups.  When the data sets were combined and study effect was corrected for,  there was a significant difference between Non-Obese and Obese groups (P-value = `r format(round(alpha_composite.summary['shannon', 'composite_p'], 5), nsmall = 5)`). **B)** For the B:F ratio there was no individual study that was significant nor was their a difference when the data was combined and study effect corrected for between Non-Obese and Obese groups (P > 0.05).    
-
-
-
-**Figure 3: Meta Analysis of the Relative Risk of Obesity Based on Shannon Diversity or Bacteroidetes/Firmicutes Ratio.**  Groups were divided for each study on high and low Shannon Diversity or Bacteroidetes/Firmicutes (B:F) ratio groups based on the median for that study. Red represents studies that used the 16S rRNA V4 region, yellow represents studies that used a V1-V3 approach, blue represents studies that used either a V1-V2 or just a V2 approach, green represents studies that used a V3-V4 region, and orange represents studies that used the V3-V5 region.  **A)** The overall pooled relative risk for Shannon Diversity was `r format(round(RR_composite['shannon', 'rr'],2), nsmall=2)` with a P-value of `r format(round(RR_composite['shannon', 'p_value']), nsmall=2)`.  **B)** The overall pooled relative risk for the B:F ratio was  `r format(round(RR_composite['bf_ratio', 'rr'],2), nsmall=2)` with a P-value of `r format(round(RR_composite['bf_ratio', 'p_value'], 2), nsmall=2)`.
-
-
-
-
-**Figure 4: ROC Curves for Each Study based on Classification of Non-Obese or Obese Groups at the Genus or OTU level.**  **A)** No significant difference was found between the different ROC curves based on Study for the genus level.  The overall AUCs ranged from `r round(min(rand_forest.genus.summary$auc), 2)` to `r round(max(rand_forest.genus.summary$auc), 2)` with a mean of `r round(mean(rand_forest.genus.summary$auc), 2)`. **B)** Similarly no difference was found between the ROC curves based on Study at the OTU level.  The overall mean of the AUCs were slightly higher overall than the genus level `r round(mean(rand_forest.otu.summary$auc), 2)` but the range was greater going from `r round(min(rand_forest.otu.summary$auc), 2)` to `r round(max(rand_forest.otu.summary$auc), 2)`.
-
-
-**Figure 5: Overall Accuracy of Each Study to Predict Non-Obese and Obese Individuals based on that Study's Classification Variables** Overall there is no significant difference between the studes in mean accuracy.  Additionally, the accuracy for each study group to predict Non-Obese and Obese individuals was relatively low.
-
-
-
-**Figure 6: Summary of Power and Sample Size Simulations for Shannon Diversity for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
-
-
-
-
-**Figure 7. Summary of Power and Sample Size Simulations for Bacteroidetes/Firmicutes Ratio for Non-obese versus Obese**  P-values listed in the legend represent the outcome of a wilcoxson rank sum test between non-obese and obese for each specific data set.  **A)** The dotted lines represent the actual effect size for each specific study.  **B)** The dotted lines represent the needed n to achieve an 80% power with the actual study effect size.
-
-*******
-##### References:
+## References
