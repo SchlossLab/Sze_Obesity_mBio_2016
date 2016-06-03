@@ -237,15 +237,6 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 \newpage
 
 
-**Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
-
-```{r}
-source('code/make_table1.R', echo=TRUE)
-table1
-```
-
-\newpage
-
 **Figure 1: PRISMA flow diagram of total records searched [@Moher2009].**
 
 **Figure 2: Individual and combined comparison of obese and non-obese groups for Shannon diversity (A) and B:F (B).**
