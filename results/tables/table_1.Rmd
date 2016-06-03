@@ -1,3 +1,22 @@
+---
+output:
+  pdf_document:
+    keep_tex: true
+    includes:
+      in_header: table_header.tex
+tables: true
+geometry: margin=0.75in
+---
+
+**Table 1. Summary of obesity, demographic, and beta-diversity analysis data for the studies used in the meta-analysis.** NA indicates that those metadata were not available for that study.
+
+```{r results='asis', echo=FALSE, warning=FALSE, eval=TRUE}
+source('code/utilities.R')
+get_dependencies('xtable')
+
+options(xtable.sanitize.text.function=identity)
+
+
 capwords <- function(s, strict = FALSE) {
 		s <- as.character(s)
 		cap <- function(s) paste(toupper(substring(s, 1, 1)),
@@ -49,7 +68,7 @@ get_study_summary <- function(study, beta = beta_summary){
 	per_white <- format(round(100*mean(metadata$white), 1), nsmall=1L)
 
 	list(study = capwords(study),
-				n_subjects = n_subjects,
+				n_subjects = as.character(n_subjects),
 				per_obese = per_obese,
 				bmi_summary = bmi,
 				per_female = per_female,
@@ -64,4 +83,27 @@ datasets <- sort(rownames(beta_summary))
 
 study_summary <- t(sapply(datasets, get_study_summary))
 
-table1 <- kable(study_summary, row.names=FALSE, col.names=c("Study", "Subjects (N)", "Obese (%)", "Average BMI (Min-Max)", "Female (%)", "Average Age (Min-Max)", "Non-Hispanic White (%)", "AMOVA (P-value)"), align=c('l',rep('c', 7)), digits=3)
+#colnames(study_summary) <- LETTERS[1:8]
+colnames(study_summary) <- c("Study", "\\bigcell{c}{Subjects \\\\ (N)}",
+													"\\bigcell{c}{Obese \\\\ (\\%)}",
+													"\\bigcell{c}{Average BMI \\\\ (Min-Max)}",
+													"\\bigcell{c}{Female \\\\ (\\%)}",
+													"\\bigcell{c}{Average Age \\\\ (Min-Max)}",
+													"\\bigcell{c}{Non-Hispanic \\\\ White (\\%)}",
+													"\\bigcell{c}{AMOVA \\\\ (P-value)}")
+
+colnames(study_summary) <- paste0("\\textbf{", colnames(study_summary), "}")
+
+composite <- xtable(study_summary, label="")
+
+align(composite) <- "llccccccc"
+
+print(composite,
+		include.rownames=FALSE,
+		include.colnames=TRUE,
+		hline.after = c(-1,0, nrow(composite)),
+		comment=FALSE,
+		size="normalsize",
+		table.placement="!ht"
+		)
+```

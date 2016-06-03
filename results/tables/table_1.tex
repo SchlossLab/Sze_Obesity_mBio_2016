@@ -1,0 +1,128 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{longtable,booktabs}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{}
+  \pretitle{\vspace{\droptitle}}
+  \posttitle{}
+  \author{}
+  \preauthor{}\postauthor{}
+  \date{}
+  \predate{}\postdate{}
+
+
+\usepackage{helvet} % Helvetica font
+\renewcommand*\familydefault{\sfdefault} % Use the sans serif version of the font
+\usepackage[T1]{fontenc}
+
+\usepackage{multirow}
+
+\pagenumbering{gobble}
+
+\usepackage{array}
+
+\newcommand{\bigcell}[2]{\begin{tabular}{@{}#1@{}}#2\end{tabular}}
+
+\usepackage{rotating}
+
+\usepackage{caption}
+
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+\begin{document}
+
+\textbf{Table 1. Summary of obesity, demographic, and beta-diversity
+analysis data for the studies used in the meta-analysis.} NA indicates
+that those metadata were not available for that study.
+
+\begin{table}[!ht]
+\centering
+\begingroup\normalsize
+\begin{tabular}{lccccccc}
+  \hline
+\textbf{Study} & \textbf{\bigcell{c}{Subjects \\ (N)}} & \textbf{\bigcell{c}{Obese \\ (\%)}} & \textbf{\bigcell{c}{Average BMI \\ (Min-Max)}} & \textbf{\bigcell{c}{Female \\ (\%)}} & \textbf{\bigcell{c}{Average Age \\ (Min-Max)}} & \textbf{\bigcell{c}{Non-Hispanic \\ White (\%)}} & \textbf{\bigcell{c}{AMOVA \\ (P-value)}} \\ 
+  \hline
+Baxter & 172 & 27.3 & 27.0 (17.5-46.9) & 64.5 & 54.3 (29.0-80.0) & 87.8 & 0.078 \\ 
+  Escobar & 30 & 33.3 & 27.4 (19.5-37.6) & 46.7 & 38.1 (21.0-60.0) & NA & 0.047 \\ 
+  Goodrich & 982 & 19.7 & 26.3 (16.2-52.4) & 98.9 & 61.0 (23.0-86.0) & NA & <0.001 \\ 
+  Hmp & 287 & 10.8 & 24.3 (19.0-34.0) & 49.1 & 26.3 (18.0-40.0) & 81.5 & 0.322 \\ 
+  Ross & 63 & 60.3 & 31.6 (22.1-47.9) & 76.2 & 57.0 (33.0-81.0) & 0.0 & 0.845 \\ 
+  Schubert & 104 & 32.7 & 28.2 (18.5-62.5) & 66.3 & 52.8 (19.0-88.0) & 82.7 & 0.180 \\ 
+  Turnbaugh & 146 & 67.8 & NA & NA & NA & 51.4 & 0.040 \\ 
+  Wu & 64 & 7.8 & 24.3 (14.0-41.3) & 53.1 & 26.3 (2.16-50.0) & NA & 0.577 \\ 
+  Zeevi & 731 & NA & 26.4 (16.4-47.0) & NA & 43.4 (18.0-70.0) & NA & 0.135 \\ 
+  Zupancic & 207 & 36.2 & 28.2 (18.2-127.0) & 57.0 & 46.7 (20.0-79.0) & 100.0 & 0.206 \\ 
+   \hline
+\end{tabular}
+\endgroup
+\label{}
+\end{table}
+
+\end{document}

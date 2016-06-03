@@ -128,7 +128,7 @@ $(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
 
 ################################################################################
 #
-#	Part 4: Generate figures
+#	Part 4: Generate figures and table
 #
 ################################################################################
 
@@ -179,13 +179,18 @@ $(FIGS)/rr_%_power.tiff : code/plot_power.R\
 												$(PROC)/rr_power.predicted
 	R -e "source('$<'); build_plots('rr')"
 
-
+$(TABLES)/table_1.pdf : results/tables/table_1.Rmd $(PROC)/beta_tests.summary\
+												$(METADATA)
+	R -e 'render("$<")'
 
 ################################################################################
 #
 #	Part 5: write.paper
 #
 ################################################################################
+
+submission/table_1.pdf : $(TABLES)/table_1.pdf
+	cp $< $@
 
 submission/figure_1.tiff : (FIGS)/figure_1.tiff
 	convert (FIGS)/flow_chart.png submission/figure_1.tiff
@@ -239,6 +244,7 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							submission/figure_s3.tiff submission/figure_s4.tiff\
 							submission/figure_s5.tiff submission/figure_s6.tiff\
 							submission/figure_s7.tiff submission/figure_s8.tiff\
+							submission/table_1.pdf\
 							$(PROC)/alpha_tests.summary $(PROC)/alpha_composite.summary\
 							$(PROC)/relative_risk.summary $(PROC)/relative_risk.composite\
 							$(PROC)/beta_tests.summary\
@@ -247,6 +253,6 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							$(PROC)/random_forest.genus.train_test\
 							$(PROC)/alpha_power.predicted\
 							$(PROC)/rr_power.predicted
-	R -e "render('submission/Sze_Obesity_mBio_2016.Rmd', clean=FALSE)"
+	R -e "library(rmarkdown);render('submission/Sze_Obesity_mBio_2016.Rmd', clean=FALSE)"
 	mv submission/Sze_Obesity_mBio_2016.utf8.md submission/Sze_Obesity_mBio_2016.md
 	rm submission/Sze_Obesity_mBio_2016.knit.md
