@@ -1,0 +1,59 @@
+---
+title: ""
+bibliography: reference.bib
+output:
+  pdf_document:
+    keep_tex: true
+    includes:
+      in_header: header.tex
+csl: mbio.csl
+fontsize: 12pt
+geometry: margin=1.0in
+---
+
+## Supplementary Text 1: Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome
+
+Marc A Sze and Patrick D Schloss
+
+
+### In-Depth Overview of Search Strategy
+
+The initial search strategy included looking for all papers that initially fit under the below NCBI PubMed advanced search criteria.  The terms included in this criteria were that the manuscript had to have "Bacterial Microbiome" and "Obesity, BMI, bmi, obesity" in their manuscript criteria, it was not published more than 10 years ago, they were not review articles, and it contained research on humans only.  The below formula when put into PubMed should recapitulate our initial search on the website.
+
+```{bash, eval=FALSE}
+(((((((((Bacterial Microbiome) AND (Obesity or bmi or body mass index or BMI or obesity) AND "last 10 years"[PDat] AND Humans[Mesh])) NOT review[ptyp]) AND "last 10 years"[PDat] AND Humans[Mesh])) AND "last 10 years"[PDat] AND Humans[Mesh])) AND "last 10 years"[PDat] AND Humans[Mesh])
+```
+
+This search yielded a total of 187 manuscripts.  From two previous other reviews of obesity and the bacterial microbiome along with knowledge of two other published papers that investigated obesity but were missed by the database search we obtained a total of 7 more articles.  We also had access to normal healthy individuals from an unpublished dataset.  This brought our total number of records to 196.  
+
+From this total we browsed abstracts for mention of stool or feces examination, that did not involve children, was not a clinical trial for probiotics or other diet related treatments, did not only have participants with inflammatory bowel disease, the articles were in English, did not only use PCR, qPCR, or RT-PCR only for their analysis, and sequencing that used only clone libraries.  This ultimately excluded all but a total of 13 studies.
+
+From this total of 11 studies with the full text was reviewed for whether or not sequencing data was publicly available, BMI information (either categorical or continuous) was available in a supplement or, if it was not available, whether authors upon contact were willing to share this information or direct us to repositories that stored this specific information.  One study was excluded [@yatsunenko_human_2012] because it contained children and their sequencing of the 16S rRNA gene involved amplicons of only 100bp in length.  They also did not have obesity as part of their results in the actual published manuscript.  The second study was excluded because it did not use 16S rRNA gene sequencing for their bacterial microbiome analysis [@arumugam_enterotypes_2011].  
+
+Once these 2 studies were excluded there was a total of 11 studies in the qualitative synthesis of the analysis.  Because we decided a prioi to use the standard definition for BMI group classification one study from this 11 did not have any individuals who were obese by this criteria [@nam_comparative_2011] and was excluded from the final quantitative synthesis and analysis.  
+
+***Inclusion Criteria:***
+
+* Contains mention of Bacterial Microbiome and Obesity
+* BMI, bmi, or obesity could be referenced instead of Obesity
+* Not published more than 10 years ago
+* Research on Humans only
+* At least one specific result examining obesity and a bacterial microbiome measure
+* Participants did not have Inflammatory Bowel Disease or Cancer
+* Greater than 100bp single or dual end reads for 16S Sequencing
+* DNA obtained from stool or feces
+
+
+***Exclusion Criteria:***
+
+* PCR, qPCR, metagenomic sequencing, or RT-PCR used as main analysis Tool
+* TRFLP or clone sequencing used to asses the bacterial community
+* Utilization of 100bp or less single end reads for sequencing
+* Sequencing Data not publicly available for download
+* BMI not available and authors do not return correspondence
+* Samples were not stool or feces
+* Study contained children
+* Study was a review
+
+
+### References
