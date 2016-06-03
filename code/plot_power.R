@@ -32,9 +32,9 @@ build_plots <- function(method){
 
 		stagger <- seq(-0.3,0.3,length.out=n_studies)
 
-		pdf_file <- paste0("results/figures/", method, "_", m, "_power.pdf")
+		tiff_file <- paste0("results/figures/", method, "_", m, "_power.tiff")
 
-		pdf(file=pdf_file, width=6.0, height=5)
+		tiff(file=tiff_file, width=6.0, height=5, units='in', res=300)
 		layout(matrix(c(1,1,3,2,2,3,0,0,0), nrow=3, byrow=T), width=c(1,1,0.4), height=c(1,1,0.2))
 
 		par(mar=c(0.5,5,0.5,0.5))

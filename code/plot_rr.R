@@ -14,8 +14,8 @@ make_study_label <- function(datasets){
 make_metric_label <- function(metric){
 
 	formatted_metrics <- c(shannon = "Relative Risk\nShannon Diversity Index",
-												shannoneven = "Relative Risk\nShannon Evenness Index",
-												sobs = "Relative Risk\nNumber of Observed OTUs",
+												shannoneven = "Relative Risk\nShannon Evenness\nIndex",
+												sobs = "Relative Risk\nNumber of\nObserved OTUs",
 												bacteroidetes = "Relative Risk\nRelative Abundance\nof Bacteroidetes",
 												firmicutes = "Relative Risk\nRelative Abundance\nof Firmicutes",
 												bf_ratio = "Relative Risk\nRatio of Bacteroidetes to Firmicutes"
@@ -78,8 +78,8 @@ rr_plot <- function(metric){
 build_figure <- function(metrics, width=6.5, height=3.75){
 	n_metrics <- length(metrics)
 
-	output_file <- paste0("results/figures/rr_", paste(metrics, collapse="_"), ".pdf")
-	pdf(file=output_file, width=width, height=height)
+	output_file <- paste0("results/figures/rr_", paste(metrics, collapse="_"), ".tiff")
+	tiff(file=output_file, width=width, height=height, units='in', res=300)
 
 	axis_width <- 0.12 * n_metrics
 	layout(matrix(c(n_metrics+1, seq(1:(n_metrics))), nrow=1), width=c(axis_width, rep(1, n_metrics)))
@@ -99,5 +99,3 @@ build_figure <- function(metrics, width=6.5, height=3.75){
 	dev.off()
 
 }
-
-build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'))

@@ -132,32 +132,32 @@ $(PROC)/rr_power.% : code/run_power_analysis.R code/utilities.R\
 #
 ################################################################################
 
-$(FIGS)/shannon_bf_ratio.pdf : code/plot_alpha_diversity.R\
+$(FIGS)/shannon_bf_ratio.tiff : code/plot_alpha_diversity.R\
 												$(PROC)/alpha_composite.summary\
 												$(PROC)/alpha_tests.summary
 	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
 
 
-$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
+$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff : \
 												code/plot_alpha_diversity.R\
 												$(PROC)/alpha_composite.summary\
 												$(PROC)/alpha_tests.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
-$(FIGS)/rr_shannon_bf_ratio.pdf : code/plot_rr.R\
+$(FIGS)/rr_shannon_bf_ratio.tiff : code/plot_rr.R\
 												$(PROC)/relative_risk_composite\
 												$(PROC)/relative_risk.summary
 	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
 
 
-$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.pdf : \
+$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff : \
 												code/plot_rr.R\
 												$(PROC)/relative_risk_composite\
 												$(PROC)/relative_risk.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
 
-$(FIGS)/roc_curve.pdf : code/plot_roc_data.R\
+$(FIGS)/roc_curve.tiff : code/plot_roc_data.R\
 												$(PROC)/random_forest.otu.roc_data\
 												$(PROC)/random_forest.otu.summary\
 												$(PROC)/random_forest.genus.roc_data\
@@ -165,17 +165,17 @@ $(FIGS)/roc_curve.pdf : code/plot_roc_data.R\
 	R -e "source('$<'); build_figure()"
 
 
-$(FIGS)/train_test.pdf : code/plot_train_test.R\
+$(FIGS)/train_test.tiff : code/plot_train_test.R\
 												$(PROC)/random_forest.genus.train_test
 	R -e "source('$<');"
 
 
-$(FIGS)/alpha_%_power.pdf : code/plot_power.R\
+$(FIGS)/alpha_%_power.tiff : code/plot_power.R\
 												$(PROC)/alpha_power.predicted
 	R -e "source('$<'); build_plots('alpha')"
 
 
-$(FIGS)/rr_%_power.pdf : code/plot_power.R\
+$(FIGS)/rr_%_power.tiff : code/plot_power.R\
 												$(PROC)/rr_power.predicted
 	R -e "source('$<'); build_plots('rr')"
 

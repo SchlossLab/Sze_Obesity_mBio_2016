@@ -69,7 +69,7 @@ plot_roc_data <- function(data_type, double=TRUE){
 
 build_figure <- function(){
 
-	pdf(file=paste0("results/figures/roc_curve.pdf"), width=7.5, height=4)
+	tiff(file=paste0("results/figures/roc_curve.tiff"), width=7.5, height=4, units='in', res=300)
 	layout(matrix(c(3,1,2), nrow=1), width=c(0.15, 1,1))
 	plot_roc_data("otu")
 	plot_roc_data("genus")

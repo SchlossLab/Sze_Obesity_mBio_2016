@@ -1,6 +1,6 @@
-pdf(file="results/figures/train_test.pdf", width=10, height=4)
+tiff(file="results/figures/train_test.tiff", width=6.75, height=3, units='in', res=300)
 
-par(mar=c(4,4,0.5,0.5))
+par(mar=c(2.5,4,0.5,0.5))
 z <- read.table(file="data/process/random_forest.genus.train_test", header=T, stringsAsFactors=F)
 
 o <- order(z$train, z$test)
@@ -33,10 +33,10 @@ for(s in 1:n_studies){
 
 }
 
-axis(1, at=1:length(studies), labels=names[studies], cex.axis=0.8)
+mtext(1, at=1:length(studies), text=names[studies], cex=0.7)
 axis(2, las=2)
 
-points(x=1:10, y=rep(-0.23, 10), pch=pch[studies], bg=bg[studies], col=col[studies], xpd=T, cex=2, lwd=2)
+points(x=1:10, y=rep(-0.2, 10), pch=pch[studies], bg=bg[studies], col=col[studies], xpd=T, cex=2, lwd=2)
 box()
 
 dev.off()

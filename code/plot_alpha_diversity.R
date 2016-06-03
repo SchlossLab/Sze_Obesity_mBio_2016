@@ -66,7 +66,7 @@ diversity_plot <- function(metric){
 
 	points(x=c(mean(subset$mean_non), mean(subset$mean_obese)), y=c(-gap,gap), pch=21, bg=c("red", "blue"), xpd=T)
 
-	if(composite[metric,1] < 0.05){
+	if(composite[composite$metric == metric,"p"] < 0.05){
 		text(x=0, y=0, labels="*", cex=3)
 	}
 
@@ -84,8 +84,8 @@ build_figure <- function(metrics, width=6.5, height=3.75, leg=c(8, 10)){
 
 	n_metrics <- length(metrics)
 
-	output_file <- paste0("results/figures/", paste(metrics, collapse="_"), ".pdf")
-	pdf(file=output_file, width=width, height=height)
+	output_file <- paste0("results/figures/", paste(metrics, collapse="_"), ".tiff")
+	tiff(file=output_file, width=width, height=height, units='in', res=300)
 
 	axis_width <- 0.12 * n_metrics
 	layout(matrix(c(n_metrics+1, seq(1:(n_metrics))), nrow=1), width=c(axis_width, rep(1, n_metrics)))
