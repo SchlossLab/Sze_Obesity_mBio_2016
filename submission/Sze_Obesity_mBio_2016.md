@@ -144,6 +144,52 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
 
 
+```
+## 
+## > capwords <- function(s, strict = FALSE) {
+## +     s <- as.character(s)
+## +     cap <- function(s) paste(toupper(substring(s, 1, 1)), {
+## +         s <- su .... [TRUNCATED] 
+## 
+## > make_study_label <- function(dataset) {
+## +     study <- ifelse(dataset == "hmp", "HMP", capwords(dataset))
+## + }
+## 
+## > format_p <- function(p_value) {
+## +     char_p <- format(round(p_value, 3), nsmall = 3)
+## +     if (p_value < 0.001) {
+## +         char_p <- "<0.001"
+## +    .... [TRUNCATED] 
+## 
+## > get_study_summary <- function(study, beta = beta_summary) {
+## +     metadata_file <- paste0("data/", study, "/", study, ".metadata")
+## +     metadata <- .... [TRUNCATED] 
+## 
+## > beta_summary <- read.table("data/process/beta_tests.summary", 
+## +     header = T, row.names = 1)
+## 
+## > datasets <- sort(rownames(beta_summary))
+## 
+## > study_summary <- t(sapply(datasets, get_study_summary))
+## 
+## > kable(study_summary, row.names = FALSE, col.names = c("Study", 
+## +     "Subjects (N)", "Obese (%)", "Average BMI (Min-Max)", "Female (%)", 
+## +     "Av ..." ... [TRUNCATED] 
+## 
+## 
+## Study        Subjects (N)    Obese (%)    Average BMI (Min-Max)    Female (%)    Average Age (Min-Max)    Non-Hispanic White (%)    AMOVA (P-value) 
+## ----------  --------------  -----------  -----------------------  ------------  -----------------------  ------------------------  -----------------
+## Baxter           172           27.3         27.0 (17.5-46.9)          64.5         54.3 (29.0-80.0)                87.8                  0.078      
+## Escobar           30           33.3         27.4 (19.5-37.6)          46.7         38.1 (21.0-60.0)                 NA                   0.047      
+## Goodrich         982           19.7         26.3 (16.2-52.4)          98.9         61.0 (23.0-86.0)                 NA                  <0.001      
+## Hmp              287           10.8         24.3 (19.0-34.0)          49.1         26.3 (18.0-40.0)                81.5                  0.322      
+## Ross              63           60.3         31.6 (22.1-47.9)          76.2         57.0 (33.0-81.0)                0.0                   0.845      
+## Schubert         104           32.7         28.2 (18.5-62.5)          66.3         52.8 (19.0-88.0)                82.7                  0.180      
+## Turnbaugh        146           67.8                NA                  NA                 NA                       51.4                  0.040      
+## Wu                64            7.8         24.3 (14.0-41.3)          53.1         26.3 (2.16-50.0)                 NA                   0.577      
+## Zeevi            731            NA          26.4 (16.4-47.0)           NA          43.4 (18.0-70.0)                 NA                   0.135      
+## Zupancic         207           36.2         28.2 (18.2-127.0)         57.0         46.7 (20.0-79.0)               100.0                  0.206
+```
 
 \newpage
 
