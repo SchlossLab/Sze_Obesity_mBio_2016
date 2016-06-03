@@ -145,7 +145,6 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 
 
-
 \newpage
 
 **Figure 1: PRISMA flow diagram of total records searched [@Moher2009].**
