@@ -8,7 +8,7 @@ tables: true
 geometry: margin=0.75in
 ---
 
-**Table 1. Summary of obesity, demographic, and beta-diversity analysis data for the studies used in the meta-analysis.** NA indicates that those metadata were not available for that study.
+**Table 1. Summary of obesity, demographic, sequencing, and beta-diversity analysis data for the studies used in the meta-analysis.** NA indicates that those metadata were not available for that study.
 
 ```{r results='asis', echo=FALSE, warning=FALSE, eval=TRUE}
 source('code/utilities.R')
@@ -38,6 +38,36 @@ format_p <- function(p_value){
 
 	return(char_p)
 }
+
+
+region <- c(
+	baxter = "V4",
+	escobar = "V2",
+	hmp = "V3-V5",
+	ross = "V1-V3",
+	schubert = "V4",
+	turnbaugh = "V2",
+	wu = "V1-V2",
+	zupancic = "V3-V5",
+	goodrich = "V4",
+	zeevi = "V3-V4"
+)
+
+technology <-  c(
+	baxter = "MiSeq",
+	escobar = "454",
+	hmp = "454",
+	ross = "454",
+	schubert = "MiSeq",
+	turnbaugh = "454",
+	wu = "454",
+	zupancic = "454",
+	goodrich = "MiSeq",
+	zeevi = "MiSeq"
+)
+
+
+
 
 get_study_summary <- function(study, beta = beta_summary){
 	metadata_file <- paste0('data/', study, '/', study, '.metadata')
@@ -74,6 +104,8 @@ get_study_summary <- function(study, beta = beta_summary){
 				per_female = per_female,
 				age_summary = age,
 				per_white = per_white,
+				method = technology[study],
+				region = region[study],
 				beta_p = format_p(beta_summary[study,'p_value']))
 }
 
@@ -90,20 +122,22 @@ colnames(study_summary) <- c("Study", "\\bigcell{c}{Subjects \\\\ (N)}",
 													"\\bigcell{c}{Female \\\\ (\\%)}",
 													"\\bigcell{c}{Average Age \\\\ (Min-Max)}",
 													"\\bigcell{c}{Non-Hispanic \\\\ White (\\%)}",
+													"\\bigcell{c}{Sequencing \\\\ Method}",
+													"\\bigcell{c}{16S rRNA \\\\ Gene Region}",
 													"\\bigcell{c}{AMOVA \\\\ (P-value)}")
 
 colnames(study_summary) <- paste0("\\textbf{", colnames(study_summary), "}")
 
 composite <- xtable(study_summary, label="")
 
-align(composite) <- "llccccccc"
+align(composite) <- "llccccccccc"
 
 print(composite,
 		include.rownames=FALSE,
 		include.colnames=TRUE,
 		hline.after = c(-1,0, nrow(composite)),
 		comment=FALSE,
-		size="normalsize",
+		size="scriptsize",
 		table.placement="!ht"
 		)
 ```
