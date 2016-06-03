@@ -154,7 +154,7 @@ $(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff : \
 												code/plot_rr.R\
 												$(PROC)/relative_risk_composite\
 												$(PROC)/relative_risk.summary
-	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
+	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'))"
 
 
 $(FIGS)/roc_curve.tiff : code/plot_roc_data.R\
