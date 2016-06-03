@@ -39,11 +39,11 @@ plot_roc_data <- function(data_type, double=TRUE){
 	}
 
 	if(double == FALSE){
-		par(mar=c(4,4,0.5,0.5))
+		par(mar=c(4,4,2,0.5))
 		plot(NA, xlim=c(1,0), ylim=c(0,1), axes=F, ylab="Specificity", xlab="Sensitivity")
 		axis(2, las=2)
 	} else {
-		par(mar=c(4,0.5,0.5,0.5))
+		par(mar=c(4,0.5,2,0.5))
 		plot(NA, xlim=c(1,0), ylim=c(0,1), axes=F, ylab="", xlab="Sensitivity")
 		axis(2, las=2, labels=NA)
 	}
@@ -71,10 +71,14 @@ build_figure <- function(){
 
 	tiff(file=paste0("results/figures/roc_curve.tiff"), width=7.5, height=4, units='in', res=300)
 	layout(matrix(c(3,1,2), nrow=1), width=c(0.15, 1,1))
-	plot_roc_data("otu")
-	plot_roc_data("genus")
 
-	par(mar=c(4,0,0.5,0.5))
+	plot_roc_data("otu")
+	mtext(side=2, line=-1, at=par()$usr[4]*1.05, text="A", cex=1, las=2, font=2)
+
+	plot_roc_data("genus")
+	mtext(side=2, line=-1, at=par()$usr[4]*1.05, text="B", cex=1, las=2, font=2)
+
+	par(mar=c(4,0,2,0.5))
 	plot(NA, ylim=c(0,1), xlim=c(0,1), axes=F, xlab="", ylab="")
 	text(x=rep(0.8,6), y=seq(0,1,0.2), labels=format(seq(0,1,0.2), digits=2))
 	text(x=0.2, y=0.5, labels="Specificity", srt=90)

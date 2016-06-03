@@ -49,7 +49,7 @@ diversity_plot <- function(metric){
 	stopifnot(subset$dataset == datasets)
 
 
-	par(mar=c(5,0.5,0.5,0.5))
+	par(mar=c(5,0.5,2,0.5))
 	plot(NA, ylim=c(0,length(datasets)), xlim=c(0,max(subset$mean_non+1.95*subset$se_non, subset$mean_obese+1.95*subset$se_obese)), axes=F, xlab=make_metric_label(metric), ylab="")
 
 	arrows(x0=subset$mean_obese, x1=subset$mean_obese+1.95*subset$se_obese, y0=length(datasets):1+gap, y1=length(datasets):1+gap, angle=90, length=gap/2)
@@ -92,13 +92,14 @@ build_figure <- function(metrics, width=6.5, height=3.75, leg=c(8, 10)){
 
 	datasets <- NULL
 
-	for(m in metrics){
-		datasets <- diversity_plot(m)
+	for(m in 1:n_metrics){
+		datasets <- diversity_plot(metrics[m])
+		mtext(side=2, line=-1, at=par()$usr[4]*1.05, text=LETTERS[m], cex=1, las=2, font=2)
 	}
 
 	legend(x=leg[1], y=leg[2], legend=c("Non-obese", "Obese"), pch=21, pt.bg=c("blue", "red"), cex=1.0)
 
-	par(mar=c(5,0.5,0.5,0.5))
+	par(mar=c(5,0.5,2,0.5))
 	plot(NA, xlim=c(0,1), ylim=c(0,length(datasets)),axes=F, xlab="", ylab="")
 
 	text(x=0.1, y=length(datasets):1, labels=make_study_label(datasets), las=2, cex=1.0, adj=0, xpd=T)

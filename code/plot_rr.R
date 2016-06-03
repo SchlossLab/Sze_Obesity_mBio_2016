@@ -45,7 +45,7 @@ rr_plot <- function(metric){
 	subset <- subset[order(subset$dataset),]
 	stopifnot(subset$dataset == datasets)
 
-	par(mar=c(5,0.5,0.5,0.5))
+	par(mar=c(5,0.5,2,0.5))
 	plot(NA, ylim=c(0,length(datasets)), xlim=c(min(subset$lower),max(subset$upper)), axes=F, xlab="", ylab="", log="x")
 
 	mtext(side=1, text=make_metric_label(metric), line=4, cex=0.7)
@@ -86,11 +86,12 @@ build_figure <- function(metrics, width=6.5, height=3.75){
 
 	datasets <- NULL
 
-	for(m in metrics){
-		datasets <- rr_plot(m)
+	for(m in 1:n_metrics){
+		datasets <- rr_plot(metrics[m])
+		mtext(side=2, line=-1, at=par()$usr[4]*1.05, text=LETTERS[m], cex=1, las=2, font=2)
 	}
 
-	par(mar=c(5,0.5,0.5,0.5))
+	par(mar=c(5,0.5,2,0.5))
 	plot(NA, xlim=c(0,1), ylim=c(0,length(datasets)),axes=F, xlab="", ylab="")
 
 	text(x=0.1, y=length(datasets):1, labels=make_study_label(datasets), las=2, cex=1.0, adj=0, xpd=T)

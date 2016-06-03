@@ -51,7 +51,7 @@ build_plots <- function(method){
 		axis(1, at=1:n_effects, labels=FALSE)
 		axis(2, las=2)
 		box()
-		mtext(side=2, at=1.0, line=3, text="A", las=2, font=2, cex=2)
+		mtext(side=2, at=1.0, line=3, text="A", las=2, font=2, cex=1)
 		abline(v=c(1.5, 2.5, 3.5))
 
 
@@ -69,7 +69,7 @@ build_plots <- function(method){
 		axis(1, at=1:n_effects, labels=100*effects)
 		axis(2, las=2)
 		box()
-		mtext(side=2, at=1.2*(10^par()$usr[4]), line=3, text="B", las=2, font=2, cex=2)
+		mtext(side=2, at=1.2*(10^par()$usr[4]), line=3, text="B", las=2, font=2, cex=1)
 
 		if(method == 'alpha'){
 			mtext(1, line=2, text = "Effect Size (%)", cex=0.7)
