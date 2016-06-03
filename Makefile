@@ -258,6 +258,6 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							$(PROC)/random_forest.genus.train_test\
 							$(PROC)/alpha_power.predicted\
 							$(PROC)/rr_power.predicted
-	R -e "library(rmarkdown);render('submission/Sze_Obesity_mBio_2016.Rmd', clean=FALSE)"
+	R -e "render('submission/Sze_Obesity_mBio_2016.Rmd', clean=FALSE)"
 	mv submission/Sze_Obesity_mBio_2016.utf8.md submission/Sze_Obesity_mBio_2016.md
 	rm submission/Sze_Obesity_mBio_2016.knit.md
