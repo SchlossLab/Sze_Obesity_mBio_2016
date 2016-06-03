@@ -15,6 +15,8 @@ if (require("knitr")) {
 RPROJ <- list(PROJHOME = normalizePath(getwd()))
 attach(RPROJ)
 
+library('rmarkdown')
+
 cat('Project home directory is available as PROJHOME or via get("PROJHOME","RPROJ")\n')
 
 rm(RPROJ)
