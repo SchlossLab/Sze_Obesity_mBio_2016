@@ -241,6 +241,7 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 ```{r}
 source('code/make_table1.R', echo=TRUE)
+table1
 ```
 
 \newpage

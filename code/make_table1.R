@@ -64,4 +64,4 @@ datasets <- sort(rownames(beta_summary))
 
 study_summary <- t(sapply(datasets, get_study_summary))
 
-kable(study_summary, row.names=FALSE, col.names=c("Study", "Subjects (N)", "Obese (%)", "Average BMI (Min-Max)", "Female (%)", "Average Age (Min-Max)", "Non-Hispanic White (%)", "AMOVA (P-value)"), align=c('l',rep('c', 7)), digits=3)
+table1 <- kable(study_summary, row.names=FALSE, col.names=c("Study", "Subjects (N)", "Obese (%)", "Average BMI (Min-Max)", "Female (%)", "Average Age (Min-Max)", "Non-Hispanic White (%)", "AMOVA (P-value)"), align=c('l',rep('c', 7)), digits=3)
