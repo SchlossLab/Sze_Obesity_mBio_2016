@@ -239,8 +239,9 @@ The authors would like to thank Nielson Baxter and Shawn Whitefield for their su
 
 **Table 1. Summary Demographics of Individuals used in the Meta-analysis.**
 
-
-
+```{r}
+source('code/make_table1.R')
+```
 
 \newpage
 
