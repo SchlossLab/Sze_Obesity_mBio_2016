@@ -145,14 +145,14 @@ $(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff : \
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
 $(FIGS)/rr_shannon_bf_ratio.tiff : code/plot_rr.R\
-												$(PROC)/relative_risk_composite\
+												$(PROC)/relative_risk.composite\
 												$(PROC)/relative_risk.summary
 	R -e "source('$<'); build_figure(c('shannon', 'bf_ratio'))"
 
 
 $(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff : \
 												code/plot_rr.R\
-												$(PROC)/relative_risk_composite\
+												$(PROC)/relative_risk.composite\
 												$(PROC)/relative_risk.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'))"
 
@@ -161,7 +161,7 @@ $(FIGS)/roc_curve.tiff : code/plot_roc_data.R\
 												$(PROC)/random_forest.otu.roc_data\
 												$(PROC)/random_forest.otu.summary\
 												$(PROC)/random_forest.genus.roc_data\
-												$(PROC)/random_forest.genus.summary\
+												$(PROC)/random_forest.genus.summary
 	R -e "source('$<'); build_figure()"
 
 
@@ -192,48 +192,48 @@ $(TABLES)/table_1.pdf : results/tables/table_1.Rmd $(PROC)/beta_tests.summary\
 submission/table_1.pdf : $(TABLES)/table_1.pdf
 	cp $< $@
 
-submission/figure_1.tiff : (FIGS)/figure_1.tiff
-	convert (FIGS)/flow_chart.png submission/figure_1.tiff
+submission/figure_1.tiff : $(FIGS)/flow_chart.png
+	convert $(FIGS)/flow_chart.png submission/figure_1.tiff
 
-submission/figure_2.tiff : (FIGS)/shannon_bf_ratio.tiff
+submission/figure_2.tiff : $(FIGS)/shannon_bf_ratio.tiff
 	cp $< $@
 
-submission/figure_3.tiff : (FIGS)/rr_shannon_bf_ratio.tiff
+submission/figure_3.tiff : $(FIGS)/rr_shannon_bf_ratio.tiff
 	cp $< $@
 
-submission/figure_4.tiff : (FIGS)/roc_curve.tiff
+submission/figure_4.tiff : $(FIGS)/roc_curve.tiff
 	cp $< $@
 
-submission/figure_5.tiff : (FIGS)/train_test.tiff
+submission/figure_5.tiff : $(FIGS)/train_test.tiff
 	cp $< $@
 
-submission/figure_6.tiff : (FIGS)/alpha_shannon_power.tiff
+submission/figure_6.tiff : $(FIGS)/alpha_shannon_power.tiff
 	cp $< $@
 
 submission/figure_s1.tiff : \
-												(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
+												$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
 submission/figure_s2.tiff : \
- 												(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
+ 												$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
-submission/figure_s3.tiff : (FIGS)/alpha_bf_ratio_power.tiff
+submission/figure_s3.tiff : $(FIGS)/alpha_bf_ratio_power.tiff
 	cp $< $@
 
-submission/figure_s4.tiff : (FIGS)/alpha_sobs_power.tiff
+submission/figure_s4.tiff : $(FIGS)/alpha_sobs_power.tiff
 	cp $< $@
 
-submission/figure_s5.tiff : (FIGS)/alpha_shannoneven_power.tiff
+submission/figure_s5.tiff : $(FIGS)/alpha_shannoneven_power.tiff
 	cp $< $@
 
-submission/figure_s6.tiff : (FIGS)/alpha_bacteroidetes_power.tiff
+submission/figure_s6.tiff : $(FIGS)/alpha_bacteroidetes_power.tiff
 	cp $< $@
 
-submission/figure_s7.tiff : (FIGS)/alpha_firmicutes_power.tiff
+submission/figure_s7.tiff : $(FIGS)/alpha_firmicutes_power.tiff
 	cp $< $@
 
-submission/figure_s8.tiff : (FIGS)/rr_shannon_power.tiff
+submission/figure_s8.tiff : $(FIGS)/rr_shannon_power.tiff
 	cp $< $@
 
 submission/supp_text.pdf : submission/supp_text.Rmd
