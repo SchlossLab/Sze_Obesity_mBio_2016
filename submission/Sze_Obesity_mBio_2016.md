@@ -1,5 +1,5 @@
 ---
-title: "Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome"
+title: ""
 bibliography: reference.bib
 output:
   pdf_document:
@@ -11,7 +11,7 @@ fontsize: 12pt
 geometry: margin=1.0in
 ---
 
-# Lack of power and small effect size confounds the ability to differentiate non-obese and obese individuals using gut microbiome data
+# Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome
 
 
 
