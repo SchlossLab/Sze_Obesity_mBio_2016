@@ -9,11 +9,10 @@
 \else % if luatex or xelatex
   \ifxetex
     \usepackage{mathspec}
-    \usepackage{xltxtra,xunicode}
   \else
     \usepackage{fontspec}
   \fi
-  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
   \newcommand{\euro}{€}
 \fi
 % use upquote if available, for straight quotes in verbatim environments
@@ -24,22 +23,12 @@
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
 \usepackage[margin=1.0in]{geometry}
-\ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex
-              unicode=false, % unicode breaks when used with xetex
-              xetex]{hyperref}
-\else
-  \usepackage[unicode=true]{hyperref}
-\fi
-\hypersetup{breaklinks=true,
-            bookmarks=true,
-            pdfauthor={},
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
             pdftitle={Looking for a Signal in the Noise: Revisiting Obesity and the Microbiome},
-            colorlinks=true,
-            citecolor=blue,
-            urlcolor=blue,
-            linkcolor=magenta,
-            pdfborder={0 0 0}}
+            pdfborder={0 0 0},
+            breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{graphicx,grffile}
 \makeatletter
@@ -79,6 +68,7 @@
   \preauthor{}\postauthor{}
   \date{}
   \predate{}\postdate{}
+
 
 \usepackage{helvet} % Helvetica font
 \renewcommand*\familydefault{\sfdefault} % Use the sans serif version of the font
@@ -141,10 +131,10 @@ Department of Microbiology and Immunology, University of Michigan, Ann Arbor, MI
 \subsection{Abstract}\label{abstract}
 
 Two recent studies have re-analyzed published data and found that when
-datasets are analyzed independently there was limited support the widely
-accepted hypothesis that changes in the microbiome are associated with
-obesity. This hypothesis was reconsidered by increasing the number of
-data sets and pooling the results across the individual datasets. The
+datasets are analyzed independently there was limited support for the
+widely accepted hypothesis that changes in the microbiome are associated
+with obesity. This hypothesis was reconsidered by increasing the number
+of datasets and pooling the results across the individual datasets. The
 Preferred Reporting Items for Systematic Reviews and Meta-Analyses
 (PRISMA) guidelines were applied to identify 10 studies for an updated
 and more synthetic analysis. Alpha diversity metrics and the relative
@@ -190,13 +180,12 @@ Obesity is a growing health concern with approximately 20\% of the youth
 (aged 2-19) in the United States classified as either overweight or
 obese (1). This number increases to approximately 35\% in adults (aged
 20 or older) and these statistics have seen little change since 2003
-(1). Traditionally the body mass index (BMI) has been used as the
-traditional method of classifying individuals as non-obese or obese (2).
-Recently, there has been increased interest in the role of the
-microbiome in modulating obesity (3, 4). If the microbiome does affect
-obesity status, then manipulating the microbiome could have a
-significant role in the future treatment of obesity and in helping to
-stem the current epidemic.
+(1). Traditionally, the body mass index (BMI) has been used to classify
+individuals as non-obese or obese (2). Recently, there has been
+increased interest in the role of the microbiome in modulating obesity
+(3, 4). If the microbiome does affect obesity status, then manipulating
+the microbiome could have a significant role in the future treatment of
+obesity and in helping to stem the current epidemic.
 
 There have been several studies that report observing a link between the
 composition of microbiome and obesity in animal models and in humans.
@@ -214,11 +203,12 @@ previously reported differences in community diversity and B:F among
 non-obese and obese individuals could not be generalized (8, 9).
 Regardless of the results using human populations, mechanistic studies
 using animal models that were manipulated with antibiotics or
-colonization with varied communities appears to support the association
-since these manipulation yielded variation in animal weight (10--13).
-The purported association between the differences in the microbiome and
-obesity have been widely repeated with little attention given to the
-lack of a clear signal in human cohort studies.
+colonization with varied communities were manipulated with antibiotics
+or underwent colonization with varied communities appears to support the
+association since these manipulation yielded variation in animal weight
+(10--13). The purported association between the differences in the
+microbiome and obesity have been widely repeated with little attention
+given to the lack of a clear signal in human cohort studies.
 
 The recent publication of additional studies that collected BMI data for
 each subject as well as other studies that were not included in the
@@ -247,14 +237,14 @@ Preferred Reporting Items for Systematic Reviews and Meta-Analyses
 search terms are provided in the Supplemental Text and in Figure 1.
 Briefly, we searched PubMed for original research studies that involved
 studying obesity and the human microbiome. The initial search yielded
-187 studies. We identified number\_string{[}n{]} additional studies that
-were not designed to explicitly test for an association between the
-microbiome and obesity. We then manually curated the 196 studies to
-select those studies that included BMI and sequence data. This yielded
-10 eligible studies. An additional study was removed from our analysis
-because no individuals in the study had a BMI over 30. Among the final
-10 studies, 3 were from identified from our PubMed search (10, 15, 16),
-5 were originally identified from the 9 studies that did not explicitly
+187 studies. We identified ten additional studies that were not designed
+to explicitly test for an association between the microbiome and
+obesity. We then manually curated the 196 studies to select those
+studies that included BMI and sequence data. This yielded 10 eligible
+studies. An additional study was removed from our analysis because no
+individuals in the study had a BMI over 30. Among the final 10 studies,
+3 were from identified from our PubMed search (10, 15, 16), 5 were
+originally identified from the 10 studies that did not explicitly
 investigate obesity but included BMI data (17--21), and two datasets
 were used (22, 23) because these publications did not specifically look
 for any metabolic or obesity conditions but had control populations and
@@ -263,35 +253,35 @@ the bacterial microbiome and obesity. The ten studies are summarized in
 Table 1.
 
 \textbf{\emph{Alpha diversity analysis.}} We calculated the Shannon
-diversity index, richness, and Shannon evenness, the relative abundance
-of \emph{Bacteroidetes} and \emph{Firmicutes}, and the ratio of their
-relative abundance (B:F) for each sample. Once we transformed each of
-the six alpha diversity metrics to make them normally distributed, we
-used a t-test to identify significant associations between the alpha
-diversity metric and whether an individual was obese for each of the ten
-studies. The B:F and the relative abundance of \emph{Firmicutes} were
-not significantly associated with obesity in any study. We identified
-seven P-values that were less than 0.05: three studies indicated obese
-individuals had a lower richness, two studies indicated a significantly
-lower diversity, one study indicated a significantly lower evenness, and
-one study indicated a significantly higher relative abundance of
-\emph{Bacteroidetes} (Figures 2 and S1). These results largely match
-those of the Walters and Finucane re-analysis studies. Interestingly,
-although only two of the ten studies observed the previously reported
-association between lower diversity and obesity, the other studies
-appeared to have the same trend, albeit the differences were not
-statistically significant. We used a random effects linear model to
-combine the studies using the study as the random effect and found
-statistical support for decreased richness, evenness, and diversity
-among obese individuals (all P\textless{}0.011). Although there was a
-significant relationship between these metrics and obesity status, the
-effect size was quite small. The obese individuals averaged 7.47\% lower
-richness, 0.88\% lower evenness, and 2.07\% lower diversity. There were
-no significant associations when we pooled the phylum-level metrics
-across studies. These results indicate that obese individuals do have a
-statistically significant lower diversity than non-obese individuals;
-however, it is questionable whether the difference is biologically
-significant.
+diversity index, observed richness, and Shannon evenness, the relative
+abundance of \emph{Bacteroidetes} and \emph{Firmicutes}, and the ratio
+of their relative abundance (B:F) for each sample. Once we transformed
+each of the six alpha diversity metrics to make them normally
+distributed, we used a t-test to identify significant associations
+between the alpha diversity metric and whether an individual was obese
+for each of the ten studies. The B:F and the relative abundance of
+\emph{Firmicutes} were not significantly associated with obesity in any
+study. We identified seven P-values that were less than 0.05: three
+studies indicated obese individuals had a lower richness, two studies
+indicated a significantly lower diversity, one study indicated a
+significantly lower evenness, and one study indicated a significantly
+higher relative abundance of \emph{Bacteroidetes} (Figures 2 and S1).
+These results largely match those of the Walters and Finucane
+re-analysis studies. Interestingly, although only two of the ten studies
+observed the previously reported association between lower diversity and
+obesity, the other studies appeared to have the same trend, albeit the
+differences were not statistically significant. We used a random effects
+linear model to combine the studies using the study as the random effect
+and found statistical support for decreased richness, evenness, and
+diversity among obese individuals (all P\textless{}0.011). Although
+there was a significant relationship between these metrics and obesity
+status, the effect size was quite small. The obese individuals averaged
+7.47\% lower richness, 0.88\% lower evenness, and 2.07\% lower
+diversity. There were no significant associations when we pooled the
+phylum-level metrics across studies. These results indicate that obese
+individuals do have a statistically significant lower diversity than
+non-obese individuals; however, it is questionable whether the
+difference is biologically significant.
 
 \textbf{\emph{Relative risk.}} Building upon the alpha diversity
 analysis we calculated the relative risk of being obese based on an
@@ -318,8 +308,8 @@ questionable whether that risk is biologically or clinically relevant.
 the Walters and Finucane re-analysis studies, for each dataset we
 calculated a Bray-Curtis distance matrix to measure the difference in
 the membership and structure of the individuals from each study. We then
-used AMOVA to test for a significant differences between the structure
-of non-obese and obese individuals (Table 1). The Escobar, Goodrich, and
+used AMOVA to test for significant differences between the structure of
+non-obese and obese individuals (Table 1). The Escobar, Goodrich, and
 Turnbaugh datasets indicated a significant difference in community
 structure (all P\textless{}0.05). Because it was not possible to
 ascertain the directionality of the difference in community structure
@@ -345,7 +335,7 @@ poor ability to classify individuals from the original dataset (Figure
 sensitivity and specificity was the highest. We then used this
 probability to define a threshold for calculating the accuracy of the
 models when applied to the other nine datasets (Figure 5). Although
-there considerable variation in accuracy values for each model, the
+there was considerable variation in accuracy values for each model, the
 median accuracy for each model varied between 0.33 (Turnbaugh) and 0.65
 (HMP) (median=0.57). When we considered the number of samples, balance
 of non-obese and obese individuals, and region within the 16S rRNA gene
@@ -388,12 +378,12 @@ required sampling effort per group was approximately 39,000, 1,500, 380,
 or 170 individuals, respectively. These estimates indicate that most
 microbiome studies are underpowered to detect modest effect sizes using
 either metric. In the case of obesity, the studies were underpowered to
-detect the \texttt{signif(range\_effect\_size,\ 1){[}1{]}} to 6\%
-difference in diversity that was observed across the studies.
+detect the 0.90 to 6\% difference in diversity that was observed across
+the studies.
 
 \subsection{Discussion}\label{discussion}
 
-Our meta-analysis helps to provide a clarity to the ongoing debate of
+Our meta-analysis helps to provide clarity to the ongoing debate of
 whether or not there are specific microbiome-based markers that can be
 associated with obesity. We performed an extensive literature review of
 the existing studies on the microbiome and obesity and performed a
@@ -409,8 +399,8 @@ their microbiome was limited. Finally, we assessed the ability of each
 study to detect defined differences in alpha diversity and observed that
 most studies were underpowered to detect modest effect sizes.
 Considering these datasets are among the largest published, it appears
-that most microbiome studies are underpowered to detect differences in
-alpha diversity.
+that most human microbiome studies are underpowered to detect
+differences in alpha diversity.
 
 Alpha diversity metrics are attractive because they distill a complex
 dataset to a single value. For example, diversity is a measure of the
@@ -439,9 +429,9 @@ in our analysis were unbalanced for the variable that we were interested
 in. This was also true of those studies that originally sought to
 identify associations with obesity. Even with a balanced design, we
 showed that it was necessary to obtain approximately 140 and 6,300
-sequences per sample to detect a 5\% difference in Shannon diversity or
+samples per group to detect a 5\% difference in Shannon diversity or
 B:F, respectively. It was interesting that these sample sizes agreed
-across studies regardless of their sequencing method, region with in the
+across studies regardless of their sequencing method, region within the
 16S rRNA gene, or subject population (Figure 6). This suggests that
 regardless of the treatment or category, these sample sizes represent a
 good starting point for subject recruitment when using stool samples.
@@ -456,18 +446,18 @@ association between alpha diversity and obesity; however, neither of
 these studies made an attempt to pool the existing data together to try
 and harness the additional power that this would give and they did not
 assess whether the studies were sufficiently powered to detect a
-difference. Our analysis also used 16S rRNA gene sequence data from ten
-studies whereas the Finucane study used 16S rRNA gene sequence data from
-three studies (7, 10, 21) and a metagenomic study (25) and the Walters
-study used 16S rRNA gene sequence data from five studies (10, 15, 20,
-21, 26); two studies were included in both analyses (10, 21). Our
-analysis included four of these studies (10, 15, 20, 21) and excluded
-three of the studies because they were too small (7), only utilized
-metagenomic data (25), or used short single read Illumina HiSeq data
-that has a high error rate making it untractable for \emph{de novo} OTU
-clustering (26). The additional seven datasets were published after the
-two reviews were performed and include datasets with more samples than
-were found in the original studies. Our collection of ten studies
+difference. Additionally, our analysis used 16S rRNA gene sequence data
+from ten studies whereas the Finucane study used 16S rRNA gene sequence
+data from three studies (7, 10, 21) and a metagenomic study (25) and the
+Walters study used 16S rRNA gene sequence data from five studies (10,
+15, 20, 21, 26); two studies were included in both analyses (10, 21).
+Our analysis included four of these studies (10, 15, 20, 21) and
+excluded three of the studies because they were too small (7), only
+utilized metagenomic data (25), or used short single read Illumina HiSeq
+data that has a high error rate making it untractable for \emph{de novo}
+OTU clustering (26). The additional seven datasets were published after
+the two reviews were performed and include datasets with more samples
+than were found in the original studies. Our collection of ten studies
 allowed us to largely use the same sequence analysis pipeline for all
 datasets and relied heavily on the availability of public data and
 access to metadata that included variables beyond the needs of the
@@ -555,7 +545,7 @@ studies using the epiR (0.9-77) and metafor (1.9-8) packages. Third, we
 used the AUCRF (1.1) R package to generate Random Forest models. For
 each study we developed models using either OTUs or genus-level
 phylotypes. The quality of each model was assessed by measuring the area
-under the curve (AUC) of the Receive Operating Characteristic (ROC)
+under the curve (AUC) of the Receiver Operating Characteristic (ROC)
 using ten-fold cross validation. Because the genus-level phylotype
 models were developed using a common reference, it was possible to use
 one study's model (i.e.~the training set) to classify the samples from
@@ -563,12 +553,11 @@ the other studies (i.e.~the testing sets). The optimum threshold for the
 training set was set as the probability threshold that had the highest
 combined sensitivity and specificity. This threshold was then used to
 calculate the accuracy of the model applied to the test studies. To
-generate Receiver Operator Characteristic (ROC) curves and calculate the
-accuracy of the models we used the pROC (1.8) R package. Finally, we
-performed power and sample number simulations for different effect sizes
-for each study using the pwr (1.1-3) R package and base R functions. We
-also calculated the actual sample size needed based on the effect size
-of each individual study.
+generate ROC curves and calculate the accuracy of the models we used the
+pROC (1.8) R package. Finally, we performed power and sample number
+simulations for different effect sizes for each study using the pwr
+(1.1-3) R package and base R functions. We also calculated the actual
+sample size needed based on the effect size of each individual study.
 
 \textbf{\emph{Reproducible methods.}} A detailed and reproducible
 description of how the data were processed and analyzed can be found at
@@ -658,80 +647,81 @@ group.
 
 \newpage
 
-\hyperdef{}{references}{\label{references}}
 \subsection*{References}\label{references}
 \addcontentsline{toc}{subsection}{References}
 
-\hyperdef{}{ref-ogdenux5fprevalenceux5f2014}{\label{ref-ogdenux5fprevalenceux5f2014}}
+\hypertarget{refs}{}
+\hypertarget{ref-ogdenux5fprevalenceux5f2014}{}
 1. \textbf{Ogden CL}, \textbf{Carroll MD}, \textbf{Kit BK},
 \textbf{Flegal KM}. 2014. Prevalence of childhood and adult obesity in
 the United States, 2011-2012. JAMA \textbf{311}:806--814.
-doi:\url{http://doi.org/10.1001/jama.2014.732}.
+doi:\href{https://doi.org/10.1001/jama.2014.732}{10.1001/jama.2014.732}.
 
-\hyperdef{}{ref-lichtashux5fbodyux5f2013}{\label{ref-lichtashux5fbodyux5f2013}}
+\hypertarget{ref-lichtashux5fbodyux5f2013}{}
 2. \textbf{Lichtash CT}, \textbf{Cui J}, \textbf{Guo X}, \textbf{Chen
 Y-DI}, \textbf{Hsueh WA}, \textbf{Rotter JI}, \textbf{Goodarzi MO}.
 2013. Body adiposity index versus body mass index and other
 anthropometric traits as correlates of cardiometabolic risk factors.
 PloS One \textbf{8}:e65954.
-doi:\url{http://doi.org/10.1371/journal.pone.0065954}.
+doi:\href{https://doi.org/10.1371/journal.pone.0065954}{10.1371/journal.pone.0065954}.
 
-\hyperdef{}{ref-braheux5fcanux5f2016}{\label{ref-braheux5fcanux5f2016}}
+\hypertarget{ref-braheux5fcanux5f2016}{}
 3. \textbf{Brahe LK}, \textbf{Astrup A}, \textbf{Larsen LH}. 2016. Can
 We Prevent Obesity-Related Metabolic Diseases by Dietary Modulation of
 the Gut Microbiota? Advances in Nutrition (Bethesda, Md)
-\textbf{7}:90--101. doi:\url{http://doi.org/10.3945/an.115.010587}.
+\textbf{7}:90--101.
+doi:\href{https://doi.org/10.3945/an.115.010587}{10.3945/an.115.010587}.
 
-\hyperdef{}{ref-drorux5fmicrobiotaux5f2016}{\label{ref-drorux5fmicrobiotaux5f2016}}
+\hypertarget{ref-drorux5fmicrobiotaux5f2016}{}
 4. \textbf{Dror T}, \textbf{Dickstein Y}, \textbf{Dubourg G},
 \textbf{Paul M}. 2016. Microbiota manipulation for weight change.
 Microbial Pathogenesis.
-doi:\url{http://doi.org/10.1016/j.micpath.2016.01.002}.
+doi:\href{https://doi.org/10.1016/j.micpath.2016.01.002}{10.1016/j.micpath.2016.01.002}.
 
-\hyperdef{}{ref-leyux5fobesityux5f2005}{\label{ref-leyux5fobesityux5f2005}}
+\hypertarget{ref-leyux5fobesityux5f2005}{}
 5. \textbf{Ley RE}, \textbf{Bäckhed F}, \textbf{Turnbaugh P},
 \textbf{Lozupone CA}, \textbf{Knight RD}, \textbf{Gordon JI}. 2005.
 Obesity alters gut microbial ecology. Proceedings of the National
 Academy of Sciences of the United States of America
 \textbf{102}:11070--11075.
-doi:\url{http://doi.org/10.1073/pnas.0504978102}.
+doi:\href{https://doi.org/10.1073/pnas.0504978102}{10.1073/pnas.0504978102}.
 
-\hyperdef{}{ref-turnbaughux5fcoreux5f2009}{\label{ref-turnbaughux5fcoreux5f2009}}
+\hypertarget{ref-turnbaughux5fcoreux5f2009}{}
 6. \textbf{Turnbaugh PJ}, \textbf{Hamady M}, \textbf{Yatsunenko T},
 \textbf{Cantarel BL}, \textbf{Duncan A}, \textbf{Ley RE}, \textbf{Sogin
 ML}, \textbf{Jones WJ}, \textbf{Roe BA}, \textbf{Affourtit JP},
 \textbf{Egholm M}, \textbf{Henrissat B}, \textbf{Heath AC},
 \textbf{Knight R}, \textbf{Gordon JI}. 2009. A core gut microbiome in
 obese and lean twins. Nature \textbf{457}:480--484.
-doi:\url{http://doi.org/10.1038/nature07540}.
+doi:\href{https://doi.org/10.1038/nature07540}{10.1038/nature07540}.
 
-\hyperdef{}{ref-leyux5fmicrobialux5f2006}{\label{ref-leyux5fmicrobialux5f2006}}
+\hypertarget{ref-leyux5fmicrobialux5f2006}{}
 7. \textbf{Ley RE}, \textbf{Turnbaugh PJ}, \textbf{Klein S},
 \textbf{Gordon JI}. 2006. Microbial ecology: Human gut microbes
 associated with obesity. Nature \textbf{444}:1022--1023.
-doi:\url{http://doi.org/10.1038/4441022a}.
+doi:\href{https://doi.org/10.1038/4441022a}{10.1038/4441022a}.
 
-\hyperdef{}{ref-waltersux5fmeta-analysesux5f2014}{\label{ref-waltersux5fmeta-analysesux5f2014}}
+\hypertarget{ref-waltersux5fmeta-analysesux5f2014}{}
 8. \textbf{Walters WA}, \textbf{Xu Z}, \textbf{Knight R}. 2014.
 Meta-analyses of human gut microbes associated with obesity and IBD.
 FEBS letters \textbf{588}:4223--4233.
-doi:\url{http://doi.org/10.1016/j.febslet.2014.09.039}.
+doi:\href{https://doi.org/10.1016/j.febslet.2014.09.039}{10.1016/j.febslet.2014.09.039}.
 
-\hyperdef{}{ref-finucaneux5ftaxonomicux5f2014}{\label{ref-finucaneux5ftaxonomicux5f2014}}
+\hypertarget{ref-finucaneux5ftaxonomicux5f2014}{}
 9. \textbf{Finucane MM}, \textbf{Sharpton TJ}, \textbf{Laurent TJ},
 \textbf{Pollard KS}. 2014. A taxonomic signature of obesity in the
 microbiome? Getting to the guts of the matter. PloS One
 \textbf{9}:e84689.
-doi:\url{http://doi.org/10.1371/journal.pone.0084689}.
+doi:\href{https://doi.org/10.1371/journal.pone.0084689}{10.1371/journal.pone.0084689}.
 
-\hyperdef{}{ref-turnbaughux5fobesity-associatedux5f2006}{\label{ref-turnbaughux5fobesity-associatedux5f2006}}
+\hypertarget{ref-turnbaughux5fobesity-associatedux5f2006}{}
 10. \textbf{Turnbaugh PJ}, \textbf{Ley RE}, \textbf{Mahowald MA},
 \textbf{Magrini V}, \textbf{Mardis ER}, \textbf{Gordon JI}. 2006. An
 obesity-associated gut microbiome with increased capacity for energy
 harvest. Nature \textbf{444}:1027--31.
-doi:\url{http://doi.org/10.1038/nature05414}.
+doi:\href{https://doi.org/10.1038/nature05414}{10.1038/nature05414}.
 
-\hyperdef{}{ref-Koren2012}{\label{ref-Koren2012}}
+\hypertarget{ref-Koren2012}{}
 11. \textbf{Koren O}, \textbf{Goodrich JK}, \textbf{Cullender TC},
 \textbf{Spor A}, \textbf{Laitinen K}, \textbf{Bäckhed HK},
 \textbf{Gonzalez A}, \textbf{Werner JJ}, \textbf{Angenent LT},
@@ -739,9 +729,9 @@ doi:\url{http://doi.org/10.1038/nature05414}.
 \textbf{Salminen S}, \textbf{Ley RE}. 2012. Host remodeling of the gut
 microbiome and metabolic changes during pregnancy. Cell
 \textbf{150}:470--480.
-doi:\url{http://doi.org/10.1016/j.cell.2012.07.008}.
+doi:\href{https://doi.org/10.1016/j.cell.2012.07.008}{10.1016/j.cell.2012.07.008}.
 
-\hyperdef{}{ref-Cox2014}{\label{ref-Cox2014}}
+\hypertarget{ref-Cox2014}{}
 12. \textbf{Cox LM}, \textbf{Yamanishi S}, \textbf{Sohn J},
 \textbf{Alekseyenko AV}, \textbf{Leung JM}, \textbf{Cho I}, \textbf{Kim
 SG}, \textbf{Li H}, \textbf{Gao Z}, \textbf{Mahana D}, \textbf{Rodriguez
@@ -749,25 +739,25 @@ JGZ}, \textbf{Rogers AB}, \textbf{Robine N}, \textbf{Loke P},
 \textbf{Blaser MJ}. 2014. Altering the intestinal microbiota during a
 critical developmental window has lasting metabolic consequences. Cell
 \textbf{158}:705--721.
-doi:\url{http://doi.org/10.1016/j.cell.2014.05.052}.
+doi:\href{https://doi.org/10.1016/j.cell.2014.05.052}{10.1016/j.cell.2014.05.052}.
 
-\hyperdef{}{ref-Mahana2016}{\label{ref-Mahana2016}}
+\hypertarget{ref-Mahana2016}{}
 13. \textbf{Mahana D}, \textbf{Trent CM}, \textbf{Kurtz ZD},
 \textbf{Bokulich NA}, \textbf{Battaglia T}, \textbf{Chung J},
 \textbf{Müller CL}, \textbf{Li H}, \textbf{Bonneau RA}, \textbf{Blaser
 MJ}. 2016. Antibiotic perturbation of the murine gut microbiome enhances
 the adiposity, insulin resistance, and liver disease associated with
 high-fat diet. Genome Medicine \textbf{8}.
-doi:\url{http://doi.org/10.1186/s13073-016-0297-9}.
+doi:\href{https://doi.org/10.1186/s13073-016-0297-9}{10.1186/s13073-016-0297-9}.
 
-\hyperdef{}{ref-moherux5fpreferredux5f2010}{\label{ref-moherux5fpreferredux5f2010}}
+\hypertarget{ref-moherux5fpreferredux5f2010}{}
 14. \textbf{Moher D}, \textbf{Liberati A}, \textbf{Tetzlaff J},
 \textbf{Altman DG}, \textbf{PRISMA Group}. 2010. Preferred reporting
 items for systematic reviews and meta-analyses: The PRISMA statement.
 International Journal of Surgery (London, England) \textbf{8}:336--341.
-doi:\url{http://doi.org/10.1016/j.ijsu.2010.02.007}.
+doi:\href{https://doi.org/10.1016/j.ijsu.2010.02.007}{10.1016/j.ijsu.2010.02.007}.
 
-\hyperdef{}{ref-zupancicux5fanalysisux5f2012}{\label{ref-zupancicux5fanalysisux5f2012}}
+\hypertarget{ref-zupancicux5fanalysisux5f2012}{}
 15. \textbf{Zupancic ML}, \textbf{Cantarel BL}, \textbf{Liu Z},
 \textbf{Drabek EF}, \textbf{Ryan KA}, \textbf{Cirimotich S},
 \textbf{Jones C}, \textbf{Knight R}, \textbf{Walters WA},
@@ -776,15 +766,16 @@ doi:\url{http://doi.org/10.1016/j.ijsu.2010.02.007}.
 \textbf{Shuldiner AR}, \textbf{Fraser CM}. 2012. Analysis of the gut
 microbiota in the old order Amish and its relation to the metabolic
 syndrome. PloS One \textbf{7}:e43052.
-doi:\url{http://doi.org/10.1371/journal.pone.0043052}.
+doi:\href{https://doi.org/10.1371/journal.pone.0043052}{10.1371/journal.pone.0043052}.
 
-\hyperdef{}{ref-escobarux5fgutux5f2014}{\label{ref-escobarux5fgutux5f2014}}
+\hypertarget{ref-escobarux5fgutux5f2014}{}
 16. \textbf{Escobar JS}, \textbf{Klotz B}, \textbf{Valdes BE},
 \textbf{Agudelo GM}. 2014. The gut microbiota of Colombians differs from
 that of Americans, Europeans and Asians. BMC microbiology
-\textbf{14}:311. doi:\url{http://doi.org/10.1186/s12866-014-0311-6}.
+\textbf{14}:311.
+doi:\href{https://doi.org/10.1186/s12866-014-0311-6}{10.1186/s12866-014-0311-6}.
 
-\hyperdef{}{ref-zeeviux5fpersonalizedux5f2015}{\label{ref-zeeviux5fpersonalizedux5f2015}}
+\hypertarget{ref-zeeviux5fpersonalizedux5f2015}{}
 17. \textbf{Zeevi D}, \textbf{Korem T}, \textbf{Zmora N},
 \textbf{Israeli D}, \textbf{Rothschild D}, \textbf{Weinberger A},
 \textbf{Ben-Yacov O}, \textbf{Lador D}, \textbf{Avnit-Sagi T},
@@ -794,24 +785,25 @@ that of Americans, Europeans and Asians. BMC microbiology
 \textbf{Pevsner-Fischer M}, \textbf{Bikovsky R}, \textbf{Halpern Z},
 \textbf{Elinav E}, \textbf{Segal E}. 2015. Personalized Nutrition by
 Prediction of Glycemic Responses. Cell \textbf{163}:1079--1094.
-doi:\url{http://doi.org/10.1016/j.cell.2015.11.001}.
+doi:\href{https://doi.org/10.1016/j.cell.2015.11.001}{10.1016/j.cell.2015.11.001}.
 
-\hyperdef{}{ref-rossux5f16sux5f2015}{\label{ref-rossux5f16sux5f2015}}
+\hypertarget{ref-rossux5f16sux5f2015}{}
 18. \textbf{Ross MC}, \textbf{Muzny DM}, \textbf{McCormick JB},
 \textbf{Gibbs RA}, \textbf{Fisher-Hoch SP}, \textbf{Petrosino JF}. 2015.
 16S gut community of the Cameron County Hispanic Cohort. Microbiome
-\textbf{3}:7. doi:\url{http://doi.org/10.1186/s40168-015-0072-y}.
+\textbf{3}:7.
+doi:\href{https://doi.org/10.1186/s40168-015-0072-y}{10.1186/s40168-015-0072-y}.
 
-\hyperdef{}{ref-goodrichux5fhumanux5f2014}{\label{ref-goodrichux5fhumanux5f2014}}
+\hypertarget{ref-goodrichux5fhumanux5f2014}{}
 19. \textbf{Goodrich JK}, \textbf{Waters JL}, \textbf{Poole AC},
 \textbf{Sutter JL}, \textbf{Koren O}, \textbf{Blekhman R},
 \textbf{Beaumont M}, \textbf{Van Treuren W}, \textbf{Knight R},
 \textbf{Bell JT}, \textbf{Spector TD}, \textbf{Clark AG}, \textbf{Ley
 RE}. 2014. Human genetics shape the gut microbiome. Cell
 \textbf{159}:789--799.
-doi:\url{http://doi.org/10.1016/j.cell.2014.09.053}.
+doi:\href{https://doi.org/10.1016/j.cell.2014.09.053}{10.1016/j.cell.2014.09.053}.
 
-\hyperdef{}{ref-wuux5flinkingux5f2011}{\label{ref-wuux5flinkingux5f2011}}
+\hypertarget{ref-wuux5flinkingux5f2011}{}
 20. \textbf{Wu GD}, \textbf{Chen J}, \textbf{Hoffmann C},
 \textbf{Bittinger K}, \textbf{Chen Y-Y}, \textbf{Keilbaugh SA},
 \textbf{Bewtra M}, \textbf{Knights D}, \textbf{Walters WA},
@@ -819,35 +811,37 @@ doi:\url{http://doi.org/10.1016/j.cell.2014.09.053}.
 K}, \textbf{Baldassano R}, \textbf{Nessel L}, \textbf{Li H},
 \textbf{Bushman FD}, \textbf{Lewis JD}. 2011. Linking long-term dietary
 patterns with gut microbial enterotypes. Science (New York, NY)
-\textbf{334}:105--108. doi:\url{http://doi.org/10.1126/science.1208344}.
+\textbf{334}:105--108.
+doi:\href{https://doi.org/10.1126/science.1208344}{10.1126/science.1208344}.
 
-\hyperdef{}{ref-humanux5fmicrobiomeux5fprojectux5fconsortiumux5fstructureux5f2012}{\label{ref-humanux5fmicrobiomeux5fprojectux5fconsortiumux5fstructureux5f2012}}
+\hypertarget{ref-humanux5fmicrobiomeux5fprojectux5fconsortiumux5fstructureux5f2012}{}
 21. \textbf{Human Microbiome Project Consortium}. 2012. Structure,
 function and diversity of the healthy human microbiome. Nature
-\textbf{486}:207--214. doi:\url{http://doi.org/10.1038/nature11234}.
+\textbf{486}:207--214.
+doi:\href{https://doi.org/10.1038/nature11234}{10.1038/nature11234}.
 
-\hyperdef{}{ref-schubertux5fmicrobiomeux5f2014}{\label{ref-schubertux5fmicrobiomeux5f2014}}
+\hypertarget{ref-schubertux5fmicrobiomeux5f2014}{}
 22. \textbf{Schubert AM}, \textbf{Rogers MAM}, \textbf{Ring C},
 \textbf{Mogle J}, \textbf{Petrosino JP}, \textbf{Young VB},
 \textbf{Aronoff DM}, \textbf{Schloss PD}. 2014. Microbiome data
 distinguish patients with Clostridium difficile infection and non-C.
 difficile-associated diarrhea from healthy controls. mBio
 \textbf{5}:e01021--01014.
-doi:\url{http://doi.org/10.1128/mBio.01021-14}.
+doi:\href{https://doi.org/10.1128/mBio.01021-14}{10.1128/mBio.01021-14}.
 
-\hyperdef{}{ref-baxterux5fmicrobiota-basedux5f2016}{\label{ref-baxterux5fmicrobiota-basedux5f2016}}
+\hypertarget{ref-baxterux5fmicrobiota-basedux5f2016}{}
 23. \textbf{Baxter NT}, \textbf{Ruffin MT}, \textbf{Rogers MAM},
 \textbf{Schloss PD}. 2016. Microbiota-based model improves the
 sensitivity of fecal immunochemical test for detecting colonic lesions.
 Genome Medicine \textbf{8}:37.
-doi:\url{http://doi.org/10.1186/s13073-016-0290-3}.
+doi:\href{https://doi.org/10.1186/s13073-016-0290-3}{10.1186/s13073-016-0290-3}.
 
-\hyperdef{}{ref-Ioannidis2005}{\label{ref-Ioannidis2005}}
+\hypertarget{ref-Ioannidis2005}{}
 24. \textbf{Ioannidis JPA}. 2005. Why most published research findings
 are false. PLoS Med \textbf{2}:e124.
-doi:\url{http://doi.org/10.1371/journal.pmed.0020124}.
+doi:\href{https://doi.org/10.1371/journal.pmed.0020124}{10.1371/journal.pmed.0020124}.
 
-\hyperdef{}{ref-Qin2010}{\label{ref-Qin2010}}
+\hypertarget{ref-Qin2010}{}
 25. \textbf{Qin J}, \textbf{Li R}, \textbf{Raes J}, \textbf{Arumugam M},
 \textbf{Burgdorf KS}, \textbf{Manichanh C}, \textbf{Nielsen T},
 \textbf{Pons N}, \textbf{Levenez F}, \textbf{Yamada T}, \textbf{Mende
@@ -875,9 +869,10 @@ RM}, \textbf{Oozeer R}, \textbf{Rescigno M}, \textbf{Sanchez N},
 de}, \textbf{Winogradsky Y}, \textbf{Zoetendal E}, \textbf{Bork P},
 \textbf{Ehrlich SD}, \textbf{Wang J}. 2010. A human gut microbial gene
 catalogue established by metagenomic sequencing. Nature
-\textbf{464}:59--65. doi:\url{http://doi.org/10.1038/nature08821}.
+\textbf{464}:59--65.
+doi:\href{https://doi.org/10.1038/nature08821}{10.1038/nature08821}.
 
-\hyperdef{}{ref-yatsunenkoux5fhumanux5f2012}{\label{ref-yatsunenkoux5fhumanux5f2012}}
+\hypertarget{ref-yatsunenkoux5fhumanux5f2012}{}
 26. \textbf{Yatsunenko T}, \textbf{Rey FE}, \textbf{Manary MJ},
 \textbf{Trehan I}, \textbf{Dominguez-Bello MG}, \textbf{Contreras M},
 \textbf{Magris M}, \textbf{Hidalgo G}, \textbf{Baldassano RN},
@@ -886,34 +881,35 @@ catalogue established by metagenomic sequencing. Nature
 \textbf{Lozupone CA}, \textbf{Lauber C}, \textbf{Clemente JC},
 \textbf{Knights D}, \textbf{Knight R}, \textbf{Gordon JI}. 2012. Human
 gut microbiome viewed across age and geography. Nature
-\textbf{486}:222--227. doi:\url{http://doi.org/10.1038/nature11053}.
+\textbf{486}:222--227.
+doi:\href{https://doi.org/10.1038/nature11053}{10.1038/nature11053}.
 
-\hyperdef{}{ref-Kozichux5f2013}{\label{ref-Kozichux5f2013}}
+\hypertarget{ref-Kozichux5f2013}{}
 27. \textbf{Kozich JJ}, \textbf{Westcott SL}, \textbf{Baxter NT},
 \textbf{Highlander SK}, \textbf{Schloss PD}. 2013. Development of a
 dual-index sequencing strategy and curation pipeline for analyzing
 amplicon sequence data on the MiSeq Illumina sequencing platform.
 Applied and environmental microbiology \textbf{79}:5112--5120.
 
-\hyperdef{}{ref-Schloss2011}{\label{ref-Schloss2011}}
+\hypertarget{ref-Schloss2011}{}
 28. \textbf{Schloss PD}, \textbf{Gevers D}, \textbf{Westcott SL}. 2011.
 Reducing the effects of PCR amplification and sequencing artifacts on
 16S rRNA-based studies. PLoS ONE \textbf{6}:e27310.
-doi:\url{http://doi.org/10.1371/journal.pone.0027310}.
+doi:\href{https://doi.org/10.1371/journal.pone.0027310}{10.1371/journal.pone.0027310}.
 
-\hyperdef{}{ref-Edgar2011}{\label{ref-Edgar2011}}
+\hypertarget{ref-Edgar2011}{}
 29. \textbf{Edgar RC}, \textbf{Haas BJ}, \textbf{Clemente JC},
 \textbf{Quince C}, \textbf{Knight R}. 2011. UCHIME improves sensitivity
 and speed of chimera detection. Bioinformatics \textbf{27}:2194--2200.
-doi:\url{http://doi.org/10.1093/bioinformatics/btr381}.
+doi:\href{https://doi.org/10.1093/bioinformatics/btr381}{10.1093/bioinformatics/btr381}.
 
-\hyperdef{}{ref-Westcott2015}{\label{ref-Westcott2015}}
+\hypertarget{ref-Westcott2015}{}
 30. \textbf{Westcott SL}, \textbf{Schloss PD}. 2015. De novo clustering
 methods outperform reference-based methods for assigning 16S rRNA gene
 sequences to operational taxonomic units. PeerJ \textbf{3}:e1487.
-doi:\url{http://doi.org/10.7717/peerj.1487}.
+doi:\href{https://doi.org/10.7717/peerj.1487}{10.7717/peerj.1487}.
 
-\hyperdef{}{ref-mothur}{\label{ref-mothur}}
+\hypertarget{ref-mothur}{}
 31. \textbf{Schloss PD}, \textbf{Westcott SL}, \textbf{Ryabin T},
 \textbf{Hall JR}, \textbf{Hartmann M}, \textbf{Hollister EB},
 \textbf{Lesniewski RA}, \textbf{Oakley BB}, \textbf{Parks DH},
@@ -922,16 +918,16 @@ open-source, platform-independent, community-supported software for
 describing and comparing microbial communities. Applied and
 environmental microbiology \textbf{75}:7537--7541.
 
-\hyperdef{}{ref-Anderson2001}{\label{ref-Anderson2001}}
+\hypertarget{ref-Anderson2001}{}
 32. \textbf{Anderson MJ}. 2001. A new method for non-parametric
 multivariate analysis of variance. Austral Ecology \textbf{26}:32--46.
-doi:\url{http://doi.org/10.1111/j.1442-9993.2001.01070.pp.x}.
+doi:\href{https://doi.org/10.1111/j.1442-9993.2001.01070.pp.x}{10.1111/j.1442-9993.2001.01070.pp.x}.
 
-\hyperdef{}{ref-Moher2009}{\label{ref-Moher2009}}
+\hypertarget{ref-Moher2009}{}
 33. \textbf{Moher D}, \textbf{Liberati A}, \textbf{Tetzlaff J},
 \textbf{Altman DG}. 2009. Preferred reporting items for systematic
 reviews and meta-analyses: The PRISMA statement. PLoS Med
 \textbf{6}:e1000097.
-doi:\url{http://doi.org/10.1371/journal.pmed.1000097}.
+doi:\href{https://doi.org/10.1371/journal.pmed.1000097}{10.1371/journal.pmed.1000097}.
 
 \end{document}
