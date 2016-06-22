@@ -2,40 +2,58 @@ source('code/utilities.R')
 source('code/cross_validate.R')
 get_dependencies(c('AUCRF', 'pROC'))
 
-get_genus_shared <- function(dataset){
+
+tax_name <- c("kingdom", "phylum", "class", "order", "family", "genus")
+
+
+get_tax_substring <- function(tax, tax_level){
+	substring <- unlist(strsplit(tax, ";"))[1:tax_level]
+	paste(substring, collapse='.')
+}
+
+get_tax_name <- function(tax_file, tax_level){
+
+	tax_file <- paste0('data/', dataset, '/', dataset, '.taxonomy')
+
+	tax_data <- read.table(file=tax_file, header=T, stringsAsFactors=F)
+	taxonomy <- tax_data$Taxonomy
+	taxonomy <- gsub("\\(\\d*\\)", "", taxonomy)
+	taxonomy <- gsub('"', '', taxonomy)
+
+	tax_substring <- sapply(taxonomy, get_tax_substring, tax_level)
+
+	names(tax_substring) <- tax_data$OTU
+
+	tax_substring
+}
+
+get_tax_level_shared <- function(dataset, tax_level){
 
 	shared_file <- paste0('data/', dataset, '/', dataset, '.0.03.subsample.shared')
 	shared_otus <- read.table(file=shared_file, header=T, stringsAsFactors=F, row.names=2)[,-c(1,2)]
 	is_present <- apply(shared_otus, 2, sum) > 0
 	shared <- shared_otus[,is_present]
 
-	tax_file <- paste0('data/', dataset, '/', dataset, '.taxonomy')
-	tax_data <- read.table(file=tax_file, header=T, stringsAsFactors=F)
-	taxonomy <- tax_data$Taxonomy
-	taxonomy <- gsub("\\(\\d*\\)", "", taxonomy)
-	taxonomy <- gsub('"', '', taxonomy)
-	taxonomy <- gsub(';', '.', taxonomy)
-	names(taxonomy) <- tax_data$OTU
+	taxonomy <- get_tax_name(tax_file, tax_level)
 	taxonomy <- taxonomy[colnames(shared)]
-
 	unique_taxa <- levels(as.factor(taxonomy))
 
-	shared_genus <- NULL
+	shared_tax_level <- NULL
 
 	for(ut in unique_taxa){
 		otus <- names(taxonomy[taxonomy %in% ut])
 		sub_shared <- shared_otus[,colnames(shared_otus) %in% otus]
 
 		if(is.null(dim(sub_shared))){
-			shared_genus <- cbind(shared_genus, sub_shared)
+			shared_tax_level <- cbind(shared_tax_level, sub_shared)
 		} else {
-			genus_count <- apply(sub_shared, 1, sum)
-			shared_genus <- cbind(shared_genus, genus_count)
+			tax_level_count <- apply(sub_shared, 1, sum)
+			shared_tax_level <- cbind(shared_tax_level, tax_level_count)
 		}
 	}
-	colnames(shared_genus) <- unique_taxa
-	rownames(shared_genus) <- rownames(shared)
-	return(shared_genus)
+	colnames(shared_tax_level) <- unique_taxa
+	rownames(shared_tax_level) <- rownames(shared)
+	return(shared_tax_level)
 }
 
 run <- function(datasets){
@@ -55,7 +73,7 @@ run <- function(datasets){
 		print(d)
 		set.seed(1976)
 
-		shared <- get_genus_shared(d)
+		shared <- get_tax_level_shared(d)
 		n_seqs <- sum(shared[1,])
 
 		metadata_file <- paste0('data/', d, '/', d, '.metadata')
@@ -110,9 +128,12 @@ run <- function(datasets){
 	}
 
 	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt", "otus", "sensitivity", "specificity", "threshold")
-	write.table(model_summary, file="data/process/random_forest.genus.summary", quote=F, sep='\t', row.names=F)
 
-	write.table(roc_summary, file="data/process/random_forest.genus.roc_data", quote=F, sep='\t', row.names=F)
+	summary_file <- paste0("data/process/random_forest.", tax_name[tax_level], ".summary")
+	write.table(model_summary, file=summary_file, quote=F, sep='\t', row.names=F)
+
+	roc_file <- paste0("data/process/random_forest.", tax_name[tax_level], ".roc_data")
+	write.table(roc_summary, file=roc_file, quote=F, sep='\t', row.names=F)
 
 
 	# need to do the round-robin where we run predict wiht each model against all
@@ -160,6 +181,8 @@ run <- function(datasets){
 																	"accuracy", "accuracy_lci", "accuracy_uci",
 																	"p_value")
 	rownames(testing_summary) <- NULL
-	write.table(testing_summary, file="data/process/random_forest.genus.train_test", quote=F, sep='\t', row.names=F)
+
+	testing_file <- paste0("data/process/random_forest.", tax_name[tax_level], ".train_test")
+	write.table(testing_summary, file=testing_file, quote=F, sep='\t', row.names=F)
 
 }
