@@ -111,10 +111,30 @@ $(PROC)/random_forest.otu.% : code/run_aucrf_otus.R code/cross_validate.R\
  			$(SHARED) $(METADATA)
 	R -e "source('$<'); run('$(STUDIES)')"
 
+$(PROC)/random_forest.phylum.% : code/run_aucrf_genus.R code/cross_validate.R\
+																code/utilities.R\
+ 			$(SHARED) $(METADATA)
+	R -e "source('$<'); run('$(STUDIES)', 2)"
+
+$(PROC)/random_forest.class.% : code/run_aucrf_genus.R code/cross_validate.R\
+																code/utilities.R\
+ 			$(SHARED) $(METADATA)
+	R -e "source('$<'); run('$(STUDIES)', 3)"
+
+$(PROC)/random_forest.order.% : code/run_aucrf_genus.R code/cross_validate.R\
+																code/utilities.R\
+ 			$(SHARED) $(METADATA)
+	R -e "source('$<'); run('$(STUDIES)', 4)"
+
+$(PROC)/random_forest.family.% : code/run_aucrf_genus.R code/cross_validate.R\
+																code/utilities.R\
+ 			$(SHARED) $(METADATA)
+	R -e "source('$<'); run('$(STUDIES)', 5)"
+
 $(PROC)/random_forest.genus.% : code/run_aucrf_genus.R code/cross_validate.R\
 																code/utilities.R\
  			$(SHARED) $(METADATA)
-	R -e "source('$<'); run('$(STUDIES)')"
+	R -e "source('$<'); run('$(STUDIES)', 6)"
 
 $(PROC)/alpha_power.% : code/run_power_analysis.R code/utilities.R\
 			$(PROC)/alpha_tests.summary
