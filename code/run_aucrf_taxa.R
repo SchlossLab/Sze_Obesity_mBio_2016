@@ -118,22 +118,25 @@ run <- function(datasets, tax_level){
 		model[[d]]$opt_accuracy_lci <- accuracy[1]
 		model[[d]]$opt_accuracy_uci <- accuracy[3]
 
+		max_rsq <- NA
 
-		reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
-		model_reg <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)
 
-		o <- order(model_reg$importance, decreasing=T)
+		if(d != 'turnbaugh'){
+			reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
+			model_reg <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)
 
-		limit <- ifelse(length(o) <= 30,length(o),30)
-		rsq <- rep(0, limit)
+			o <- order(model_reg$importance, decreasing=T)
 
-		for(i in 2:limit){
-			reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
-			rsq[i] <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)$rsq[500]
+			limit <- ifelse(length(o) <= 30,length(o),30)
+			rsq <- rep(0, limit)
+
+			for(i in 2:limit){
+				reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
+				rsq[i] <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)$rsq[500]
+			}
+
+			max_rsq <- max(rsq)
 		}
-
-		max_rsq <- max(rsq)
-
 
 		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc[[d]]$sensitivities, specificity = roc[[d]]$specificities))
 

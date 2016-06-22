@@ -49,21 +49,23 @@ run <- function(datasets){
 		auc_cv <- cross_validate(model)
 
 		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc$sensitivities, specificity = roc$specificities))
+		max_rsq <- NA
 
+		if(d != 'turnbaugh'){
+			test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
+			model_reg <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)
 
-		test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
-		model_reg <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)
+			o <- order(model_reg$importance, decreasing=T)
 
-		o <- order(model_reg$importance, decreasing=T)
+			limit <- ifelse(length(o) <= 30,length(o),30)
+			rsq <- rep(0, limit)
 
-		limit <- ifelse(length(o) <= 30,length(o),30)
-		rsq <- rep(0, limit)
-
-		for(i in 2:limit){
-			test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
-			rsq[i] <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)$rsq[500]
+			for(i in 2:limit){
+				test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
+				rsq[i] <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)$rsq[500]
+			}
+			max_rsq <- max(rsq)
 		}
-		max_rsq <- max(rsq)
 
 		model_summary <- rbind(model_summary, c(d, auc, auc_cv$cv_est, k_opt, otus, max_rsq))
 
