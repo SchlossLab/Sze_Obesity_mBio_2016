@@ -56,9 +56,10 @@ run <- function(datasets){
 
 		o <- order(model_reg$importance, decreasing=T)
 
-		rsq <- NULL
+		limit <- ifelse(length(o) <= 30,length(o),30)
+		rsq <- rep(0, limit)
 
-		for(i in 2:30){
+		for(i in 2:limit){
 			test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
 			rsq[i] <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)$rsq[500]
 		}
