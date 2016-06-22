@@ -13,7 +13,6 @@ get_tax_substring <- function(tax, tax_level){
 
 get_tax_name <- function(tax_file, tax_level){
 
-	tax_file <- paste0('data/', dataset, '/', dataset, '.taxonomy')
 
 	tax_data <- read.table(file=tax_file, header=T, stringsAsFactors=F)
 	taxonomy <- tax_data$Taxonomy
@@ -34,6 +33,7 @@ get_tax_level_shared <- function(dataset, tax_level){
 	is_present <- apply(shared_otus, 2, sum) > 0
 	shared <- shared_otus[,is_present]
 
+	tax_file <- paste0('data/', dataset, '/', dataset, '.taxonomy')
 	taxonomy <- get_tax_name(tax_file, tax_level)
 	taxonomy <- taxonomy[colnames(shared)]
 	unique_taxa <- levels(as.factor(taxonomy))
@@ -56,7 +56,7 @@ get_tax_level_shared <- function(dataset, tax_level){
 	return(shared_tax_level)
 }
 
-run <- function(datasets){
+run <- function(datasets, tax_level){
 
 	datasets <- unlist(strsplit(datasets, split=" "))
 
@@ -73,7 +73,7 @@ run <- function(datasets){
 		print(d)
 		set.seed(1976)
 
-		shared <- get_tax_level_shared(d)
+		shared <- get_tax_level_shared(d, tax_level)
 		n_seqs <- sum(shared[1,])
 
 		metadata_file <- paste0('data/', d, '/', d, '.metadata')
