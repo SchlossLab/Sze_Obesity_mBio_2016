@@ -50,11 +50,25 @@ run <- function(datasets){
 
 		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc$sensitivities, specificity = roc$specificities))
 
-		model_summary <- rbind(model_summary, c(d, auc, auc_cv$cv_est, k_opt, otus))
+
+		test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
+		model_reg <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)
+
+		o <- order(model_reg$importance, decreasing=T)
+
+		rsq <- NULL
+
+		for(i in 2:30){
+			test_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
+			rsq[i] <- randomForest(bmi ~ ., data=test_data, ntree=500, nodesize=10)$rsq[500]
+		}
+		max_rsq <- max(rsq)
+
+		model_summary <- rbind(model_summary, c(d, auc, auc_cv$cv_est, k_opt, otus, max_rsq))
 
 	}
 
-	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt",  "otus")
+	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt",  "otus", "regression_auc")
 	write.table(model_summary, file="data/process/random_forest.otu.summary", quote=F, sep='\t', row.names=F)
 
 	colnames(roc_summary) <- c("dataset", "sensitivity", "specificity")

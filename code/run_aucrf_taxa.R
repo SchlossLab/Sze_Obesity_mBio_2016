@@ -118,16 +118,32 @@ run <- function(datasets, tax_level){
 		model[[d]]$opt_accuracy_lci <- accuracy[1]
 		model[[d]]$opt_accuracy_uci <- accuracy[3]
 
+
+		reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
+		model_reg <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)
+
+		o <- order(model_reg$importance, decreasing=T)
+
+		rsq <- NULL
+
+		for(i in 2:30){
+			reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
+			rsq[i] <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)$rsq[500]
+		}
+
+		max_rsq <- max(rsq)
+
+
 		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc[[d]]$sensitivities, specificity = roc[[d]]$specificities))
 
 		model_summary <- rbind(model_summary, c(d, model[[d]]$auc,
 			 									model[[d]]$auc_cv["cv_est"], k_opt, otus,
 												model[[d]]$opt_sensitivity,
 												model[[d]]$opt_specificity,
-												model[[d]]$opt_threshold))
+												model[[d]]$opt_threshold, max_rsq))
 	}
 
-	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt", "otus", "sensitivity", "specificity", "threshold")
+	colnames(model_summary) <- c("dataset", "auc_lci", "auc", "auc_hci", "auc_cv", "k_opt", "otus", "sensitivity", "specificity", "threshold", "regression_auc")
 
 	summary_file <- paste0("data/process/random_forest.", tax_name[tax_level], ".summary")
 	write.table(model_summary, file=summary_file, quote=F, sep='\t', row.names=F)
