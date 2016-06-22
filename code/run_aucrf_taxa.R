@@ -120,7 +120,6 @@ run <- function(datasets, tax_level){
 
 		max_rsq <- NA
 
-
 		if(d != 'turnbaugh'){
 			reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep)
 			model_reg <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)
@@ -128,14 +127,14 @@ run <- function(datasets, tax_level){
 			o <- order(model_reg$importance, decreasing=T)
 
 			limit <- ifelse(length(o) <= 30,length(o),30)
-			rsq <- rep(0, limit)
+			rsq <- rep(NA, limit)
 
 			for(i in 2:limit){
 				reg_data <- data.frame(bmi=metadata$bmi, rel_abund_keep[,o[1:i]])
 				rsq[i] <- randomForest(bmi ~ ., data=reg_data, ntree=500, nodesize=10)$rsq[500]
 			}
 
-			max_rsq <- max(rsq)
+			max_rsq <- max(rsq, na.rm=T)
 		}
 
 		roc_summary <- rbind(roc_summary, data.frame(dataset=d, sensitivity = roc[[d]]$sensitivities, specificity = roc[[d]]$specificities))
