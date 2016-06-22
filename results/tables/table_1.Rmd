@@ -75,7 +75,7 @@ get_study_summary <- function(study, beta = beta_summary){
 
 	n_subjects <- nrow(metadata)
 
-	per_obese <- format(round(100 * mean(metadata$obese), 1), nsmall=1L)
+	per_obese <- format(round(100 * mean(metadata$obese, na.rm=T), 1), nsmall=1L)
 
 	bmi <- "NA"
 	if(sum(is.na(metadata$bmi)) != nrow(metadata)){
