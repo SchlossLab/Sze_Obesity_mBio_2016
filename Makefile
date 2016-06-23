@@ -164,6 +164,10 @@ $(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff : \
 												$(PROC)/alpha_tests.summary
 	R -e "source('$<'); build_figure(c('shannoneven', 'sobs', 'bacteroidetes', 'firmicutes'), leg=c(0, 10))"
 
+$(FIGS)/funnel_plot.tiff: code/plot_funnels.R\
+												data/process/relative_risk.summary
+	R -e "source('$<')"
+
 $(FIGS)/rr_shannon_bf_ratio.tiff : code/plot_rr.R\
 												$(PROC)/relative_risk.composite\
 												$(PROC)/relative_risk.summary
@@ -231,29 +235,34 @@ submission/figure_6.tiff : $(FIGS)/alpha_shannon_power.tiff
 	cp $< $@
 
 submission/figure_s1.tiff : \
+												$(FIGS)/funnel_plot.tiff
+	cp $< $@
+
+
+submission/figure_s2.tiff : \
 												$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
-submission/figure_s2.tiff : \
+submission/figure_s3.tiff : \
  												$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
-submission/figure_s3.tiff : $(FIGS)/alpha_bf_ratio_power.tiff
+submission/figure_s4.tiff : $(FIGS)/alpha_bf_ratio_power.tiff
 	cp $< $@
 
-submission/figure_s4.tiff : $(FIGS)/alpha_sobs_power.tiff
+submission/figure_s5.tiff : $(FIGS)/alpha_sobs_power.tiff
 	cp $< $@
 
-submission/figure_s5.tiff : $(FIGS)/alpha_shannoneven_power.tiff
+submission/figure_s6.tiff : $(FIGS)/alpha_shannoneven_power.tiff
 	cp $< $@
 
-submission/figure_s6.tiff : $(FIGS)/alpha_bacteroidetes_power.tiff
+submission/figure_s7.tiff : $(FIGS)/alpha_bacteroidetes_power.tiff
 	cp $< $@
 
-submission/figure_s7.tiff : $(FIGS)/alpha_firmicutes_power.tiff
+submission/figure_s8.tiff : $(FIGS)/alpha_firmicutes_power.tiff
 	cp $< $@
 
-submission/figure_s8.tiff : $(FIGS)/rr_shannon_power.tiff
+submission/figure_s9.tiff : $(FIGS)/rr_shannon_power.tiff
 	cp $< $@
 
 submission/supp_text.pdf : submission/supp_text.Rmd
