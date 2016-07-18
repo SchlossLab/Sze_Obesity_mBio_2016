@@ -234,17 +234,17 @@ submission/figure_5.tiff : $(FIGS)/train_test.tiff
 submission/figure_6.tiff : $(FIGS)/alpha_shannon_power.tiff
 	cp $< $@
 
-submission/figure_s1.tiff : \
-												$(FIGS)/funnel_plot.tiff
-	cp $< $@
 
+
+submission/figure_s1.tiff : $(FIGS)/funnel_plot.tiff
+	cp $< $@
 
 submission/figure_s2.tiff : \
 												$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
 submission/figure_s3.tiff : \
- 												$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
+											$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
 submission/figure_s4.tiff : $(FIGS)/alpha_bf_ratio_power.tiff
@@ -273,12 +273,12 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							submission/figure_1.tiff submission/figure_2.tiff\
 							submission/figure_3.tiff submission/figure_4.tiff\
 							submission/figure_5.tiff submission/figure_6.tiff\
+							submission/table_1.pdf\
 							submission/figure_s1.tiff submission/figure_s2.tiff\
 							submission/figure_s3.tiff submission/figure_s4.tiff\
 							submission/figure_s5.tiff submission/figure_s6.tiff\
 							submission/figure_s7.tiff submission/figure_s8.tiff\
-							submission/table_1.pdf\
-							submission/supp_text.pdf\
+							submission/figure_s8.tiff submission/supp_text.pdf\				
 							$(PROC)/alpha_tests.summary $(PROC)/alpha_composite.summary\
 							$(PROC)/relative_risk.summary $(PROC)/relative_risk.composite\
 							$(PROC)/beta_tests.summary\
