@@ -290,3 +290,21 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 	R -e "render('submission/Sze_Obesity_mBio_2016.Rmd', clean=FALSE)"
 	mv submission/Sze_Obesity_mBio_2016.utf8.md submission/Sze_Obesity_mBio_2016.md
 	rm submission/Sze_Obesity_mBio_2016.knit.md
+
+submission/Response_to_reviewers.pdf : submission/Response_to_reviewers.md
+	pandoc $< -o $@ --include-in-header=submission/header.tex
+
+submission/Track_changes.pdf: \
+					submission/Sze_Obesity_mBio_2016.md\
+					submission/references.bib\
+					submission/msystems.csl\
+					submission/header.tex
+
+	OPTS="--bibliography=submission/references.bib --csl=submission/msystems.csl  --filter=pandoc-citeproc --include-in-header=submission/header.tex"
+	git show 40d7145:$< > orig.md
+	pandoc orig.md -o orig.tex $(OPTS)
+	pandoc $< -o revised.tex $(OPTS)
+	latexdiff orig.tex revised.tex > diff.tex
+	pdflatex diff
+	mv diff.pdf $@
+	rm {revised,orig,diff}.tex
