@@ -2,7 +2,7 @@
 
 DIR=data/goodrich
 
-#rm -f $DIR/*.sra
+rm -f $DIR/*.sra
 
 # This is a second larger twin data set and the paper can be found
 # [here](http://www.ncbi.nlm.nih.gov/pmc/articles/PMC4255478/).  The individuals
@@ -12,29 +12,29 @@ DIR=data/goodrich
 # following code:
 
 
-#wget -r -q -np -nd -k -P $DIR ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006339/
-#wget -r -q -np -nd -k -P $DIR ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006342/
+wget -r -q -np -nd -k -P $DIR ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006339/
+wget -r -q -np -nd -k -P $DIR ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByStudy/sra/ERP/ERP006/ERP006342/
 
 
-#for sample in $DIR/*.sra
-#do
-#  fastq-dump $sample -O $DIR
-#  fastq=${sample//sra/fastq}
-#
-#  mothur "#fastq.info(fastq=$fastq); trim.seqs(fasta=current, qfile=current, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50, processors=8)"
-#done
+for sample in $DIR/*.sra
+do
+  fastq-dump $sample -O $DIR
+  fastq=${sample//sra/fastq}
+
+  mothur "#fastq.info(fastq=$fastq); trim.seqs(fasta=current, qfile=current, maxambig=0, maxhomop=8, qwindowaverage=35, qwindowsize=50, processors=8)"
+done
 
 
 
-#cat $DIR/*trim.fasta > $DIR/goodrich.fasta
+cat $DIR/*trim.fasta > $DIR/goodrich.fasta
 
 
-#grep '^>' $DIR/goodrich.fasta | cut -c 2- > $DIR/header.txt
+grep '^>' $DIR/goodrich.fasta | cut -c 2- > $DIR/header.txt
 
-#sed 's/\..*//g' $DIR/header.txt > $DIR/group.txt
+sed 's/\..*//g' $DIR/header.txt > $DIR/group.txt
 #paste --delimiters='\t' $DIR/header.txt $DIR/group.txt > $DIR/goodrich.groups
 
-#rm -f $DIR/*.sra $DIR/*.fastq $DIR/*.scrap.* $DIR/*.trim.* $DIR/SRR*fasta $DIR/SRR*qual $DIR/header.txt $DIR/group.txt
+rm -f $DIR/*.sra $DIR/*.fastq $DIR/*.scrap.* $DIR/*.trim.* $DIR/SRR*fasta $DIR/SRR*qual $DIR/header.txt $DIR/group.txt
 
 
 mothur "#unique.seqs(fasta=$DIR/goodrich.fasta);
