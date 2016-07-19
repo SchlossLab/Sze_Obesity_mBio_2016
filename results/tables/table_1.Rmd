@@ -27,6 +27,7 @@ capwords <- function(s, strict = FALSE) {
 
 make_study_label <- function(dataset){
 	study <- ifelse(dataset=="hmp", "HMP", capwords(dataset))
+	paste0(study, " (", citation[dataset], ")")
 }
 
 format_p <- function(p_value){
@@ -66,8 +67,18 @@ technology <-  c(
 	zeevi = "MiSeq"
 )
 
-
-
+citation <-  c(
+	baxter = "23",#
+	escobar = "16",#
+	hmp = "21",#
+	ross = "18",#
+	schubert = "22",#
+	turnbaugh = "6",#
+	wu = "20",#
+	zupancic = "15",#
+	goodrich = "19",#
+	zeevi = "17"#
+)
 
 get_study_summary <- function(study, beta = beta_summary){
 	metadata_file <- paste0('data/', study, '/', study, '.metadata')
@@ -97,7 +108,7 @@ get_study_summary <- function(study, beta = beta_summary){
 
 	per_white <- format(round(100*mean(metadata$white), 1), nsmall=1L)
 
-	list(study = capwords(study),
+	list(study = make_study_label(study),
 				n_subjects = as.character(n_subjects),
 				per_obese = per_obese,
 				bmi_summary = bmi,
@@ -116,7 +127,7 @@ datasets <- sort(rownames(beta_summary))
 study_summary <- t(sapply(datasets, get_study_summary))
 
 #colnames(study_summary) <- LETTERS[1:8]
-colnames(study_summary) <- c("Study", "\\bigcell{c}{Subjects \\\\ (N)}",
+colnames(study_summary) <- c("Study (Ref.)", "\\bigcell{c}{Subjects \\\\ (N)}",
 													"\\bigcell{c}{Obese \\\\ (\\%)}",
 													"\\bigcell{c}{Average BMI \\\\ (Min-Max)}",
 													"\\bigcell{c}{Female \\\\ (\\%)}",
