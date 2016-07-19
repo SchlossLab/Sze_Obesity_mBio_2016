@@ -278,7 +278,7 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							submission/figure_s3.tiff submission/figure_s4.tiff\
 							submission/figure_s5.tiff submission/figure_s6.tiff\
 							submission/figure_s7.tiff submission/figure_s8.tiff\
-							submission/figure_s8.tiff submission/supp_text.pdf\
+							submission/figure_s9.tiff submission/supp_text.pdf\
 							$(PROC)/alpha_tests.summary $(PROC)/alpha_composite.summary\
 							$(PROC)/relative_risk.summary $(PROC)/relative_risk.composite\
 							$(PROC)/beta_tests.summary\
