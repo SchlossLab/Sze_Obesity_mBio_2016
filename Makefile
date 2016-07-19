@@ -238,11 +238,11 @@ submission/figure_6.tiff : $(FIGS)/alpha_shannon_power.tiff
 submission/supp_text.pdf : submission/supp_text.Rmd
 	R -e "render('submission/supp_text.Rmd')"
 
-submission/figure_s1.tiff : $(FIGS)/funnel_plot.tiff
+submission/figure_s1.tiff : \
+												$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
-submission/figure_s2.tiff : \
-												$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
+submission/figure_s2.tiff : $(FIGS)/funnel_plot.tiff
 	cp $< $@
 
 submission/figure_s3.tiff : \
