@@ -318,11 +318,11 @@ submission/Track_changes.pdf: \
 					submission/mbio.csl\
 					submission/header.tex
 
-	OPTS="--bibliography=submission/references.bib --csl=submission/mbio.csl  --filter=pandoc-citeproc --include-in-header=submission/header.tex"
+	OPTS="--bibliography=submission/reference.bib --csl=submission/mbio.csl  --filter=pandoc-citeproc --include-in-header=submission/header.tex"
 	git show 40d7145:$< > orig.md
 	pandoc orig.md -o orig.tex $(OPTS)
 	pandoc $< -o revised.tex $(OPTS)
 	latexdiff orig.tex revised.tex > diff.tex
 	pdflatex diff
 	mv diff.pdf $@
-	rm {revised,orig,diff}.tex
+	rm {revised,orig,diff}.{tex,md}
