@@ -194,6 +194,20 @@ $(FIGS)/train_test.tiff : code/plot_train_test.R\
 	R -e "source('$<');"
 
 
+$(FIGS)/train_test_supp.tiff : code/plot_train_test_supp.R\
+												$(PROC)/random_forest.phylum.train_test\
+												$(PROC)/random_forest.class.train_test\
+												$(PROC)/random_forest.order.train_test\
+												$(PROC)/random_forest.family.train_test\
+												$(PROC)/random_forest.genus.train_test\
+												$(PROC)/random_forest.phylum.summary\
+												$(PROC)/random_forest.class.summary\
+												$(PROC)/random_forest.order.summary\
+												$(PROC)/random_forest.family.summary\
+												$(PROC)/random_forest.genus.summary
+	R -e "source('$<');"
+
+
 $(FIGS)/alpha_%_power.tiff : code/plot_power.R\
 												$(PROC)/alpha_power.predicted
 	R -e "source('$<'); build_plots('alpha')"
@@ -249,22 +263,25 @@ submission/figure_s3.tiff : \
 											$(FIGS)/rr_shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
 
-submission/figure_s4.tiff : $(FIGS)/alpha_bf_ratio_power.tiff
+submission/figure_s4.tiff : $(FIGS)/train_test_supp.tiff
 	cp $< $@
 
-submission/figure_s5.tiff : $(FIGS)/alpha_sobs_power.tiff
+submission/figure_s5.tiff : $(FIGS)/alpha_bf_ratio_power.tiff
 	cp $< $@
 
-submission/figure_s6.tiff : $(FIGS)/alpha_shannoneven_power.tiff
+submission/figure_s6.tiff : $(FIGS)/alpha_sobs_power.tiff
 	cp $< $@
 
-submission/figure_s7.tiff : $(FIGS)/alpha_bacteroidetes_power.tiff
+submission/figure_s7.tiff : $(FIGS)/alpha_shannoneven_power.tiff
 	cp $< $@
 
-submission/figure_s8.tiff : $(FIGS)/alpha_firmicutes_power.tiff
+submission/figure_s8.tiff : $(FIGS)/alpha_bacteroidetes_power.tiff
 	cp $< $@
 
-submission/figure_s9.tiff : $(FIGS)/rr_shannon_power.tiff
+submission/figure_s9.tiff : $(FIGS)/alpha_firmicutes_power.tiff
+	cp $< $@
+
+submission/figure_s10.tiff : $(FIGS)/rr_shannon_power.tiff
 	cp $< $@
 
 
@@ -278,7 +295,8 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							submission/figure_s3.tiff submission/figure_s4.tiff\
 							submission/figure_s5.tiff submission/figure_s6.tiff\
 							submission/figure_s7.tiff submission/figure_s8.tiff\
-							submission/figure_s9.tiff submission/supp_text.pdf\
+							submission/figure_s9.tiff submission/figure_s10.tiff\
+							submission/supp_text.pdf\
 							$(PROC)/alpha_tests.summary $(PROC)/alpha_composite.summary\
 							$(PROC)/relative_risk.summary $(PROC)/relative_risk.composite\
 							$(PROC)/beta_tests.summary\

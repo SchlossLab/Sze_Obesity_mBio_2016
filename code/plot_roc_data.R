@@ -27,8 +27,8 @@ plot_roc_data <- function(data_type, double=TRUE){
 
 	N <- ifelse(data_type == "otu", "OTUs", "Genera")
 
-	rf_summary <- rf_summary[order(rf_summary$auc_cv, decreasing=T),]
-	datasets <- sort(rf_summary$dataset)
+	rf_summary <- rf_summary[order(rf_summary$dataset, decreasing=F),]
+	datasets <- rf_summary$dataset
 
 	study_name <- capwords(datasets)
 	study_name[study_name == "Hmp"] <- "HMP"
