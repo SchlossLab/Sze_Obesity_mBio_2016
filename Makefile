@@ -296,8 +296,8 @@ submission/Response_to_reviewers.pdf : submission/Response_to_reviewers.md
 
 submission/Track_changes.pdf: \
 					submission/Sze_Obesity_mBio_2016.md\
-					submission/references.bib\
-					submission/msystems.csl\
+					submission/reference.bib\
+					submission/mbio.csl\
 					submission/header.tex
 
 	OPTS="--bibliography=submission/references.bib --csl=submission/msystems.csl  --filter=pandoc-citeproc --include-in-header=submission/header.tex"
