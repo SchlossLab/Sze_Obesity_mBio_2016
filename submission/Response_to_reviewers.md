@@ -13,16 +13,13 @@ geometry: margin=1.0in
 **Major Comments
 P.5 (line 81): The bioinformatics behind the statistical analyses are important. Include a brief summary in the main text. Specifically, it is important to clarify that you focused on studies that collected targeted 16S sequence data (not shotgun metagenomes). Also briefly mention that you did OTU clustering from scratch (per study and pooled?). Here or in the methods, clarify how alpha and beta diversity statistics were estimated.**
 
-> We have added text to address these comments (LXXX).
-
+> We have added text to address these comments (L81 and L91).
 
 
 
 **P.7 (lines 134-136): To overcome challenges with non-overlapping 16S regions, might it be possible to predict taxonomy of OTUs (which it appears you have already done for phylum level analyses) and then do a pooled community structure analysis on the taxa rather than OTUs? Alternatively, perhaps tools designed for identifying OTUs from non-overlapping shotgun marker gene reads might work.**
 
-> We did this in the random forest analysis at the genus level and did not see a difference in the results relative to the OTU-based analysis.
-
- - need to add extra text for RF analysis at all of the levels.
+> We did this in the random forest analysis at the phylum, class, order, family and genus levels and did not see a difference in the results relative to the OTU-based analysis. We have added text at L161 to L165
 
 
 **P.8 (line 162): What variability was used in the calculations (presumably that observed in the studies)? For designing future studies, it would be great to investigate the sensitivity of the results to the amount of between-sample variance, since variance does differ between studies (e.g., is higher in rural populations and is lower between moms and their newborns than between unrelated individuals).**
@@ -53,7 +50,7 @@ P.4 (lines 53-56): repeated text and typos: "mechanistic studies using animal mo
 
 **P.6 (line 100) and elsewhere: When first referring to a study by name (e.g., Walters, Finucane, Goodrich) provide the citation. This info is in Table 1, but it would be helpful to provide in the text as well.**
 
-> We have added an explicit reference to the first time we mention the Walters and Finucane studies at LXXX. Also, to respond to a comment from Reviewer 2, we have added the reference numbers to Table 1. This should make the connection between the studies and specific references more clear.
+> We have added an explicit reference to the first time we mention the Walters and Finucane studies at L50. Also, to respond to a comment from Reviewer 2, we have added the reference numbers to Table 1. This should make the connection between the studies and specific references more clear.
 
 
 **P.6 (line 103): In the random effects model does study have a random intercept or slope (or both)?**
@@ -63,7 +60,7 @@ P.4 (lines 53-56): repeated text and typos: "mechanistic studies using animal mo
 
 **P.6 (line 88): What is the overlap of studies with the Walters and Finucane analyses (could move or copy this from the discussion)?**
 
-> We have added text at LXX to indicate which of our studies overlapped with those from the Walters and Finucane.
+> We have added text at L89 to L91 to indicate which of our studies overlapped with those from the Walters and Finucane.
 
 
 **P.6 (line 88): What is the range of sample size per study (in Table 1, but would be helpful to give this overview statistic in the text)?**
