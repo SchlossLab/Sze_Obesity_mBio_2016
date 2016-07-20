@@ -314,3 +314,6 @@ submission/Track_changes.pdf: submission/Sze_Obesity_mBio_2016.tex
 	pdflatex diff
 	mv diff.pdf $@
 	rm diff.* orig.*
+
+submission/Sze_Obesity_mBio_2016.docx : submission/Sze_Obesity_mBio_2016.tex
+	pandoc -s $< -o $@
