@@ -249,9 +249,6 @@ submission/figure_6.tiff : $(FIGS)/alpha_shannon_power.tiff
 	cp $< $@
 
 
-submission/supp_text.pdf : submission/supp_text.Rmd
-	R -e "render('submission/supp_text.Rmd')"
-
 submission/figure_s1.tiff : \
 												$(FIGS)/shannoneven_sobs_bacteroidetes_firmicutes.tiff
 	cp $< $@
@@ -296,7 +293,6 @@ write.paper : submission/Sze_Obesity_mBio_2016.Rmd\
 							submission/figure_s5.tiff submission/figure_s6.tiff\
 							submission/figure_s7.tiff submission/figure_s8.tiff\
 							submission/figure_s9.tiff submission/figure_s10.tiff\
-							submission/supp_text.pdf\
 							$(PROC)/alpha_tests.summary $(PROC)/alpha_composite.summary\
 							$(PROC)/relative_risk.summary $(PROC)/relative_risk.composite\
 							$(PROC)/beta_tests.summary\
