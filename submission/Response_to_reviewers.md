@@ -124,7 +124,7 @@ L47 "individuals had a lower diversity than lean individuals (6)." Specify what 
 
 **L78 "We identified ten additional studies" How?**
 
-> The exact approach we used has been clarified in the Supplemental Materials.
+> The exact approach we used has been moved from the Supplemental Materials to the Methods section.
 
 
 **L80 "and obesity. We then manually curated the 196 studies to select." Numbers don't add up - 187 + 10 = 197. I looked through the Figure and I am not sure this explains all the numbers either.**
