@@ -97,7 +97,7 @@ build_figure <- function(metrics, width=6.5, height=3.75, leg=c(8, 10)){
 		mtext(side=2, line=-1, at=par()$usr[4]*1.05, text=LETTERS[m], cex=1, las=2, font=2)
 	}
 
-	legend(x=leg[1], y=leg[2], legend=c("Non-obese", "Obese"), pch=21, pt.bg=c("blue", "red"), cex=1.0)
+	legend(x=leg[1], y=leg[2], legend=c("Non-obese", "Obese"), pch=21, pt.bg=c("red", "blue"), cex=1.0)
 
 	par(mar=c(5,0.5,2,0.5))
 	plot(NA, xlim=c(0,1), ylim=c(0,length(datasets)),axes=F, xlab="", ylab="")
