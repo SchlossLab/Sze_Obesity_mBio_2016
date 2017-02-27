@@ -48,7 +48,7 @@ $(REFS)/silva.v4.align : $(REFS)/silva.seed.align
 # http://blog.mothur.org/2014/10/28/RDP-v10-reference-files/
 
 $(REFS)/trainset14_032015.% :
-	wget -N http://www.mothur.org/w/images/8/88/Trainset14_032015.pds.tgz
+	wget -N http://mothur.org/w/images/8/88/Trainset14_032015.pds.tgz
 	tar xvzf Trainset14_032015.pds.tgz trainset14_032015.pds/trainset14_032015.pds.*
 	mv trainset14_032015.pds/* $(REFS)/
 	rmdir trainset14_032015.pds
